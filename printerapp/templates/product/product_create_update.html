@@ -1,0 +1,299 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>PRODUCT</h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>Product View</h2>
+                                {%else%}
+                                <h2>Product Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>Product Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/product/product_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post"name="productfrm" id="productfrm">{% csrf_token %}
+                                <label for="product_name">Product Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="product_name" id="product_name" class="form-control" value="{{data.product_name}}"placeholder="Enter Product name">
+                                    </div>
+                                </div>
+                                
+                                <label for="size">Sizes</label>
+                                <div class="form-group">
+                                    
+                                        {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
+                                        
+                                        <div class="col-md-12">
+                                   
+                                        <select class="form-control show-tick" id="demoSelect1" name="demoSelect1" multiple>
+                                        {% for list_drop_val in list_drop %}
+                                        
+                                        <option value="{{ list_drop_val.id }}" 
+                                        {%if data.id %}
+                                        {%for list in product_data%}
+                                        {%if list.productid|add:0  == data.id|add:0 %}
+                                        {% if list.product_size == list_drop_val.id %}selected="true"{% endif%}
+                                        {%endif%}
+                                        {%endfor%}
+                                        {%endif%}
+                                        > {{ list_drop_val.text }} </option>
+                                        {% endfor %}
+                                        </select>
+                                        </div>
+                                  
+                                </div>
+
+
+                                <label for="Papers">Papers</label>
+                                <div class="form-group">
+                                   
+                                        {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
+                                        <div class="col-md-12">
+                                   
+                                        <select class="form-control show-tick" id="demoSelect2" name="demoSelect2"multiple>
+                                        {% for list_drop_val in list_drop %}
+                                        <option value="{{ list_drop_val.id }}" 
+                                        {%if data.id %}
+                                        {%for list in product_data%}
+                                        {%if list.productid|add:0  == data.id|add:0 %}
+                                        {% if list.product_paper == list_drop_val.id %}selected="true"{% endif%}
+                                        {%endif%}
+                                        {%endfor%}
+                                        {%endif%}
+                                        > {{ list_drop_val.text }} </option>
+                                        {% endfor %}
+                                        </select>
+
+                                        </div>
+
+                                      
+                                    
+                                </div>
+
+                                <label for="GSMs">GSMs</label>
+                                <div class="form-group">
+                                    
+                                        {% drop_down_list tableName="printerapp_gsm" show_field_name="gsm_name" store_field_name="id" as list_drop %}
+                                        
+                                        <div class="col-md-12">
+                                   
+                                        <select class="form-control show-tick" id="demoSelect3" name="demoSelect3"multiple>
+                                        {% for list_drop_val in list_drop %}
+                                        
+                                        <option value="{{ list_drop_val.id }}" 
+                                        {%if data.id %}
+                                        {%for list in product_data%}
+                                        {%if list.productid|add:0  == data.id|add:0 %}
+                                        {% if list.product_gsm == list_drop_val.id %}selected="true"{% endif%}
+                                        {%endif%}
+                                        {%endfor%}
+                                        {%endif%}
+                                        > {{ list_drop_val.text }} </option>
+                                        
+                                        {% endfor %}
+                                        </select>
+                                        </div>
+                                </div>
+                               
+                                {%if data.id %}
+                                <label for="process_name">Process Names</label>
+                                <div class="form-group">
+                                    <ul>
+                                    {% for list in product_data %}
+                                    {%if data.id|add:0  == list.productid|add:0 %}
+                                    {%if list.product_process%}
+                                    {% processlist id=list.product_process as processname %}
+                                    <li>{{processname}}<i class="material-icons">delete</i></a></li>
+                                    {%endif%}                
+                                    {%endif%}{%endfor%}
+                                    </ul>
+                                </div>
+                                {%endif%}
+
+
+                                <label for="process_name">Process Name</label>
+                                <div class="form-group"id='TextBoxesGroup'>
+                                    <div class="form-line"id="PassBoxDiv1">
+                                        <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Product name">
+                                    </div>
+                                </div>
+                                <label for="lab_plus" id="lab_plus">Add + </label>
+                            
+
+                        </div>
+                    </div>
+                    <div {% if view_mode %} style="display:none" {% endif%}>
+                    {%if data.id %}
+                    <button type="button" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="button" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           
+           
+</div>
+</section>
+
+</body>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script type="text/javascript">
+var jQuery_3_2_1 = jQuery.noConflict();
+jQuery_3_2_1(document).ready(function() {
+    var counter = 2;
+    var processidarray=[];
+    console.log("ready");
+    jQuery_3_2_1("#lab_plus").click(function () {
+                
+    var newPassBoxDiv = jQuery_3_2_1(document.createElement('div')).attr({"id":'ProccessBoxDiv' + counter,"class":'form-line'});
+
+         newPassBoxDiv.after().html('<label>Process Name '+ counter + ' : </label><input type="text" class="form-control" placeholder="Enter process name" name="textbox' + counter + '" id="textbox' + counter + '" value="">');
+            
+    newPassBoxDiv.appendTo("#TextBoxesGroup");
+    for (var i=1; i < counter;i++)
+    {
+      jQuery_3_2_1("#textbox"+counter).autocomplete({
+      source : "/printerapp/autocomplete/processname/",
+      select : function(event, ui) { //item selected
+      
+      processidarray.push(ui.item.id);
+      },
+      minLength : 2,
+      });
+    }
+    counter++;
+
+    });
+    jQuery_3_2_1(function() {
+
+    for (var i=1; i < counter;i++)
+    {
+      jQuery_3_2_1("#textbox"+i).autocomplete({
+      source : "/printerapp/autocomplete/processname/",
+      select : function(event, ui) { //item selected
+      processidarray.push(ui.item.id);
+      },
+      minLength : 2,
+      });
+    }
+}); 
+jQuery_3_2_1("#submitfrm").click(function(){
+
+ for(i=0; i<counter-1; i++){
+  console.log(processidarray[i]);
+  }
+  var crf_token = jQuery_3_2_1('[name="csrfmiddlewaretoken"]').attr('value');
+  data={"product_name":jQuery_3_2_1('#product_name').val(),"sizes[]":jQuery_3_2_1('#demoSelect1').val(),"papers[]":jQuery_3_2_1('#demoSelect2').val(),"gsms[]":jQuery_3_2_1('#demoSelect3').val(),"processidarray[]":processidarray};
+    /* url="../../product_processupdate/";
+    
+    data={"product_name":jQuery_3_2_1('#product_name').val()};*/
+    $.ajax({
+        type:"POST",
+        url:"../product_create/",
+        data:data,
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
+            
+        success:function(data){
+        document.getElementById("productfrm").reset();  
+        }
+        });     
+    }); 
+  
+});
+
+
+
+
+
+/*jQuery_3_2_1(function process_delete(id,productid) {
+
+        alert("yes");
+        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+
+        data={"id":id};
+        $.ajax({
+            url : "../../product_processdelete/",
+            data : data,
+            type : "POST",
+            headers : {
+              "X-CSRFToken" : crf_token
+           },
+            success : function(data) {
+                alert("success");
+            },
+            error : function(textStatus, errorThrown) {
+                
+                Success = false;//doesnt goes here
+                
+            }
+        });
+});
+*/
+</script>
+
+{% include "includes/file_js.html" %}
+</html>

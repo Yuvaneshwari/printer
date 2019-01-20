@@ -1,0 +1,288 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>COMPANY</h2>
+            </div>
+  	<div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+    </div>
+    <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>Company View</h2>
+                                {%else%}
+                                <h2>Company Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>Company Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/company/company_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post" name="companyfrm" id="companyfrm">{% csrf_token %}
+                                <label for="name">Company Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter Company name">
+                                    </div>
+                                </div>
+
+                                <label for="size_name">Short Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="short_name" id="short_name" class="form-control" value="{{data.short_name}}"placeholder="Enter Short name">
+                                    </div>
+                                </div>
+
+                                <label for="mobile">Mobile</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="mobile" class="form-control" value="{{data.mobile}}"placeholder="Enter mobile number">
+                                    </div>
+                                </div>
+
+                                <label for="phone">Phone</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="phone" id="phone" class="form-control" value="{{data.phone}}"placeholder="Enter Phone number">
+                                    </div>
+                                </div>
+                                
+                                <label for="email">Email</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="email" id="email" class="form-control" value="{{data.email}}"placeholder="Enter your Email Id">
+                                    </div>
+                                </div>
+
+                                <label for="address">Address</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <textarea class="form-control" rows="4" name="address" id="address"placeholder="Enter your address">{{data.address}}</textarea>
+                                    </div>
+                              
+                                </div>
+                               
+                                <label for="state">State</label>
+                                <div>
+                                    
+                                    {% drop_down_list tableName="printerapp_statemaster" show_field_name="state" store_field_name="id" as list_dorp %} 
+                  					<select class="form-control show-tick" id="state" name="state">
+                  					
+                  					<option value="">-- Select State-- </option>
+                  					{% for list_val in list_dorp %}
+                  					<option value="{{ list_val.id }}">{{ list_val.text }}</option>
+                  					{% endfor %}
+                  					</select>
+                                    
+                                </div>
+
+                                <label for="default_currency">Default Currency</label>
+                                <div>
+                                    
+                                    {% drop_down_list tableName="printerapp_currency" show_field_name="name" store_field_name="id" as list_dorp %} 
+                 
+                                    <select class="form-control show-tick" id="default_currency" name="default_currency">  
+
+                                    <option value="">-- Select default currency-- </option>
+                                    {% for list_val in list_dorp %}
+                                    <option value="{{ list_val.id }}">{{ list_val.text }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    
+                                </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+
+                        	<label for="pan_no">PAN</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="pan_no" id="pan_no" class="form-control" value="{{data.pan_no}}"placeholder="Enter PAN no">
+                                    </div>
+                                </div>
+
+                            <label for="bank_name">Bank Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="bank_name" id="bank_name" class="form-control" value="{{data.bank_name}}"placeholder="Enter Bank Name">
+                                    </div>
+                                </div>
+
+                            <label for="account_no">Account No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="account_no" id="account_no" class="form-control" value="{{data.account_no}}"placeholder="Enter Account No">
+                                    </div>
+                                </div>
+
+                            <label for="account_holder_name">Account Holder Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="account_holder_name" id="account_holder_name" class="form-control" value="{{data.account_holder_name}}"placeholder="Enter PAccount Holder Namer">
+                                    </div>
+                                </div>
+                                
+                                <label for="ifsc_code">IFSC Code</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="ifsc_code" id="ifsc_code" class="form-control" value="{{data.ifsc_code}}"placeholder="Enter IFSC Code">
+                                    </div>
+                                </div>
+
+                                <label for="gst_no">GST No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="gst_no" id="gst_no" class="form-control" value="{{data.gst_no}}"placeholder="Enter GST No">
+                                    </div>
+                                </div>
+
+                                <label for="cst_no">CST No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="cst_no" id="cst_no" class="form-control" value="{{data.cst_no}}"placeholder="Enter CST No">
+                                    </div>
+                                </div>
+
+                                <label for="tin_no">TIN No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" name="tin_no" id="tin_no" class="form-control" value="{{data.tin_no}}"placeholder="Enter TIN No">
+                                    </div>
+                                </div>
+
+                                
+
+                        </div>
+                    </div>
+                </div>           
+            
+
+
+
+
+
+
+    
+</div>
+</div>            
+                    <div {% if view_mode %} style="display:none" {% endif%}>
+                    {%if data.id %}
+                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    </div>
+                    </form>
+                
+
+
+</div>
+</section>
+
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $("#submit_frm").click(function(){
+        frmvalidation();
+
+    }); 
+    
+});
+function frmvalidation(){
+    $("#companyfrm").validate({
+        rules : {
+            name : {
+                required : true,
+            },
+            short_name : {
+                required : true,
+            },
+             email : {
+                required : true,
+                email:true
+            },
+            mobile : {
+                required : true,
+              
+            },
+            default_currency:{
+                required:true,
+
+            },
+            address:{
+                required:true,
+                
+            },
+            state:{
+                required:true,
+                
+            },
+            account_holder_name:{
+                required:true,
+                
+            },
+            bank_name:{
+                 required:true,
+             },
+             account_no:{
+                 required:true,
+             },
+        }
+    });
+}
+ </script>
+ {% include "includes/file_js.html" %}
+</html>

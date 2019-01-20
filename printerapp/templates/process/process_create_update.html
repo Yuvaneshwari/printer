@@ -1,0 +1,153 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>PROCESS</h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>Process View</h2>
+                                {%else%}
+                                <h2>Process Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>Process Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/process/process_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post"name="processfrm" id="processfrm">{% csrf_token %}
+                                <label for="process_name">Process Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="process_name" id="process_name" class="form-control" value="{{data.process_name}}"placeholder="Enter Process name">
+                                    </div>
+
+                                </div>
+                                
+                               <label for="ig_checkbox">Is DeliveryTime</label>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-addon">
+                                        <input type="checkbox" class="filled-in" id="ig_checkbox"name="ig_checkbox">
+                                        <label for="ig_checkbox">Yes</label>
+                                        </span>
+                                        <div class="form-line">
+                                        <input type="text" name="is_deliveryTime" name="is_deliveryTime"class="form-control">
+                                        </div>
+                                        
+                                    </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                    <div {% if view_mode %} style="display:none" {% endif%}>
+                    {%if data.id %}
+                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="submit"  name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           
+           
+</div>
+</section>
+                            
+ 
+                  
+
+</body>
+
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+       $('input[type="checkbox"]').click(function(){
+            if($(this).prop("checked") == true){
+                $(this).val("1");
+            }
+            else if($(this).prop("checked") == false){
+                $(this).val("0");
+            }
+    });
+        frmvalidation();
+        
+    }); 
+});
+function frmvalidation(){
+$("#processfrm").validate({
+  rules : {
+    process_name: {
+      required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+    
+
+</script>
+{% include "includes/file_js.html" %}
+
+</html>
