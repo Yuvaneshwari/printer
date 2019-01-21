@@ -1,0 +1,106 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+
+            <!-- Basic Table -->
+            
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Paper Name</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    {% for lists_val in data %}
+                                    
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{lists_val.paper_name}}</td>
+                                    <td><div class="btn-group dropright">
+                                        <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                        <li><a href="/printerapp/paper/paper_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
+                                        <li><a href="/printerapp/paper/paper_delete/{{ lists_val.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                        <li><a href="/printerapp/paper/paper_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
+                                        </ul>
+                                        </div>
+                                    </td>
+                                   
+
+                                </tr>
+                                {% endfor %}
+                               
+                                </tbody>
+                            </table>
+                   
+            </div>
+            <div class="row clearfix js-sweetalert"style="float: right">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <p>A warning message, with a function attached to the <b>Confirm</b> button...</p>
+                                    <button class="btn btn-primary waves-effect" data-type="confirm">CLICK ME</button>
+                                </div>
+                            </div>
+
+
+{% if data.has_other_pages %}
+                                 <div>
+                                    <div class="" style="float: right">
+                                        <ul class="pagination">
+                                            {% if data.has_previous %}
+
+                                            <li class="paginate_button previous"  tabindex="0" >
+                                                <a href="?page={{ data.previous_page_number }}">Previous</a>
+                                            </li>
+                                            {% else %}
+                                              <li class="paginate_button previous disabled"  tabindex="0" >
+                                                <a href="#">Previous</a>
+                                            </li>
+                                             {% endif %}
+
+                                             {% for i in data.paginator.page_range %}
+                                             {% if data.number == i %}
+                                            <li class="paginate_button active"  tabindex="0">
+                                                <a href="?page={{ i }}">{{ i }}</a>
+                                            </li> {% else %}
+                                            <li class="paginate_button "  tabindex="0">
+                                                <a href="?page={{ i }}">{{ i }}</a>
+                                            </li>{% endif %}
+                                            {% endfor %}
+                                            {% if data.has_next %}
+                                            <li class="paginate_button next"  tabindex="0" id="datatable_next">
+                                                    <a href="?page={{ lists.next_page_number }}">Next</a>
+                                            {% else %}
+                                            <li class="paginate_button next disabled"  tabindex="0">
+                                                    <a href="#">Next</a>
+                                            {% endif %}         
+                                            </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {% endif %}  
+
+
+
+                    
+                     
+
+</body>
+{% include "includes/file_js.html" %}
+ 
+</html>

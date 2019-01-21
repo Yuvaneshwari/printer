@@ -1,0 +1,321 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>CUSTOMER</h2>
+            </div>
+  	<div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+    </div>
+    <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>Customer View</h2>
+                                {%else%}
+                                <h2>Customer Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>Customer Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/customer/customer_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post" name="customerfrm" id="customerfrm">{% csrf_token %}
+                                <label for="size_name">Customer Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter customer name">
+                                    </div>
+                                </div>
+
+                                <label for="customergroup">Customer Group</label>
+                                <div>
+                                {% drop_down_list tableName="printerapp_customergroup" show_field_name="name" store_field_name="id" as list_drop %}
+                                <select class="form-control" id="customergroup" name="customergroup" >
+                                <option value="">-- Select customer  Group -- </option>
+                                {% for list_drop_val in list_drop %}
+                                <option value="{{ list_drop_val.id }}" 
+                                {% if list_drop_val.id == data.customergroup %}selected="true"{% endif%} > {{ list_drop_val.text }} </option>
+                                {% endfor %}
+                                </select>
+                                    
+                                </div>
+
+
+                                <label for="primary_contact_no">Contact No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="primary_contact_no" id="primary_contact_no" class="form-control" value="{{data.primary_contact_no}}"placeholder="Enter Primary Contact No">
+                                    </div>
+                                </div>
+
+                                <label for="email_id">Email</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="email" name="email_id" id="email_id" class="form-control" value="{{data.email_id}}"placeholder="Enter your Email Id">
+                                    </div>
+                                </div>
+
+                                <label for="address">Address</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <textarea class="form-control" rows="4" name="address" id="address"placeholder="Enter your address">{{data.address}}</textarea>
+                                    </div>
+                              
+                                </div>
+                               
+                                <label for="state">State</label>
+                                <div>
+                                    
+                                    {% drop_down_list tableName="printerapp_statemaster" show_field_name="state" store_field_name="id" as list_dorp %} 
+                  					<select class="form-control show-tick" id="state" name="state">
+                  					
+                  					<option value="">-- Select State-- </option>
+                  					{% for list_val in list_dorp %}
+                  					<option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif%}>{{ list_val.text }}</option>
+                  					{% endfor %}
+                  					</select>
+                                    
+                                </div>
+
+
+                                <label for="gst_no">GST No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="gst_no" id="gst_no" class="form-control" value="{{data.gst_no}}"placeholder="Enter GST No">
+                                    </div>
+                                </div>
+
+                                <label for="company">Company</label>
+                                <div>
+                                    
+                                    {% drop_down_list tableName="printerapp_company" show_field_name="name" store_field_name="id" as list_dorp %} 
+                 
+                                    <select class="form-control show-tick" id="company" name="company">  
+
+                                    <option value="">-- Select Company-- </option>
+                                    {% for list_val in list_dorp %}
+                                    <option value="{{ list_val.id }}"{% if list_val.id == data.company %}selected="true"{% endif%}>{{ list_val.text }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    
+                                </div>
+
+                                <label for="credit_days">Credit Days</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="credit_days" id="credit_days" class="form-control" value="{{data.credit_days}}"placeholder="Enter Credit Days">
+                                    </div>
+                                </div>
+
+                                <label for="credit_status">Credit Status</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <select class="form-control" id="credit_status" name="credit_status" placeholder="Enter credit status">
+                                    <option value="">-- Select Credit Status -- </option>
+                                    <option value="0" {% if data.credit_status == "0" %} selected="true"  {% endif%}> Not Allowed </option>
+                                    <option value="1" {% if data.credit_status == "1" %}  selected="true" {% endif%} >Allowed </option>
+                                    </select>
+                                    </div>
+                                </div>
+                                
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+
+                        	
+
+                        	<label for="max_credit_amount">Max Credit Amt</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="max_credit_amount" id="max_credit_amount" class="form-control" value="{{data.max_credit_amount}}"placeholder="Enter Max Credit Amt">
+                                    </div>
+                                </div>
+
+                            <label for="contact_person">Contact Person</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="contact_person" id="contact_person" class="form-control" value="{{data.contact_person}}"placeholder="Enter contact Name">
+                                    </div>
+                                </div>
+
+                            <label for="contact_person_contact_no">Contact Person No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="contact_person_contact_no" id="contact_person_contact_no" class="form-control" value="{{data.contact_person_contact_no}}"placeholder="Enter Contact Person No">
+                                    </div>
+                                </div>
+
+                            <label for="contact_person_email_id">Contact Person Email </label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="email" name="contact_person_email_id" id="contact_person_email_id" class="form-control" value="{{data.contact_person_email_id}}"placeholder="Enter Contact Person Email">
+                                    </div>
+                                </div>
+                                
+                                <label for="secondary_contact_no">Secondary Contact No</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="secondary_contact_no" id="secondary_contact_no" class="form-control" value="{{data.secondary_contact_no}}"placeholder="Enter Phone no">
+                                    </div>
+                                </div>
+
+                                
+
+                                <label for="secondary_email_id">Secondary Email</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="secondary_email_id" id="secondary_email_id" class="form-control" value="{{data.secondary_email_id}}"placeholder="Enter Secondary  emil">
+                                    </div>
+                                </div>
+
+                                <label for="billing_address">Billing Address</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <textarea class="form-control" rows="4" name="billing_address" id="billing_address"placeholder="Enter billing address">{{data.billing_address}}</textarea>
+                                    </div>
+                              
+                                </div>
+                               
+                                <label for="shiping_address">Shiping Address</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <textarea class="form-control" rows="4" name="shiping_address" id="shiping_address"placeholder="Enter Shiping address">{{data.address}}</textarea>
+                                    </div>
+                              
+                                </div>
+                               
+                                <label for="default_cash_customer">Default Customer</label>
+                                <div>
+                                <select class="form-control" id="default_cash_customer" name="default_cash_customer">
+                                <option value="">-- Select Customer -- </option>
+                                <option value="0" {% if data.default_cash_customer == 0 %} selected="true"  {% endif%}> No </option>
+                                <option value="1" {% if data.default_cash_customer == 1 %}  selected="true" {% endif%} >Yes </option>
+                                </select>
+                                </div>
+
+                                
+
+                        </div>
+                    </div>
+                </div>           
+            
+
+
+
+
+
+
+    
+</div>
+</div>            
+                    <div {% if view_mode %} style="display:none" {% endif%}>
+                    {%if data.id %}
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    </div>
+                    </form>
+                
+
+
+</div>
+</section>
+ 
+
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script>
+
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+       frmvalidation();
+        
+    }); 
+    
+});
+function frmvalidation(){
+    $("#customerfrm").validate({
+        rules : {
+            name : {
+                required : true,
+            },
+            customergroup : {
+                required : true,
+            },
+            
+            primary_contact_no : {
+                required : true,
+              
+            },
+           
+            address:{
+                required:true,
+                
+            },
+            state:{
+                required:true,
+                
+            },
+             default_currency:{
+                required:true,
+                
+            }, company:{
+                required:true,
+                
+            },
+        }
+    });
+}
+</script>
+{% include "includes/file_js.html" %}
+
+</html>
