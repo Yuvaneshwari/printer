@@ -25,7 +25,7 @@ SECRET_KEY = '-s9n#)m4req6*&ixfjxwt$-2x^^t(88r4r1-!yfn7)pzxvmbf!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['101.53.145.13']
+ALLOWED_HOSTS = ['101.53.145.13','localhost']
 
 
 # Application definition
@@ -140,7 +140,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_ROOT ='/Python34/Lib/site-packages/Projects/printers/static/'
-STATIC_URL='/Python34/Lib/site-packages/Projects/printers/static/'
-STATICFILES_DIR ='/Python34/Lib/site-packages/Projects/printers/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+#STATIC_URL = 'http://101.53.145.13:85/ERP/static/'
+STATIC_URL=os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIR = os.path.join(BASE_DIR, 'ERP/static/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/').replace('\\', '/')
+MEDIA_URL = '/media/'
+#STATIC_ROOT ='/Python34/Lib/site-packages/Projects/printers/static/'
+#STATIC_URL='/Python34/Lib/site-packages/Projects/printers/static/'
+#STATICFILES_DIR ='/Python34/Lib/site-packages/Projects/printers/static/'
