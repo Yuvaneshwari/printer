@@ -1,0 +1,7 @@
+printerapp/migrations
+printerapp/__pycache__
+printerapp/models/__pycache__
+printers/settings.py
+printerapp/__pycache__
+*.log 
+*.pyc
