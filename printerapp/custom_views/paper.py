@@ -56,7 +56,7 @@ def paper_list(request):
         paper_data = paginator.page(paginator.num_pages)
 
     if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='includes/sample.html')
+        return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='paper/paper_list.html')
     return Response({"data": paper_data}, status=status.HTTP_200_OK)
 
 
