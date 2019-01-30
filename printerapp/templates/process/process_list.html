@@ -41,6 +41,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Process Name</th>
+                                        <th>Partial Delivery Time Need</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -51,13 +52,14 @@
                                     
                                     <td>{{forloop.counter}}</td>
                                     <td>{{lists_val.process_name}}</td>
+                                    <td>{% if lists_val.is_deliveryTime == 1|add:0%}Yes{%else%}No{%endif%}</td>
                                     <td><div class="btn-group dropright">
                                         <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
                                         <li><a href="/printerapp/process/process_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
-                                        <li><a href="/printerapp/process/process_delete/{{ lists_val.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                        <li><a href="/printerapp/process/process_delete/{{ lists_val.id }}"onclick="return confirm_delete();"><i class="material-icons">delete</i></a></li>
                                         <li><a href="/printerapp/process/process_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
                                         </ul>
                                         </div>

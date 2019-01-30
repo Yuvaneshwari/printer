@@ -3,15 +3,17 @@
 <html>
 <head>
 {% include "includes/css_file.html" %}
+
 </head>
 <body class="theme-red">
 {% include "includes/index.html" %}
 
 
+
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>SIZE</h2>
+                <h2>DELIVERY MODE</h2>
             </div>
             <!-- Basic Table -->
             <div class="row clearfix">
@@ -19,7 +21,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                Size List
+                                Deliverymode List
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -27,7 +29,7 @@
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/size/size_create"><i class="material-icons">add</i></a></li>
+                                        <li><a href="/printerapp/deliverymode/deliverymode_create"><i class="material-icons">add</i></a></li>
                                        
                                     </ul>
                                 </li>
@@ -38,9 +40,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Size Name</th>
-                                        <th>Length</th>
-                                        <th>Width</th>
+                                        <th>Delivery Mode</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -50,17 +50,15 @@
                                     {% for lists_val in data %}
                                     
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{lists_val.size_name}}</td>
-                                    <td>{{lists_val.length}}</td>
-                                    <td>{{lists_val.width}}</td>
+                                    <td>{{lists_val.deliverymode}}</td>
                                     <td><div class="btn-group dropright">
                                         <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                        <li><a href="/printerapp/size/size_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
-                                        <li><a href="/printerapp/size/size_delete/{{ lists_val.id }}" onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
-                                        <li><a href="/printerapp/size/size_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
+                                        <li><a href="/printerapp/deliverymode/deliverymode_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
+                                        <li><a href="/printerapp/deliverymode/deliverymode_delete/{{ lists_val.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                        <li><a href="/printerapp/deliverymode/deliverymode_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
                                         </ul>
                                         </div>
                                     </td>
@@ -74,10 +72,10 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
+        </div>
+    </div>
 </div>
-</section> 
+</section>
 
 
 {% if data.has_other_pages %}
@@ -115,10 +113,11 @@
 </div>
 {% endif %}  
 
-                    
+                 
+                         
 {% include "includes/file_js.html" %}
-  
-                  
+ 
+   
 </body>
 
 </html>

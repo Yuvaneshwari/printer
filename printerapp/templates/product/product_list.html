@@ -38,9 +38,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Product Name</th>
-                                        <th>Sizes</th>
-                                        <th>Papers</th>
-                                        <th>GSMs</th>
                                         <th>Process</th>
                                         <th>Action</th>
                                         
@@ -52,31 +49,7 @@
                                     
                                     <td>{{forloop.counter}}</td>
                                     <td>{{lists_val.product_name}}</td>
-                                    <td>
-                                    {% for list in product_data %}
-                                    {%if lists_val.id|add:0  == list.productid|add:0 %}
-                                    {%if list.product_size%}
-                                    {% sizelist id=list.product_size as sizename %}
-                                    {{sizename}},
-                                    {%endif%}
-                                    {%endif%}{%endfor%}
-                                    </td>
-                                    <td> {% for list in product_data %}
-                                    {%if lists_val.id|add:0  == list.productid|add:0 %}
-                                    {%if list.product_paper%}
-                                    {% paperlist id=list.product_paper as papername %}
-                                    {{papername}},
-                                    {%endif%}                
-                                    {%endif%}{%endfor%}
-                                    </td>
-                                    <td> {% for list in product_data %}
-                                    {%if lists_val.id|add:0  == list.productid|add:0 %}
-                                    {%if list.product_gsm%}
-                                    {% gsmlist id=list.product_gsm as gsmname %}
-                                    {{gsmname}},
-                                    {%endif%}                
-                                    {%endif%}{%endfor%}
-                                    </td>
+                                  
                                     <td> {% for list in product_data %}
                                     {%if lists_val.id|add:0  == list.productid|add:0 %}
                                     {%if list.product_process%}

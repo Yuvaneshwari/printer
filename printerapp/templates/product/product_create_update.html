@@ -70,83 +70,6 @@
                                     </div>
                                 </div>
                                 
-                                <label for="size">Sizes</label>
-                                <div class="form-group">
-                                    
-                                        {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
-                                        
-                                        <div class="col-md-12">
-                                   
-                                        <select class="form-control show-tick" id="demoSelect1" name="demoSelect1" multiple>
-                                        {% for list_drop_val in list_drop %}
-                                        
-                                        <option value="{{ list_drop_val.id }}" 
-                                        {%if data.id %}
-                                        {%for list in product_data%}
-                                        {%if list.productid|add:0  == data.id|add:0 %}
-                                        {% if list.product_size == list_drop_val.id %}selected="true"{% endif%}
-                                        {%endif%}
-                                        {%endfor%}
-                                        {%endif%}
-                                        > {{ list_drop_val.text }} </option>
-                                        {% endfor %}
-                                        </select>
-                                        </div>
-                                  
-                                </div>
-
-
-                                <label for="Papers">Papers</label>
-                                <div class="form-group">
-                                   
-                                        {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
-                                        <div class="col-md-12">
-                                   
-                                        <select class="form-control show-tick" id="demoSelect2" name="demoSelect2"multiple>
-                                        {% for list_drop_val in list_drop %}
-                                        <option value="{{ list_drop_val.id }}" 
-                                        {%if data.id %}
-                                        {%for list in product_data%}
-                                        {%if list.productid|add:0  == data.id|add:0 %}
-                                        {% if list.product_paper == list_drop_val.id %}selected="true"{% endif%}
-                                        {%endif%}
-                                        {%endfor%}
-                                        {%endif%}
-                                        > {{ list_drop_val.text }} </option>
-                                        {% endfor %}
-                                        </select>
-
-                                        </div>
-
-                                      
-                                    
-                                </div>
-
-                                <label for="GSMs">GSMs</label>
-                                <div class="form-group">
-                                    
-                                        {% drop_down_list tableName="printerapp_gsm" show_field_name="gsm_name" store_field_name="id" as list_drop %}
-                                        
-                                        <div class="col-md-12">
-                                   
-                                        <select class="form-control show-tick" id="demoSelect3" name="demoSelect3"multiple>
-                                        {% for list_drop_val in list_drop %}
-                                        
-                                        <option value="{{ list_drop_val.id }}" 
-                                        {%if data.id %}
-                                        {%for list in product_data%}
-                                        {%if list.productid|add:0  == data.id|add:0 %}
-                                        {% if list.product_gsm == list_drop_val.id %}selected="true"{% endif%}
-                                        {%endif%}
-                                        {%endfor%}
-                                        {%endif%}
-                                        > {{ list_drop_val.text }} </option>
-                                        
-                                        {% endfor %}
-                                        </select>
-                                        </div>
-                                </div>
-                               
                                 {%if data.id %}
                                 <label for="process_name">Process Names</label>
                                 <div class="form-group">
@@ -166,7 +89,7 @@
                                 <label for="process_name">Process Name</label>
                                 <div class="form-group"id='TextBoxesGroup'>
                                     <div class="form-line"id="PassBoxDiv1">
-                                        <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Product name">
+                                        <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Process name">
                                     </div>
                                 </div>
                                 <label for="lab_plus" id="lab_plus">Add + </label>
@@ -245,7 +168,7 @@ jQuery_3_2_1("#submitfrm").click(function(){
   console.log(processidarray[i]);
   }
   var crf_token = jQuery_3_2_1('[name="csrfmiddlewaretoken"]').attr('value');
-  data={"product_name":jQuery_3_2_1('#product_name').val(),"sizes[]":jQuery_3_2_1('#demoSelect1').val(),"papers[]":jQuery_3_2_1('#demoSelect2').val(),"gsms[]":jQuery_3_2_1('#demoSelect3').val(),"processidarray[]":processidarray};
+  data={"product_name":jQuery_3_2_1('#product_name').val(),"processidarray[]":processidarray};
     /* url="../../product_processupdate/";
     
     data={"product_name":jQuery_3_2_1('#product_name').val()};*/
@@ -258,7 +181,7 @@ jQuery_3_2_1("#submitfrm").click(function(){
         },
             
         success:function(data){
-        document.getElementById("productfrm").reset();  
+            document.getElementById("productfrm").reset();  
         }
         });     
     }); 
@@ -267,32 +190,6 @@ jQuery_3_2_1("#submitfrm").click(function(){
 
 
 
-
-
-/*jQuery_3_2_1(function process_delete(id,productid) {
-
-        alert("yes");
-        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-
-        data={"id":id};
-        $.ajax({
-            url : "../../product_processdelete/",
-            data : data,
-            type : "POST",
-            headers : {
-              "X-CSRFToken" : crf_token
-           },
-            success : function(data) {
-                alert("success");
-            },
-            error : function(textStatus, errorThrown) {
-                
-                Success = false;//doesnt goes here
-                
-            }
-        });
-});
-*/
 </script>
 
 {% include "includes/file_js.html" %}

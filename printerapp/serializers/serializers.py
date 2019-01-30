@@ -76,3 +76,14 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = "__all__"
+
+class DeliverymodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deliverymode
+        fields = "__all__"
+
+
+class CommunicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Communication
+        fields = "__all__"

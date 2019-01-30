@@ -32,5 +32,25 @@ def process_name_autocomplete(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+@api_view(['GET', 'POST'])
+def product_name_autocomplete(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        custom_filter={}     
+        users = Product.objects.filter(product_name__icontains = q )[:10]
+        results = []
+        for user in users:
+            return_json = {}
+            return_json['id'] = user.id
+            return_json['label'] = user.product_name
+            return_json['value'] = user.product_name
+            
+            
+            results.append(return_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
             
 

@@ -13,7 +13,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>GSM</h2>
+                <h2>COMMUNICATION MODE</h2>
             </div>
 
             <div class="row clearfix">
@@ -43,12 +43,12 @@
                         <div class="header">
                             {% if data.id %}
                                 {%if view_mode%}
-                                <h2>GSM View</h2>
+                                <h2>Communicationmode View</h2>
                                 {%else%}
-                                <h2>GSM Update</h2>
+                                <h2>Communicationmode Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>GSM Create</h2>
+                            <h2>Communicationmode Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -56,18 +56,18 @@
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a></li>
+                                        <li><a href="/printerapp/communication/communication_list"><i class="material-icons">visibility</i></a></li>
                                        
                                     </ul>
                                 </li>
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post"name="gsmfrm" id="gsmfrm">{% csrf_token %}
-                                <label for="gsm_name">Enter GSM</label>
+                            <form method="post"name="comm_modefrm" id="comm_modefrm">{% csrf_token %}
+                                <label for="gsm_name">Communication Mode</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="gsm_name" id="gsm_name" class="form-control" value="{{data.gsm_name}}"placeholder="Enter GSM">
+                                        <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter Communication mode">
                                     </div>
                                 </div>
                                 
@@ -106,9 +106,9 @@ $(document).ready(function() {
     
 });
 function frmvalidation(){
-$("#gsmfrm").validate({
+$("#comm_modefrm").validate({
   rules : {
-    gsm_name: {
+    name: {
       required : true,
       },
       submitHandler : function(form) {

@@ -13,7 +13,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>GSM</h2>
+                <h2>CURRENCY</h2>
             </div>
 
             <div class="row clearfix">
@@ -43,12 +43,12 @@
                         <div class="header">
                             {% if data.id %}
                                 {%if view_mode%}
-                                <h2>GSM View</h2>
+                                <h2>Currency View</h2>
                                 {%else%}
-                                <h2>GSM Update</h2>
+                                <h2>Currency Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>GSM Create</h2>
+                            <h2>Currency Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -56,18 +56,25 @@
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a></li>
+                                        <li><a href="/printerapp/currency/currency_list"><i class="material-icons">visibility</i></a></li>
                                        
                                     </ul>
                                 </li>
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post"name="gsmfrm" id="gsmfrm">{% csrf_token %}
-                                <label for="gsm_name">Enter GSM</label>
+                            <form method="post"name="currencyfrm" id="currencyfrm">{% csrf_token %}
+                                <label for="name">Currency Name</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="gsm_name" id="gsm_name" class="form-control" value="{{data.gsm_name}}"placeholder="Enter GSM">
+                                        <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter Currency name">
+                                    </div>
+                                </div>
+
+                                <label for="country">Country</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="country" id="country" class="form-control" value="{{data.country}}"placeholder="Enter Country name">
                                     </div>
                                 </div>
                                 
@@ -78,7 +85,7 @@
                     {%if data.id %}
                     <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
                     {%else%}
-                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
                     {%endif%}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
@@ -92,7 +99,7 @@
            
 </div>
 </section>
-<!-- Jquery Core Js -->
+                
 
 </body>
 <script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
@@ -106,9 +113,9 @@ $(document).ready(function() {
     
 });
 function frmvalidation(){
-$("#gsmfrm").validate({
+$("#currencyfrm").validate({
   rules : {
-    gsm_name: {
+    name: {
       required : true,
       },
       submitHandler : function(form) {

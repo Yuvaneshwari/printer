@@ -8,10 +8,12 @@
 {% include "includes/index.html" %}
 
 
+
+
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>SIZE</h2>
+                <h2>COMPANY</h2>
             </div>
             <!-- Basic Table -->
             <div class="row clearfix">
@@ -19,7 +21,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                Size List
+                                Company List
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -27,7 +29,7 @@
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/size/size_create"><i class="material-icons">add</i></a></li>
+                                        <li><a href="/printerapp/company/company_create"><i class="material-icons">add</i></a></li>
                                        
                                     </ul>
                                 </li>
@@ -38,9 +40,13 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Size Name</th>
-                                        <th>Length</th>
-                                        <th>Width</th>
+                                        <th>Company Name</th>
+                                        <th>Short Name</th>
+                                        <th>Mobile</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        <th>PAN</th>
+                                        <th>GST</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -50,17 +56,21 @@
                                     {% for lists_val in data %}
                                     
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{lists_val.size_name}}</td>
-                                    <td>{{lists_val.length}}</td>
-                                    <td>{{lists_val.width}}</td>
+                                    <td>{{lists_val.name}}</td>
+                                    <td>{{lists_val.short_name}}</td>
+                                    <td>{{lists_val.mobile}}</td>
+                                    <td>{{lists_val.email}}</td>
+                                    <td>{{lists_val.address}}</td>
+                                    <td>{{lists_val.pan_no}}</td>
+                                    <td>{{lists_val.gst_no}}</td>
                                     <td><div class="btn-group dropright">
                                         <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                        <li><a href="/printerapp/size/size_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
-                                        <li><a href="/printerapp/size/size_delete/{{ lists_val.id }}" onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
-                                        <li><a href="/printerapp/size/size_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
+                                        <li><a href="/printerapp/company/company_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
+                                        <li><a href="/printerapp/company/company_delete/{{ lists_val.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                        <li><a href="/printerapp/company/company_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
                                         </ul>
                                         </div>
                                     </td>
@@ -73,7 +83,6 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
 </div>
@@ -115,10 +124,33 @@
 </div>
 {% endif %}  
 
+
                     
-{% include "includes/file_js.html" %}
-  
-                  
+                    
+<!-- Jquery Core Js -->
+    <script src="{% static 'printerapp/plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'printerapp/plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="{% static 'printerapp/plugins/bootstrap-select/js/bootstrap-select.js' %}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{% static 'printerapp/plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'printerapp/plugins/node-waves/waves.js' %}"></script>
+
+ 
+
+    <!-- Custom Js -->
+    <script src="{% static 'printerapp/js/admin.js' %}"></script>
+
+    <!-- Demo Js -->
+    <script src="{% static 'printerapp/js/demo.js' %}"></script>
+ 
+         
 </body>
 
 </html>
