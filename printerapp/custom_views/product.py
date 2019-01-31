@@ -20,25 +20,15 @@ def product_create(request):
         return Response({'data':'','module':'Product'},template_name='product/product_create_update.html')
     else:
         pname=request.POST.get('product_name')
-        gsizes=request.POST.getlist('sizes[]')
-        gpapers=request.POST.getlist('papers[]')
-        ggsms=request.POST.getlist('gsms[]')
         gprarray=request.POST.getlist('processidarray[]')
-        sizes=list(map(int,gsizes))
-        papers=list(map(int,gpapers))
-        gsms=list(map(int,ggsms))
         prarray=list(map(int,gprarray))
-        sizes_len=len(sizes)
-        papers_len=len(papers)
-        gsms_len=len(gsms)
         prarray_len=len(prarray)
-        total_len=max(sizes_len,papers_len,gsms_len,prarray_len)
         data={"product_name":pname}
         productserializer=ProductSerializer(data=data)
         if productserializer.is_valid():
             productvar=productserializer.save();
             productid=productvar.id
-            add_productdetails(sizes,papers,gsms,prarray,productid,total_len);
+            add_productdetails(prarray,productid);
             if request.accepted_renderer.format=='html':
                 return Response({"success_data": "Data added successfully"},template_name='product/product_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
@@ -58,31 +48,11 @@ def product_create(request):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-def add_productdetails(sizes,papers,gsms,prarray,productid,total_len):
-    for i in range(total_len):
-
-        try:
-            sizeval = sizes[i]
-        except (IndexError, ValueError):
-            sizeval = ''
-        try:
-            gsmval=gsms[i]
-        except (IndexError, ValueError):
-            gsmval = ''
-        try:
-            paperval = papers[i]
-        except (IndexError, ValueError):
-            paperval = ''
-        try:
-            prarrayval = prarray[i]
-        except (IndexError, ValueError):
-            prarrayval = '' 
+def add_productdetails(prarray,productid):
+    for i in prarray:
         data={
-            "product_size":sizeval,
             "productid":productid,
-            "product_gsm":gsmval,
-             "product_paper":paperval,
-            "product_process":prarrayval,
+            "product_process":i,
         }
         proddetails_serializer=ProductdetailsSerializer(data=data)
         if proddetails_serializer.is_valid():

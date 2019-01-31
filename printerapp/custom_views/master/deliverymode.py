@@ -14,15 +14,15 @@ from django.conf import  settings
 row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 
 @api_view(['GET','POST'])
-def paper_create(request):
+def deliverymode_create(request):
     if request.method=='GET':
-        return Response({'data':'','module':'Paper'},template_name='paper/paper_create_update.html')
+        return Response({'data':'','module':'deliverymode'},template_name='master/deliverymode/delivery_create_update.html')
     else:
-        serializer=PaperSerializer(data=request.data)
+        serializer=DeliverymodeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='paper/paper_create_update.html')
+                return Response({"success_data": "Data added successfully"},template_name='master/deliverymode/delivery_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
@@ -36,53 +36,53 @@ def paper_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='paper/paper_create_update.html')
+                return Response({"error_data": data},template_name='master/deliverymode/delivery_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
-def paper_list(request):
+def deliverymode_list(request):
     custom_filter={}
     custom_filter['deleted']=0
-    paper_obj = Paper.objects.filter(**custom_filter)
-    paper_data = PaperSerializer(paper_obj, many=True).data
+    delivery_obj = Deliverymode.objects.filter(**custom_filter)
+    delivery_data = DeliverymodeSerializer(delivery_obj, many=True).data
     page = request.GET.get('page', 1)
-    paginator = Paginator(paper_data, row_per_page)
+    paginator = Paginator(delivery_data, row_per_page)
     try:
-        paper_data = paginator.page(page)
+        delivery_data = paginator.page(page)
     except PageNotAnInteger:
-        paper_data = paginator.page(1)
+        delivery_data = paginator.page(1)
     except EmptyPage:
-        paper_data = paginator.page(paginator.num_pages)
-
+        delivery_data = paginator.page(paginator.num_pages)
+        
     if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='paper/paper_list.html')
-    return Response({"data": paper_data}, status=status.HTTP_200_OK)
+        return Response({"data":delivery_data,'module':'deliverymode',"custom_filter":custom_filter},template_name='master/deliverymode/delivery_list.html')
+    return Response({"data": delivery_data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def paper_view(request,id):
-    paper_obj=Paper.objects.get(id=id)
-    paper_data = PaperSerializer(paper_obj).data
+def deliverymode_view(request,id):
+    delivery_obj=Deliverymode.objects.get(id=id)
+    delivery_data = DeliverymodeSerializer(delivery_obj).data
     if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"view_mode":1},template_name='paper/paper_create_update.html')
-    return Response({"data": paper_data,"view_mode":1}, status=status.HTTP_200_OK)
+        return Response({"data":delivery_data,'module':'deliverymode',"view_mode":1},template_name='master/deliverymode/delivery_create_update.html')
+    return Response({"data":delivery_data,"view_mode":1}, status=status.HTTP_200_OK)
 
 @api_view(['GET','PUT','POST'])
-def paper_update(request,id):
-    paper_obj=Paper.objects.get(id=id)
+def deliverymode_update(request,id):
+    delivery_obj=Deliverymode.objects.get(id=id)
     if request.method=='GET':
-        data=PaperSerializer(paper_obj).data
+        data=DeliverymodeSerializer(delivery_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='paper/paper_create_update.html')
+            return Response({'data':data},template_name='master/deliverymode/delivery_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
-        serializer=PaperSerializer(paper_obj,request.data,partial=True)
+        serializer=DeliverymodeSerializer(delivery_obj,request.data,partial=True)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return HttpResponseRedirect(reverse('printerapp:paper_list'))
+                return HttpResponseRedirect(reverse('printerapp:deliverymode_list'))
             return Response({"data": "Data Updated successfully"}, status=status.HTTP_200_OK)
         else:
             error_details = []
@@ -96,12 +96,12 @@ def paper_update(request,id):
                             }
                         }
                 if request.accepted_renderer.format=='html':
-                    return Response({"error_data": data},template_name='paper/paper_create_update.html')
+                    return Response({"error_data": data},template_name='master/deliverymode/delivery_create_update.html')
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST','Delete'])
-def paper_delete(request,id):
-    selected_values=Paper.objects.get(pk=id)
+def deliverymode_delete(request,id):
+    selected_values=Deliverymode.objects.get(pk=id)
     selected_values.deleted=1;
     selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:paper_list'))
+    return HttpResponseRedirect(reverse('printerapp:deliverymode_list'))

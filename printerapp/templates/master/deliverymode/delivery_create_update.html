@@ -13,7 +13,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>GSM</h2>
+                <h2>DELIVERY MODE</h2>
             </div>
 
             <div class="row clearfix">
@@ -43,12 +43,12 @@
                         <div class="header">
                             {% if data.id %}
                                 {%if view_mode%}
-                                <h2>GSM View</h2>
+                                <h2>Deliverymode View</h2>
                                 {%else%}
-                                <h2>GSM Update</h2>
+                                <h2>Deliverymode Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>GSM Create</h2>
+                            <h2>Deliverymode Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -56,18 +56,18 @@
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a></li>
+                                        <li><a href="/printerapp/deliverymode/deliverymode_list"><i class="material-icons">visibility</i></a></li>
                                        
                                     </ul>
                                 </li>
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post"name="gsmfrm" id="gsmfrm">{% csrf_token %}
-                                <label for="gsm_name">Enter GSM</label>
+                            <form method="post"name="deliverymodefrm" id="deliverymodefrm">{% csrf_token %}
+                                <label for="gsm_name">Delivery Mode</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="gsm_name" id="gsm_name" class="form-control" value="{{data.gsm_name}}"placeholder="Enter GSM">
+                                        <input type="text"name="deliverymode" id="deliverymode" class="form-control" value="{{data.deliverymode}}"placeholder="Enter deliverymode">
                                     </div>
                                 </div>
                                 
@@ -106,9 +106,9 @@ $(document).ready(function() {
     
 });
 function frmvalidation(){
-$("#gsmfrm").validate({
+$("#deliverymodefrm").validate({
   rules : {
-    gsm_name: {
+    deliverymode: {
       required : true,
       },
       submitHandler : function(form) {

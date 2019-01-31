@@ -25,6 +25,8 @@ class Paper(models.Model):
 class Size(models.Model):
     """Details of Size Entity"""
     size_name = models.CharField(max_length=50, blank=False, null=False)
+    length = models.CharField(max_length=50,blank=True, null=True)
+    width = models.CharField(max_length=50,blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(
@@ -88,9 +90,6 @@ class Product(models.Model):
 
 class Productdetails(models.Model):
     productid=models.ForeignKey(Product, on_delete=models.CASCADE, related_name='pd_productid')
-    product_size=models.ForeignKey(Size, on_delete=models.CASCADE, related_name='pd_size',null=True,blank=True)
-    product_paper=models.ForeignKey(Paper, on_delete=models.CASCADE, related_name='pd_paper',null=True,blank=True)
-    product_gsm=models.ForeignKey(Gsm, on_delete=models.CASCADE, related_name='pd_size',null=True,blank=True)
     product_process=models.ForeignKey(Process, on_delete=models.CASCADE, related_name='pd_process',null=True,blank=True)
 
 
@@ -238,3 +237,32 @@ class Customer(models.Model):
             ("name", "primary_contact_no","deleted","company"),
         ]
 
+class Deliverymode(models.Model):
+    """Details of Deliverymode Entity"""
+    deliverymode = models.CharField(max_length=50)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='Deliverymode_Created_By_User', default=1)
+    modified_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='Deliverymode_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+    class Meta:
+        unique_together = [
+            ("deliverymode"),
+        ]
+
+class Communication(models.Model):
+    """Details of Communication Entity"""
+    name = models.CharField(max_length=50)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='Communication_Created_By_User', default=1)
+    modified_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='Communication_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+    class Meta:
+        unique_together = [
+            ("name"),
+        ]

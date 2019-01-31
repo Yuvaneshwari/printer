@@ -9,11 +9,14 @@ from printerapp.custom_views import product
 from printerapp.custom_views import role
 from printerapp.custom_views import employee
 from printerapp.custom_views import autocomplete
+from printerapp.custom_views import jobcard
 from printerapp.custom_views.master import customergroup
 from printerapp.custom_views.master import state
 from printerapp.custom_views.master import currency
 from printerapp.custom_views.master import company
 from printerapp.custom_views.master import customer
+from printerapp.custom_views.master import deliverymode
+from printerapp.custom_views.master import communication
 
 app_name = 'printerapp'
 urlpatterns = [	
@@ -60,8 +63,6 @@ urlpatterns = [
     url(r'^product/product_processdelete/(?P<id>[^/]*)/$', product.product_processdelete, name='product_processdelete'),
     url(r'^product/product_processupdate/$', product.product_processupdate, name='product_processupdate'),
 
-
-
     url(r'^customergroup/customergroup_create/$', customergroup.customergroup_create, name='customergroup_create'),
     url(r'^customergroup/customergroup_list/$', customergroup.customergroup_list, name='customergroup_list'),
     url(r'^customergroup/customergroup_view/(?P<id>[^/]*)/$', customergroup.customergroup_view, name='customergroup_view'),
@@ -91,5 +92,28 @@ urlpatterns = [
     url(r'^customer/customer_view/(?P<id>[^/]*)/$', customer.customer_view, name='customer_view'),
     url(r'^customer/customer_update/(?P<id>[^/]*)/$',customer.customer_update, name='customer_update'),
     url(r'^customer/customer_delete/(?P<id>[^/]*)/$', customer.customer_delete, name='customer_delete'),
+
+    url(r'^deliverymode/deliverymode_create/$', deliverymode.deliverymode_create, name='deliverymode_create'),
+    url(r'^deliverymode/deliverymode_list/$', deliverymode.deliverymode_list, name='deliverymode_list'),
+    url(r'^deliverymode/deliverymode_view/(?P<id>[^/]*)/$', deliverymode.deliverymode_view, name='deliverymode_view'),
+    url(r'^deliverymode/deliverymode_update/(?P<id>[^/]*)/$',deliverymode.deliverymode_update, name='deliverymode_update'),
+    url(r'^deliverymode/deliverymode_delete/(?P<id>[^/]*)/$', deliverymode.deliverymode_delete, name='deliverymode_delete'),
+
+    url(r'^communication/communication_create/$', communication.communication_create, name='communication_create'),
+    url(r'^communication/communication_list/$', communication.communication_list, name='communication_list'),
+    url(r'^communication/communication_view/(?P<id>[^/]*)/$', communication.communication_view, name='communication_view'),
+    url(r'^communication/communication_update/(?P<id>[^/]*)/$',communication.communication_update, name='communication_update'),
+    url(r'^communication/communication_delete/(?P<id>[^/]*)/$', communication.communication_delete, name='communication_delete'),
+
+    url(r'^jobcard/jobcard_create/$', jobcard.jobcard_create, name='jobcard_create'),
+    url(r'^jobcard/jobcard_list/$', jobcard.jobcard_list, name='jobcard_list'),
+    url(r'^jobcard/jobcard_view/(?P<id>[^/]*)/$', jobcard.jobcard_view, name='jobcard_view'),
+    url(r'^jobcard/jobcard_update/(?P<id>[^/]*)/$',jobcard.jobcard_update, name='jobcard_update'),
+    url(r'^jobcard/jobcard_delete/(?P<id>[^/]*)/$', jobcard.jobcard_delete, name='jobcard_delete'),
+    url(r'^autocomplete/productname/$', autocomplete.product_name_autocomplete, name='productname_auto'),
+    url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
+    url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
+
+
 
 ]

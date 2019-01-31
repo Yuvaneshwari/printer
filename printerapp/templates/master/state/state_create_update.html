@@ -3,17 +3,14 @@
 <html>
 <head>
 {% include "includes/css_file.html" %}
-
 </head>
 <body class="theme-red">
 {% include "includes/index.html" %}
 
-
-
-    <section class="content">
+<section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>GSM</h2>
+                <h2>STATE</h2>
             </div>
 
             <div class="row clearfix">
@@ -43,12 +40,12 @@
                         <div class="header">
                             {% if data.id %}
                                 {%if view_mode%}
-                                <h2>GSM View</h2>
+                                <h2>State View</h2>
                                 {%else%}
-                                <h2>GSM Update</h2>
+                                <h2>State Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>GSM Create</h2>
+                            <h2>State Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -56,29 +53,35 @@
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a></li>
+                                        <li><a href="/printerapp/state/state_list"><i class="material-icons">visibility</i></a></li>
                                        
                                     </ul>
                                 </li>
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post"name="gsmfrm" id="gsmfrm">{% csrf_token %}
-                                <label for="gsm_name">Enter GSM</label>
+                            <form method="post"name="statefrm" id="statefrm">{% csrf_token %}
+                                <label for="state">State Name</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="gsm_name" id="gsm_name" class="form-control" value="{{data.gsm_name}}"placeholder="Enter GSM">
+                                        <input type="text"name="state" id="state" class="form-control" value="{{data.state}}"placeholder="Enter State name">
                                     </div>
                                 </div>
                                 
+                                <label for="state_code">State Code</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="state_code" id="state_code" class="form-control" value="{{data.state_code}}"placeholder="Enter State code">
+                                    </div>
+                                </div>
                                
                         </div>
                     </div>
                     <div {% if view_mode %} style="display:none" {% endif%}>
                     {%if data.id %}
-                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
                     {%else%}
-                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
                     {%endif%}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
@@ -92,7 +95,6 @@
            
 </div>
 </section>
-<!-- Jquery Core Js -->
 
 </body>
 <script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
@@ -106,9 +108,9 @@ $(document).ready(function() {
     
 });
 function frmvalidation(){
-$("#gsmfrm").validate({
+$("#statefrm").validate({
   rules : {
-    gsm_name: {
+    state: {
       required : true,
       },
       submitHandler : function(form) {

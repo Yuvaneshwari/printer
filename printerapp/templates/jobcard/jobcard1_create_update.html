@@ -1,0 +1,229 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>JOB CARD</h2>
+        </div>
+  	<div class="row clearfix">
+        {% if  error_data  or  success_data%}
+        <div class="col-md-12">
+        <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+        {% if  error_data  %}
+        {{error_data.Error.message}} 
+                                    
+        {% for  error_details in error_data.Error.error_details %}
+        {{error_data..Error.error_details}}
+        </Br>
+        {{error_details.field}} -> {{error_details.message}}
+        {% endfor %}
+        {% endif %}
+        {% if  success_data %}
+        <strong>Well done!</strong> {{success_data}}.
+        {% endif %}
+        </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    {% if data.id %}
+                    {%if view_mode%}
+                    <h2>Customer View</h2>
+                    {%else%}
+                    <h2>Customer Update</h2>
+                    {%endif%}
+                    {%else%}
+                    <h2>Customer Create</h2>
+                    {%endif%}
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                            <li><a href="/printerapp/customer/customer_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body">
+                <form method="post" name="customerfrm" id="customerfrm">{% csrf_token %}
+                    
+                    <div class="col-md-4">
+                        <label for="size_name">Company Name</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter Customer Name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="primary_contact_no">Contact Person Name</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="contact_person" id="contact_person" class="form-control" value="{{data.contact_person}}"placeholder="Enter Contact Person">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <label for="primary_contact_no">Contact No</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="contact_no" id="contact_no" class="form-control" value="{{data.contact_no}}"placeholder="Enter Contact No">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="primary_contact_no">Secondary Contact No</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="sec_contact_no" id="sec_contact_no" class="form-control" value="{{data.sec_contact_no}}"placeholder="Enter Secondary Contact No">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="primary_contact_no">What's app Number</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="contact_no" id="contact_no" class="form-control" value="{{data.contact_no}}"placeholder="Enter What's app No">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="address">Address</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <textarea class="form-control" rows="4" name="address" id="address"placeholder="Enter your address">{{data.address}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label for="email_id">Email</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="email" name="email_id" id="email_id" class="form-control" value="{{data.email_id}}"placeholder="Enter your Email Id">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="order_date">Order Date</label>
+                        <div class="form-group">
+                            <div class="form-line" id="bs_datepicker_container">
+                                <input type="text" name="order_date" id="order_date" class="form-control" value="{{data.order_date}}"placeholder="Enter order date">
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                    
+                    <label for="deliverymode">Mode of Communication</label>
+                    <div class="col-md-4">
+                        {% drop_down_list tableName="printerapp_communication" show_field_name="name" store_field_name="id" as list_dorp %} 
+                        <select class="form-control show-tick" id="deliverymode" name="deliverymode">
+                        <option value="">-- Select communication mode-- </option>
+                        {% for list_val in list_dorp %}
+                        <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                   
+                       
+
+              
+                </div>
+            <div>
+        </div>
+    </div>            
+
+    <div id="productadd" name="productadd" class="productadd"></div>
+
+            <!-- #END# Custom Content -->
+
+
+    <div class="icon-button-demo" style="float: right">
+        <button type="button" name="productaddbtn" id="productaddbtn" class="btn btn-danger btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></button>
+    </div>
+
+    <br><br>           
+    <div {% if view_mode %} style="display:none" {% endif%}>
+        {%if data.id %}
+        <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+        {%else%}
+        <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+        {%endif%}
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+    </div>
+    </form>
+                  
+
+         
+
+   </div>
+</section>
+</body>
+
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script language="javascript" type="text/javascript">
+
+$(document).ready(function() {
+
+var count=1;
+ 
+$("#productaddbtn").click(function(){
+
+    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+    $.ajax({
+            type:'POST',
+            url:"../getproductadd/",
+            headers : {
+                "X-CSRFToken" : crf_token
+            },
+            success:function(data){
+            
+                productcal(data,count);
+            }
+
+        });
+count++;
+});
+
+function productcal(data,count){
+ 
+    var container = $('#productadd');
+    
+    container.append(data);
+   
+}
+
+
+});
+</script>    
+{% include "includes/file_js.html" %}
+
+</html>
+
+
+

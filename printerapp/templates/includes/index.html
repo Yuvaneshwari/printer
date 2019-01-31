@@ -265,7 +265,7 @@
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active">
-                        <a href="index.html">
+                        <a href="{% url 'printerapp:home' %}">
                             <i class="material-icons">home</i>
                             <span>Home</span>
                         </a>
@@ -294,6 +294,15 @@
                                 <a href="{% url 'printerapp:product_list' %}">Product</a>
                             </li>
                             <li>
+                                <a href="{% url 'printerapp:deliverymode_list' %}">Deliverymode</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'printerapp:communication_list' %}">Communication</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'printerapp:jobcard_create' %}">Job Card</a>
+                            </li>
+                            <li>
                                 <a href="{% url 'printerapp:state_list' %}">State</a>
                             </li>
                             <li>
@@ -308,34 +317,13 @@
                             <li>
                                 <a href="{% url 'printerapp:customer_list' %}">Customer</a>
                             </li>
+                        
+                            
                         </ul>
                     </li>
                     
                     
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">content_copy</i>
-                            <span>Example Pages</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                            <li>
-                                <a href="pages/examples/sign-in.html">Sign In</a>
-                            </li>
-                            <li>
-                                <a href="pages/examples/sign-up.html">Sign Up</a>
-                            </li>
-                            <li>
-                                <a href="pages/examples/blank.html">Blank Page</a>
-                            </li>
-                            <li>
-                                <a href="pages/examples/404.html">404 - Not Found</a>
-                            </li>
-                            <li>
-                                <a href="pages/examples/500.html">500 - Server Error</a>
-                            </li>
-                        </ul>
-                    </li>
+                    
 
             </div>
             <!-- #Menu -->

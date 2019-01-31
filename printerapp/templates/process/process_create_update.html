@@ -71,22 +71,13 @@
                                     </div>
 
                                 </div>
-                                
-                               <label for="ig_checkbox">Is DeliveryTime</label>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-addon">
-                                        <input type="checkbox" class="filled-in" id="ig_checkbox"name="ig_checkbox">
-                                        <label for="ig_checkbox">Yes</label>
-                                        </span>
-                                        <div class="form-line">
-                                        <input type="text" name="is_deliveryTime" name="is_deliveryTime"class="form-control">
-                                        </div>
-                                        
-                                    </div>
-                                    </div>
+
+                                <div class="demo-checkbox">
+                                   <input type="checkbox" id="md_checkbox_29" name="md_checkbox_29" class="filled-in chk-col-teal"/>
+                                    <label for="md_checkbox_29">Delivery Time Required?</label>             
                                 </div>
+
+                              
 
                         </div>
                     </div>
@@ -118,18 +109,21 @@
 
 <script>
 $(document).ready(function() {
+    $('input[type="checkbox"]').click(function(){
+        if($(this).prop("checked") == true){
+            $(this).val("1");
+            console.log("yes")
+        }
+        else if($(this).prop("checked") == false){
+            $(this).val("0");
+        }
+    });      
     $("#submitfrm").click(function(){
-       $('input[type="checkbox"]').click(function(){
-            if($(this).prop("checked") == true){
-                $(this).val("1");
-            }
-            else if($(this).prop("checked") == false){
-                $(this).val("0");
-            }
-    });
         frmvalidation();
+    });
+       
         
-    }); 
+    
 });
 function frmvalidation(){
 $("#processfrm").validate({
