@@ -124,6 +124,7 @@
 
 <script type="text/javascript">
 var jQuery_3_2_1 = jQuery.noConflict();
+
 jQuery_3_2_1(document).ready(function() {
     var counter = 2;
     var processidarray=[];
@@ -164,7 +165,7 @@ jQuery_3_2_1(document).ready(function() {
 }); 
 jQuery_3_2_1("#submitfrm").click(function(){
 
- for(i=0; i<counter-1; i++){
+    for(i=0; i<counter-1; i++){
   console.log(processidarray[i]);
   }
   var crf_token = jQuery_3_2_1('[name="csrfmiddlewaretoken"]').attr('value');
