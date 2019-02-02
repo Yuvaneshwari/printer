@@ -103,7 +103,7 @@
                         <label for="primary_contact_no">What's app Number</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text"name="contact_no" id="contact_no" class="form-control" value="{{data.contact_no}}"placeholder="Enter What's app No">
+                                <input type="text"name="whats_no" id="whats_no" class="form-control" value="{{data.whats_no}}"placeholder="Enter What's app No">
                             </div>
                         </div>
                     </div>
@@ -137,10 +137,10 @@
 
                   
                     
-                    <label for="deliverymode">Mode of Communication</label>
+                    <label for="communicationmode">Mode of Communication</label>
                     <div class="col-md-4">
                         {% drop_down_list tableName="printerapp_communication" show_field_name="name" store_field_name="id" as list_dorp %} 
-                        <select class="form-control show-tick" id="deliverymode" name="deliverymode">
+                        <select class="form-control show-tick" id="communicationmode" name="communicationmode">
                         <option value="">-- Select communication mode-- </option>
                         {% for list_val in list_dorp %}
                         <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
@@ -160,7 +160,7 @@
 
             <!-- #END# Custom Content -->
 
-
+    <div id="resultdiv" name="resultdiv"></div>        
     <div class="icon-button-demo" style="float: right">
         <button type="button" name="productaddbtn" id="productaddbtn" class="btn btn-danger btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></button>
     </div>
@@ -174,56 +174,245 @@
         {%endif%}
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+
+        <button type="button" name="sub" id="sub"class="btn btn-primary m-t-15 waves-effect">check</button> 
+        
     </div>
     </form>
                   
 
-         
+        
 
-   </div>
+</div>
 </section>
 </body>
 
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
 <script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 
-$(document).ready(function() {
+    var count=1;
+    var jQuery_3_2_1 = jQuery.noConflict();
+    var productlist=[];
+    var paperlist=[];
+    var sizelist=[];
+    var gsmlist=[];
+    var sizeselect=[];
+    var custom_length_list=[];
+    var custom_width_list=[];
+    var sideselect=[];
+    var sides_list=[];
+    var quantitylist=[];
+    var partial_qty_list=[];
+    var partial_datetime_list=[];
+    var deliverymodelist=[];
+    var delivery_desc_list=[];
+    var delivery_datetime_list=[];
+    var partialdelivery_list=[];
 
-var count=1;
+    var result=[];
+
+jQuery_3_2_1(document).ready(function() {
+    
+    console.log("ready");
  
-$("#productaddbtn").click(function(){
 
+    $("#productaddbtn").click(function(){
+    console.log(count);
+    data={"count":count};
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
     $.ajax({
             type:'POST',
             url:"../getproductadd/",
+            data:data,
             headers : {
                 "X-CSRFToken" : crf_token
             },
             success:function(data){
-            
-                productcal(data,count);
+                $('#productadd').append(data);
             }
 
         });
-count++;
-});
+    count++;
+    }); 
 
-function productcal(data,count){
- 
-    var container = $('#productadd');
     
-    container.append(data);
-   
-}
-
 
 });
-</script>    
+
+
+
+
+</script>
+
+
+<script type="text/javascript">
+
+jQuery_3_2_1(document).ready(function() {
+
+
+    jQuery_3_2_1("#product_name").autocomplete({
+    source : "/printerapp/autocomplete/productname/",
+    select : function(event, ui) { //item selected
+    getid=ui.item.id;  
+      //productidarray.push(ui.item.id);
+      //jQuery_3_2_1("#product_name").val(ui.item.value);
+    calfun(getid);
+    },
+    minLength : 2,
+    });
+
+
+    $("#sub").click(function(){
+        
+        $.each($('[id^=product_name'), function (i, item) {
+        var productname = $(this).val();
+        productlist.push(productname);
+        //alert(productlist);
+        });
+
+        $.each($('[id^=papertype'), function (i, item) {
+        var papertype = $(this).val();
+        paperlist.push(papertype);
+        });
+
+        $.each($('[id^=gsm'), function (i, item) {
+        var gsm = $(this).val();
+        gsmlist.push(gsm);
+        })
+
+        $.each($('[id^=size'), function (i, item) {
+        var size = $(this).val();
+        sizelist.push(size);
+        })
+
+        $.each($('[id^=radio_3'), function (i, item) {
+        
+        if($(this).prop("checked") == true){
+            $(this).val("1");
+            sizeselect=$(this).val();    
+        }
+        })
+
+        $.each($('[id^=radio_4'), function (i, item) {
+        
+        if($(this).prop("checked") == true){
+            $(this).val("2");
+            sizeselect=$(this).val();    
+            
+        }
+        })
+
+        if(sizeselect==1){
+            sizeselect="Predefined";
+        }
+        else{
+            sizeselect="Custom";
+        }
+
+        //alert(sizeselect);
+
+        $.each($('[id^=custom_length'), function (i, item) {
+        var custom_length = $(this).val();
+        custom_length_list.push(custom_length);
+        })
+
+        $.each($('[id^=custom_width'), function (i, item) {
+        var custom_width = $(this).val();
+        custom_width_list.push(custom_width);
+        })
+
+        $.each($('[id^=radio_1'), function (i, item) {
+        
+        if($(this).prop("checked") == true){
+            $(this).val("1");
+            sideselect=$(this).val();    
+        }
+        })
+
+        $.each($('[id^=radio_2'), function (i, item) {
+        
+        if($(this).prop("checked") == true){
+            $(this).val("2");
+            sideselect=$(this).val();    
+            
+        }
+        })
+
+        if(sideselect==1){
+            sideselect="singleside";
+        }
+        else{
+            sideselect="doubleside";
+        }
+
+        //alert(sideselect);
+
+        $.each($('[id^=quantity'), function (i, item) {
+        var quantity = $(this).val();
+        quantitylist.push(quantity);
+        })
+
+        $.each($('[id^=partialdelivery'), function (i, item) {
+        if($(this).prop("checked") == true){
+            $(this).val("1");
+            $('#partialdeliverydiv'+i).show();
+        }
+        else if($(this).prop("checked") == false){
+            $(this).val("0");
+            $('#partialdeliverydiv'+i).hide();
+        }
+        var partialdelivery = $(this).val();
+        partialdelivery_list.push(partialdelivery);
+
+        })
+        //alert(partialdelivery_list);
+
+        $.each($('[id^=partial_quantity'), function (i, item) {
+        var partial_quantity = $(this).val();
+        partial_qty_list.push(partial_quantity);
+        })
+
+        $.each($('[id^=partial_datetime'), function (i, item) {
+        var partial_datetime = $(this).val();
+        partial_datetime_list.push(partial_datetime);
+        })
+
+        $.each($('[id^=deliverymode'), function (i, item) {
+        var deliverymode = $(this).val();
+        deliverymodelist.push(deliverymode);
+        })
+
+        $.each($('[id^=delivery_description'), function (i, item) {
+        var delivery_description = $(this).val();
+        delivery_desc_list.push(delivery_description);
+        })
+
+        $.each($('[id^=delivery_datetime'), function (i, item) {
+        var delivery_datetime = $(this).val();
+        delivery_datetime_list.push(delivery_datetime);
+        })
+
+        for(i=0;i<count-1;i++){
+
+            result[i] = {"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Custom length":custom_length_list[i],"Custom  Width":custom_width_list[i],"Quantity":quantitylist[i],"Partial Qty":partial_qty_list[i],"Partial DateTime":partial_datetime_list[i],"Delivery Mode":deliverymodelist[i],"Deleivery Desc":delivery_desc_list[i],"Deleivery DateTime":delivery_datetime_list[i]};
+        }
+
+        for(i=0;i<count-1;i++){
+            
+            $.each(result[i], function(key, value){
+            $("#resultdiv").append(key + ": " + value + '<br>');
+            });
+
+        }
+
+    });
+
+});
+</script>
 {% include "includes/file_js.html" %}
 
 </html>
-
-
-

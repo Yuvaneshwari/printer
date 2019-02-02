@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from printerapp.models import *
 from django.template.loader import render_to_string 
-from django.template.loader import render_to_string 
 from printerapp.serializers.serializers import *
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
@@ -137,10 +136,10 @@ def getprocesslist(request):
 @api_view(['GET','PUT','POST'])
 def getproductadd(request):
     html=None
-    task_obj=[]
+    count=request.POST.get('count')
+    print(count)
     if request.is_ajax():
-        print("entered")
-        html = render_to_string("jobcard/jobcard1_add.html",{'data': ''})
+        html = render_to_string("jobcard/jobcard1_add.html",{'data': count})
         return HttpResponse(html)
         
 

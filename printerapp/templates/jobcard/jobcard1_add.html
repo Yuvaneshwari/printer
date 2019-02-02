@@ -1,192 +1,255 @@
 {% load static %}{% load rest_framework %}
 {% load common_function %}
-<html>
+
 <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
-                <div class="header">
-                    <h2>PRODUCT CARD</h2>
-                    <ul class="header-dropdown m-r--5">
-                        <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6">
-                            <div class="thumbnail">
-                                <div class="caption">
-                                
-                                <label for="Paper">Paper Type</label>
-                                <div class="form-group">
-                                {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
-                                    <div class="col-md-12">
-                                    <select class="form-control show-tick" id="demoSelect2" name="demoSelect2">
-                                    <option value="">-- Select Paper Type-- </option>   
-                                    {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
-                                    {% endfor %}
-                                    </select>
-                                    </div>        
-                                </div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-danger">
 
-                                <label for="GSM">GSM</label>
-                                <div class="form-group">
-                                {% drop_down_list tableName="printerapp_gsm" show_field_name="gsm_name" store_field_name="id" as list_drop %}
-                                    <div class="col-md-12">
-                                    <select class="form-control show-tick" id="demoSelect3" name="demoSelect3">
-                                    <option value="">-- Select GSM -- </option>    
-                                    {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
-                                    {% endfor %}
-                                    </select>
-                                    </div>
-                                </div>
+        <div class="panel-heading" role="tab" id="headingOne_1">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">
+                PRODUCT CARD {{data}}
+                </a>
+            </h4>
+        </div>
 
-                                <label for="size">Size</label>
-                                <div class="form-group">
-                                 {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
-                                    <div class="col-md-12">
-                                    <select class="form-control show-tick" id="demoSelect1" name="demoSelect1">
-                                    <option value="">-- Select Size -- </option>
-                                    {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
-                                    {% endfor %}
-                                    </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="demo-radio-button">
-                                
-                                <input name="group1" type="radio" id="radio_3" class="with-gap" checked="true" />
-                                <label for="radio_3">Predefined</label>
-                                <input name="group1" type="radio" id="radio_4" class="with-gap" />
-                                <label for="radio_4">Custom</label>
-                               
-                                </div>
-                                <br>
-
-                                <div id="customsize" hidden="true">
-                                <div class="col-md-6">
-                                <label for="custom_length">1) Length (inches) </label>
-                                    <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text"name="custom_length" id="custom_length" class="form-control" value=""placeholder="Enter Custom Length">
-                                    </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                <label for="custom_width">2) Width (inches) </label>
-                                    <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text"name="custom_width" id="custom_width" class="form-control" value=""placeholder="Enter Custom Width">
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
-
-                                <label for="Quantity">Quantity</label>
-                                <div class="form-group">
-                                <div class="form-line">
-                                    <input type="text"name="quantity" id="quantity" class="form-control" value=""placeholder="Enter Total Quantity">
-                                </div>
-                                </div>
-
-
-                                <div class="demo-checkbox">
-                                   <input type="checkbox" id="md_checkbox_29" class="filled-in chk-col-teal"/>
-                                    <label for="md_checkbox_29">Is Partial Delivery Required</label>             
-                                </div>
-                                <br>
-
-                                <div id="partialdelivery" hidden="true">
-                                <div class="col-md-5">
-                                <label for="partial_quantity">1)Partial Quantity</label>
-                                    <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text"name="partial_quantity" id="partial_quantity" class="form-control" value=""placeholder="Enter Total Quantity">
-                                    </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-7">
-                                <label for="partial_datetime">2) Date and Time</label>
-                                    <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text" name="partial_datetime" id="partial_datetime" class="datetimepicker form-control" value=""placeholder="Enter Date and Time">
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
-
-                                <label for="Expected_delivery">Expected Delivery  Date and Time</label>
-                                <div class="form-group">
-                                <div class="form-line">
-                                    <input type="text" name="delivery_datetime" id="delivery_datetime" class="datetimepicker form-control" value="" placeholder="Enter Expected Delivery  Date and Time">
-                                </div>
-                                </div>
-
-                    
-
-
-                                <label for="deliverymode">Delivery Mode</label>
-                                <div>
-                                {% drop_down_list tableName="printerapp_deliverymode" show_field_name="deliverymode" store_field_name="id" as list_dorp %} 
-                                    <select class="form-control show-tick" id="deliverymode" name="deliverymode">
-                                    <option value="">-- Select Deliverymode-- </option>
-                                    {% for list_val in list_dorp %}
-                                    <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
-                                
-                                <br>
-                                <label for="delivery_description">Delivery Description</label>
-                            
-                                <div class="form-group">
-                                <div class="form-line">
-                                    <textarea class="form-control" rows="4" name="delivery_description" id="delivery_description" placeholder="Enter delivery desccription">{{data.delivery_description}}</textarea>
-                                </div>
-                                </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-                             
-                        <div class="col-sm-6 col-md-6">
-                            <div class="thumbnail">
-                                <div class="caption">
+        <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
+        <div class="panel-body">
+                        
+            <div class="col-sm-4 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption">
                                     
-                                    <label for="product_name">Product Name</label>
-                                    <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text"name="product_name" id="product_name" class="form-control" value="{{data.product_name}}"placeholder="Enter Product name">
-                                    </div>
-                                    </div>
+                        <label for="product_name">Product Name</label>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="product_name[]" id="product_name[]{{data}}" class="form-control" value="{{data.product_name}}"placeholder="Enter Product name">
+                            </div>
+                            </div>
 
-                                    <label for="Process">Process :</label>
-                                    <div id="processlist" class="demo-checkbox"></div>
+                            <label for="Process">Process :</label>
+                            <div id="processlist" class="demo-checkbox"></div>
   
                                 
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-8 col-md-8">
+                <div class="thumbnail">
+                    <div class="caption">
+                                
+                    <div class="col-md-6">
+                        <label for="Paper">Paper Type</label>
+                        <div class="form-group">
+                        {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
+                            <div class="col-md-12">
+                            <select class="form-control show-tick" id="papertype[]{{data}}" name="papertype[]">
+                                <option value="">-- Select Paper Type-- </option>   
+                                {% for list_drop_val in list_drop %}
+                                <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                        </div> 
+
+                        <label for="GSM">GSM</label>
+                        <div class="form-group">
+                        {% drop_down_list tableName="printerapp_gsm" show_field_name="gsm_name" store_field_name="id" as list_drop %}
+                            <div class="col-md-12">
+                            <select class="form-control show-tick" id="gsm[]{{data}}" name="gsm[]">
+                                <option value="">-- Select GSM -- </option>    
+                                {% for list_drop_val in list_drop %}
+                                <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                        </div>       
+
+                    
+                        <label for="size">Size</label>
+                        <div class="form-group">
+                            {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
+                            <div class="col-md-12">
+                                <select class="form-control show-tick" id="size[]{{data}}" name="size">
+                                <option value="">-- Select Size -- </option>
+                                {% for list_drop_val in list_drop %}
+                                <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                               
+                                                 
+                        <div class="demo-radio-button">
+                            <div class="col-md-6">
+                            <input name="group3" type="radio" id="radio_3[]{{data}}" class="with-gap" checked="true" />
+                            <label for="radio_3[]{{data}}">Predefined</label>
+                            </div>
+                            <div class="col-md-6">
+                            <input name="group3" type="radio" id="radio_4[]{{data}}" class="with-gap" />
+                            <label for="radio_4[]{{data}}">Custom</label>
+                            </div>
+                        </div>
+                                
+
+                        <div id="customsize">
+                            <div class="col-md-6">
+                            <label for="custom_length">1.Length(inches)</label>
+                                <div class="form-group">
+                                <div class="form-line">
+                                <input type="text"name="custom_length[]" id="custom_length[]{{data}}" class="form-control" value=""placeholder="Length">
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                            <label for="custom_width">2.Width(inches)</label>
+                                <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text"name="custom_width[]" id="custom_width[]{{data}}" class="form-control" value=""placeholder="Width">
+                                </div>
                                 </div>
                             </div>
                         </div>
+
+                        <label for="Select">Select</label>    
+                        <div class="demo-radio-button">
+                            <div class="col-md-6">
+                            <input name="group2" type="radio" id="radio_1[]{{data}}" class="with-gap" checked="true" />
+                            <label for="radio_1[]{{data}}">Single Side</label>
+                            </div>
+                            <div class="col-md-6">
+                            <input name="group2" type="radio" id="radio_2[]{{data}}" class="with-gap" />
+                            <label for="radio_2[]{{data}}">Double Side</label>
+                            </div>
+                        </div>
+
+
+                        <label for="Jobtype">Job Type</label>    
+                            <div class="demo-radio-button">
+                                    <div class="col-md-6">
+                                    <input name="group1" type="radio" id="radio_5" class="with-gap" checked="true" />
+                                    <label for="radio_5">Invoice</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <input name="group1" type="radio" id="radio_6" class="with-gap" />
+                                    <label for="radio_6">Job Type2</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <input name="group1" type="radio" id="radio_7" class="with-gap" />
+                                    <label for="radio_7">Job Type3</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <input name="group1" type="radio" id="radio_8" class="with-gap" />
+                                    <label for="radio_8">Job Type4</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <input name="group1" type="radio" id="radio_9" class="with-gap" />
+                                    <label for="radio_9">Job Type5</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <input name="group1" type="radio" id="radio_10" class="with-gap" />
+                                    <label for="radio_10">Job Type6</label>
+                                    </div>
+                                    
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                            <label for="Quantity">Quantity</label>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" name="quantity[]" id="quantity[]{{data}}" class="form-control" value=""placeholder="Quantity">
+                            </div>
+                            </div>
+                            </div>
+
+                            <br>
                             
+                            <div class="col-md-12">
+                            <div class="demo-checkbox">
+                                <input type="checkbox" id="partialdelivery[]{{data}}" name="partialdelivery[]" class="filled-in chk-col-teal"/>
+                                <label for="partialdelivery[]{{data}}">Is Partial Delivery Required</label>             
+                            </div>
+                            </div>
+
+                        
+                            <div id="partialdeliverydiv[]{{data}}">
+                                <div class="col-md-6">
+                                <label for="partial_quantity">1.Quantity</label>
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="partial_quantity[]" id="partial_quantity[]{{data}}" class="form-control" value=""placeholder="Partial Qty">
+                                    </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                <label for="partial_datetime">2.Date & Time</label>
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" name="partial_datetime[]" id="partial_datetime[]{{data}}" class="datetimepicker form-control" value=""placeholder="Date and Time">
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                      
+                            <div class="col-md-12">
+                            <label for="deliverymode">Delivery Mode</label>
+                            <div class="form-group">
+                            {% drop_down_list tableName="printerapp_deliverymode" show_field_name="deliverymode" store_field_name="id" as list_dorp %} 
+                                
+                                <select class="form-control show-tick" id="deliverymode[]{{data}}" name="deliverymode[]">
+                                <option value="">-- Select Deliverymode-- </option>
+                                {% for list_val in list_dorp %}
+                                <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
+                                {% endfor %}
+                                </select>
+                                </div>
+                            </div>
+                       
+                            <div class="col-md-12">
+                            <label for="delivery_description">Delivery Description</label>
+                            
+                                <div class="form-group">
+                                <div class="form-line">
+                                    <textarea class="form-control" rows="4" name="delivery_description[]" id="delivery_description[]{{data}}" placeholder="Enter delivery desccription">{{data.delivery_description}}</textarea>
+                                </div>
+                                </div>
+                            </div>
+                            
+                            <label for="Expected_delivery">Expected Delivery  Date and Time</label>
+                            <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" name="delivery_datetime[]" id="delivery_datetime[]{{data}}" class="datetimepicker form-control" value="" placeholder="Enter Expected Delivery  Date and Time">
+                            </div>
+                            </div>
+                                
+                    </div>
+                    
+                            <label for="Exlivery"></label>
+                            <div class="form-group">
+                            <div class="form-line">
+                                
+                            </div>
+                            </div>
+                    
 
                     </div>
                 </div>
-
             </div>
-        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>               
     </div>
-</html>
+</div>
+
