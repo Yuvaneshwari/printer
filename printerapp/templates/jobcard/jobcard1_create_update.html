@@ -4,7 +4,9 @@
 <head>
 
 {% include "includes/css_file.html" %}
-
+<style type="text/css">
+.container { border:2px solid #ccc; width:250px; height: 210px; overflow-y: scroll;
+</style>
 </head>
 <body class="theme-red">
 {% include "includes/index.html" %}
@@ -62,7 +64,7 @@
                 <div class="body">
                 <form method="post" name="customerfrm" id="customerfrm">{% csrf_token %}
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="size_name">Company Name</label>
                         <div class="form-group">
                             <div class="form-line">
@@ -71,7 +73,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="primary_contact_no">Contact Person Name</label>
                         <div class="form-group">
                             <div class="form-line">
@@ -81,7 +83,7 @@
                     </div>
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="primary_contact_no">Contact No</label>
                         <div class="form-group">
                             <div class="form-line">
@@ -90,43 +92,36 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="primary_contact_no">Secondary Contact No</label>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="text"name="sec_contact_no" id="sec_contact_no" class="form-control" value="{{data.sec_contact_no}}"placeholder="Enter Secondary Contact No">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="primary_contact_no">What's app Number</label>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="text"name="whats_no" id="whats_no" class="form-control" value="{{data.whats_no}}"placeholder="Enter What's app No">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="address">Address</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <textarea class="form-control" rows="4" name="address" id="address"placeholder="Enter your address">{{data.address}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-            
-                    <div class="col-md-4">
-                        <label for="email_id">Email</label>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="email" name="email_id" id="email_id" class="form-control" value="{{data.email_id}}"placeholder="Enter your Email Id">
+                                <textarea rows="2" class="form-control" name="address" id="address"placeholder="Enter your address">{{data.address}}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-2">
+                        <label for="primary_contact_no">What's app</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="whats_no" id="whats_no" class="form-control" value="{{data.whats_no}}"placeholder="What's app No">
+                            </div>
+                        </div>
+                    </div>
+
+                    
+            
+                    <div class="col-md-2">
+                        <label for="primary_contact_no">Secondary No</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text"name="sec_contact_no" id="sec_contact_no" class="form-control" value="{{data.sec_contact_no}}"placeholder="Contact No">
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="col-md-2">
                         <label for="order_date">Order Date</label>
                         <div class="form-group">
                             <div class="form-line" id="bs_datepicker_container">
@@ -135,21 +130,28 @@
                         </div>
                     </div>
 
-                  
-                    
-                    <label for="communicationmode">Mode of Communication</label>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label for="email_id">Email</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="email" name="email_id" id="email_id" class="form-control" value="{{data.email_id}}"placeholder="Enter your Email Id">
+                            </div>
+                        </div>
+                    </div>
+
+                            
+                    <label for="communicationmode">Communication</label>
+                    <div class="col-md-3">
                         {% drop_down_list tableName="printerapp_communication" show_field_name="name" store_field_name="id" as list_dorp %} 
                         <select class="form-control show-tick" id="communicationmode" name="communicationmode">
-                        <option value="">-- Select communication mode-- </option>
+                        <option value="">-- Communication mode -- </option>
                         {% for list_val in list_dorp %}
                         <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
                         {% endfor %}
                         </select>
                     </div>
                    
-                       
-
+                   
               
                 </div>
             <div>
