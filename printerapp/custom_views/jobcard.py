@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from printerapp.models import *
 from django.template.loader import render_to_string 
 from printerapp.serializers.serializers import *
@@ -12,20 +13,121 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import  settings
+from datetime import datetime
+
 row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
+
 
 @api_view(['GET','POST'])
 def jobcard_create(request):
     if request.method=='GET':
-        return Response({'data':'','module':'Productcard'},template_name='jobcard/jobcard1_create_update.html')
+        return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')
     else:
-        print(request.data)
-        serializer=ProcessSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save();
+        orderdate=request.POST.get("order_date")
+        order_date=datetime.strptime(orderdate,"%m/%d/%Y").date()
+        
+        if not request.POST.get('customerid'):
+            customer_name=request.POST.get("name")
+            contact_person=request.POST.get("contact_person")
+            primary_contact_no=request.POST.get("contact_no")
+            whatsup_no=request.POST.get("whatsup_no")
+            email_id=request.POST.get("email_id")
+            secondary_contact_no=request.POST.get("sec_contact_no")
+            address=request.POST.get("address")
+            communication_mode=request.POST.get("communicationmode")
+            
+            data={
+            "customer_name":customer_name,
+            "contact_person":contact_person,
+            "primary_contact_no":primary_contact_no,
+            "whatsup_no":whatsup_no,
+            "email_id":email_id,
+            "secondary_contact_no":secondary_contact_no,
+            "address":address,
+            "communication_mode":communication_mode
+            }
+            customerserializer=CustomerdetailsSerializer(data=data)
+            if customerserializer.is_valid():
+                getcustomerid=customerserializer.save();
+                getcustid=getcustomerid.id
+        else:
+            getcustid=request.POST.get('customerid')
+            data={"customerid":getcustid,"order_date":order_date}
+        jobcardserializer=JobcardSerializer(data=data)
+        if jobcardserializer.is_valid():
+            getjobcardid=jobcardserializer.save();
+            jobcardid=getjobcardid.id
+            print(jobcardid)
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='productcard/product_create_update.html')
-            return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
+                return Response({"success_data": "Data added successfully","jobcardid": jobcardid},template_name='jobcard/jobcard1_create_update.html')
+            return Response({"data": jobcardid,"jobcardid":jobcardid}, status=status.HTTP_201_CREATED)
+        else:
+            error_details = []
+            for key in serializer.errors.keys():
+                error_details.append({"field": key, "message": serializer.errors[key][0]})
+            data = {
+                    "Error": {
+                    "status": 400,
+                    "message": "Your submitted data was not valid - please correct the below errors",
+                    "error_details": error_details
+                    }
+                    }
+            if request.accepted_renderer.format=='html':
+                return Response({"error_data": data},template_name='jobcard/jobcard1_create_update.html')
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET','POST'])
+def jobcard_product_create(request):
+    if request.method=='GET':
+        return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')
+    else:
+        jobcardid=request.POST.get("id")
+        pname=request.POST.get("Productname")
+        paper=request.POST.get("Paper")
+        gsm=request.POST.get("GSM")
+        size=request.POST.get("Size")
+        sizeselect=request.POST.get("Sizeselect")
+        squareinch=request.POST.get("squareinch")
+        quantity=request.POST.get("Quantity")
+        partialdelivery=request.POST.get("PartialDelivery")
+        partial_qty=request.POST.get("Partialqty")
+        partial_datetime=request.POST.get("PartialDateTime")
+        side=request.POST.get("Sides")
+        jobtype=request.POST.get("Jobtype")
+        delivery_mode=request.POST.get("Deliverymode")
+        delivery_desc=request.POST.get("DeleiveryDesc")
+        delivery_datetime=request.POST.get("DeleiveryDateTime")
+        #productcardcount=request.POST.get("count")
+
+        data={
+        "productcard":pname,
+        "size_custom":sizeselect,
+        "squareinch":squareinch,
+        "quantity":quantity,
+        "partialdelivery":partialdelivery,
+        "partial_qty":partial_qty,
+        "partial_datetime":partial_datetime,
+        "side":side,
+        "delivery_mode":delivery_mode,
+        "delivery_desc":delivery_desc,
+        "delivery_datetime":delivery_datetime,
+        "gsm":gsm,
+        "jobcardid":jobcardid,
+        "jobtype":jobtype,
+        "paper":paper,
+        "size":size,
+        }
+
+
+        jobcard_productserializer=Jobcard_ProductSerializer(data=data)
+        if jobcard_productserializer.is_valid():
+            getjobcardproductid=jobcard_productserializer.save();
+            jobcard_product_id=getjobcardproductid.id
+            if request.accepted_renderer.format=='html':
+                return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id},template_name='jobcard/jobcard1_create_update.html')
+            return Response({"data": '','jobcard_product_id':jobcard_product_id}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
             for key in serializer.errors.keys():
@@ -38,8 +140,37 @@ def jobcard_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='productcard/product_create_update.html')
+                return Response({"error_data": data},template_name='jobcard/jobcard1_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','POST'])
+def jobcard_product_process_create(request):
+    if request.method=='GET':
+        return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')
+    else:
+        jobcard_product_id=request.POST.get("id")
+        processlist_id=request.POST.getlist("processlist_id[]")
+        process_ids=list(map(int,processlist_id))
+        print(jobcard_product_id)
+        print(process_ids)
+        storeproduct_proccess(jobcard_product_id,process_ids)
+        if request.accepted_renderer.format=='html':
+            return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id},template_name='jobcard/jobcard1_create_update.html')
+        return Response({"data": '','jobcard_product_id':jobcard_product_id}, status=status.HTTP_201_CREATED)
+
+    return Response({'data':'success'})
+    
+
+def storeproduct_proccess(jobcard_product_id,process_ids):
+    for x in process_ids:
+        data ={
+            "processid":x,
+            "jobcard_productid":jobcard_product_id,
+        }
+        Product_process_serializer = Jobcard_Product_ProcessSerializer(data=data)
+        if Product_process_serializer.is_valid():
+            Product_process_serializer.save();
 
 
 @api_view(['GET'])

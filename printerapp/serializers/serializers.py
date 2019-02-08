@@ -87,3 +87,28 @@ class CommunicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Communication
         fields = "__all__"
+
+class PaperpricingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Paperpricing
+        fields = "__all__"
+
+class CustomerdetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customerdetails
+        fields = "__all__"
+
+class JobcardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jobcard
+        fields = "__all__"
+
+class Jobcard_ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jobcard_Product
+        fields = "__all__"
+
+class Jobcard_Product_ProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jobcard_Product_Process
+        fields = "__all__"

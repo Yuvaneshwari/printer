@@ -266,3 +266,125 @@ class Communication(models.Model):
         unique_together = [
             ("name"),
         ]
+
+class Jobtype(models.Model):
+    """Details of Paper Entity"""
+    jobtype_name = models.CharField(max_length=50, blank=False, null=False)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='Jobtype_Created_By_User', default=1)
+    modified_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='Jobtype_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+    class Meta:
+        unique_together = [
+            ("jobtype_name"),
+        ]
+
+class Paperpricing(models.Model):
+    """Details of Paperpricing Entity"""
+    papertype = models.ForeignKey(Paper, on_delete=models.CASCADE, related_name='papertype', default=1)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='size', default=1)
+    gsm =models.ForeignKey(Gsm, on_delete=models.CASCADE, related_name='gsm', default=1)
+    squareinch_from=models.CharField(max_length=50)
+    squareinch_to=models.CharField(max_length=50)
+    quality_from=models.CharField(max_length=50)
+    quality_to=models.CharField(max_length=50)
+    price=models.CharField(max_length=50)
+    deleted = models.BooleanField(default=False)
+
+class Processpricing(models.Model):
+    """Details of Processpricing Entity"""
+    process = models.ForeignKey(Process, on_delete=models.CASCADE, related_name='process', default=1)
+    jobtype = models.ForeignKey(Jobtype, on_delete=models.CASCADE, related_name='jobtype', default=1)
+    pricingtype =models.CharField(max_length=50)
+    deleted = models.BooleanField(default=False)
+
+class Bytime(models.Model):
+    Processpricing = models.ForeignKey(Processpricing, on_delete=models.CASCADE, related_name='processpricing_bt', default=1)
+    squareinch_from=models.CharField(max_length=50,blank=True, null=True)
+    squareinch_to=models.CharField(max_length=50,blank=True, null=True)
+    time_from=models.CharField(max_length=50,blank=True, null=True)
+    time_to=models.CharField(max_length=50,blank=True, null=True)
+    price_time=models.CharField(max_length=50,blank=True, null=True)
+    deleted = models.BooleanField(default=False)
+
+class Byquantity(models.Model):    
+    Processpricing = models.ForeignKey(Processpricing, on_delete=models.CASCADE, related_name='processpricing_bq', default=1)
+    size_qty = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='size_quantity', default=1)
+    quality_from=models.CharField(max_length=50,blank=True, null=True)
+    quality_to=models.CharField(max_length=50,blank=True, null=True)
+    price_qty=models.CharField(max_length=50,blank=True, null=True)
+    deleted = models.BooleanField(default=False)
+
+class Bynopages(models.Model):
+    Processpricing = models.ForeignKey(Processpricing, on_delete=models.CASCADE, related_name='processpricing_bp', default=1)
+    size_qty = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='size_nopages', default=1)
+    nopages=models.CharField(max_length=50,blank=True, null=True)
+    price_nopages=models.CharField(max_length=50,blank=True, null=True)
+    deleted = models.BooleanField(default=False)
+
+class Customerdetails(models.Model):
+    """docstring for Customerdetails"""
+    customer_name = models.CharField(max_length=100)
+    contact_person = models.CharField(max_length=50,blank=True, null=True)
+    primary_contact_no = models.CharField(max_length=50,blank=True, null=True)
+    address = models.CharField(max_length=200,blank=True, null=True)
+    email_id = models.EmailField(blank=True, null=True)
+    whatsup_no = models.CharField(max_length=50,blank=True, null=True)
+    secondary_contact_no = models.CharField(max_length=50,blank=True, null=True)
+    communication_mode=models.ForeignKey(Communication, on_delete=models.CASCADE, related_name='communication_mode_customer')
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Customerdetails_Created_By_User', default=1)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Customerdetails_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+
+
+class Jobcard(models.Model):
+    """Details of Jobcard Entity"""
+    jobcard_no= models.CharField(max_length=50,blank=True, null=True)
+    customerid = models.ForeignKey(Customerdetails, on_delete=models.CASCADE, related_name='customerid', default=1)
+    order_date = models.DateField(blank=True, null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Created_By_User', default=1)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+
+
+class Jobcard_Product(models.Model):
+    """docstring for Jobcard_Product"""
+
+    productcard = models.CharField(max_length=100)
+    jobcardid = models.ForeignKey(Jobcard, on_delete=models.CASCADE, related_name='jobcardid', default=1)
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE, related_name='paperid', default=1)
+    gsm = models.ForeignKey(Gsm, on_delete=models.CASCADE, related_name='gsmid', default=1)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='sizeid', default=1)
+    size_custom = models.CharField(max_length=50,blank=True, null=True)
+    squareinch = models.CharField(max_length=50,blank=True, null=True)
+    quantity = models.CharField(max_length=50,blank=True, null=True)
+    partialdelivery = models.CharField(max_length=50,blank=True, null=True)
+    partial_qty = models.CharField(max_length=50,blank=True, null=True)
+    partial_datetime= models.CharField(max_length=50,blank=True, null=True)
+    side = models.CharField(max_length=50,blank=True, null=True)
+    jobtype = models.ForeignKey(Jobtype, on_delete=models.CASCADE, related_name='jobtypeid', default=1)
+    delivery_mode = models.CharField(max_length=50,blank=True, null=True)
+    delivery_desc = models.CharField(max_length=250,blank=True, null=True)
+    delivery_datetime = models.CharField(max_length=50,blank=True, null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Jobcard_Product_Created_By_User', default=1)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Jobcard_Product_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+
+class Jobcard_Product_Process(models.Model):
+    """Details of Jobcard_Product_Process Entity"""
+    jobcard_productid= models.ForeignKey(Jobcard_Product, on_delete=models.CASCADE, related_name='jobcardproductid', default=1)
+    processid = models.ForeignKey(Process, on_delete=models.CASCADE, related_name='jobcardprocessid', default=1)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Product_Process_Created_By_User', default=1)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Product_Process_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)

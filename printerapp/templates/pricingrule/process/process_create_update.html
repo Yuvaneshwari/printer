@@ -1,0 +1,329 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>PROCESS PRICING RULE</h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>Paper View</h2>
+                                {%else%}
+                                <h2>Paper Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>Process Pricing Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/paper/paper_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post" name="paperpricingfrm" id="paperpricingfrm">{% csrf_token %}
+
+
+                                <div class="row clearfix">
+                                <div class="col-md-4">
+
+                                <label for="processname">Process Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Process Name">
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                <label for="jobtype">Job Type</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <select class="form-control show-tick" id="" name="">
+                                    <option value="">-- Select Jobtype -- </option>
+                                    
+                                    <option value="">Invoice</option>
+                                    <option value="">Jobtype1</option>
+                                    <option value="">Jobtype2</option>
+                                    <option value="">Jobtype3</option>
+                                    
+                                    </select>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                <label for="select">Pricing Type</label>
+                                <div class="form-group">
+                                    <div class="form-line">       
+                                    <select class="form-control show-tick" id="gsm" name="gsm">
+                                    <option value="">-- Select type -- </option>    
+                                
+                                    <option value="1">By Time</option>
+                                    <option value="2">By Quantity</option>
+                                    <option value="3">By No.Of.Pages</option>
+                                    
+                                    
+                                    </select>
+                                    </div>
+                                </div>
+                                </div>
+
+                            
+
+                                </div>
+
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <label for="squareinch">Square Inch</label>
+                                    </div> 
+                                    <div class="col-md-4">
+                                    <label for="time">Time</label>
+                                    </div>    
+                                    <div class="col-md-4">
+                                    <label for="price">Price</label>
+                                    </div>    
+                                </div>
+                                
+                                <div class="row clearfix">
+                                    <div class="col-md-2">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From Hour">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To Hour">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-4">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                               
+
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <label for="size">Size</label>
+                                    </div> 
+                                    <div class="col-md-4">
+                                    <label for="time">Quantity</label>
+                                    </div>    
+                                    <div class="col-md-4">
+                                    <label for="price">Price</label>
+                                    </div>    
+                                </div>
+                                
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <div class="form-group">
+                                    {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
+                                    <div class="form-line">
+                                        <select class="form-control show-tick" id="size" name="size">
+                                        <option value="">-- Select Size -- </option>
+                                        {% for list_drop_val in list_drop %}
+                                        <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-4">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                               
+
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <label for="size">Size</label>
+                                    </div> 
+                                    <div class="col-md-4">
+                                    <label for="time">No of Pages</label>
+                                    </div>    
+                                    <div class="col-md-4">
+                                    <label for="price">Price</label>
+                                    </div>    
+                                </div>
+                                
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <div class="form-group">
+                                    {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
+                                    <div class="form-line">
+                                        <select class="form-control show-tick" id="size" name="size">
+                                        <option value="">-- Select Size -- </option>
+                                        {% for list_drop_val in list_drop %}
+                                        <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                
+                                    <div class="col-md-4">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="No.of.Pages">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-4">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                               
+
+
+
+
+                        </div>
+                    </div>
+                    <div {% if view_mode %} style="display:none" {% endif%}>
+                    {%if data.id %}
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           
+           
+</div>
+</section>
+   
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+        frmvalidation();
+        
+    }); 
+    
+});
+function frmvalidation(){
+$("#paperpricingfrm").validate({
+  rules : {
+    paper_name: {
+      required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+
+</script>
+
+{% include "includes/file_js.html" %}
+ 
+</html>

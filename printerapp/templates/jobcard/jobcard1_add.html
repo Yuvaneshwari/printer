@@ -23,28 +23,20 @@
                                     
             <label for="product_name">Product Name</label>
             <div class="form-group">
-            <div class="form-line">
-                <input type="text"name="product_name[]" id="product_name[]{{data}}" class="form-control" value="{{data.product_name}}"placeholder="Enter Product name">
-            </div>
+            {% drop_down_list tableName="printerapp_product" show_field_name="product_name" store_field_name="id" as list_drop %}
+            <select class="form-control show-tick" id="product_name[]{{data}}" name="product_name[]" onchange="getproductid(this,data);">
+                <option value="">-- Select Product-- </option>   
+                {% for list_drop_val in list_drop %}
+                <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
+                {% endfor %}
+            </select>
             </div>
 
             <label for="Process">Process :</label>
-            <div id="processlist" class="demo-checkbox"></div>
-
             <div class="container">
-            <div class="demo-checkbox">
-            <input type="checkbox" id="ch1" class="filled-in chk-col-teal"/><label for="ch1">Procces1 </label><br />
-            <input type="checkbox" id="ch2"class="filled-in chk-col-teal"/><label for="ch2">Procces2 </label> <br />
-            <input type="checkbox" id="ch3"class="filled-in chk-col-teal"/><label for="ch3">Procces3 </label> <br />
-            <input type="checkbox" id="ch4"class="filled-in chk-col-teal"/><label for="ch4">Procces4 </label> <br />
-            <input type="checkbox" id="ch5" class="filled-in chk-col-teal"/><label for="ch5">Procces5 </label> 
-            <input type="checkbox" id="ch6" class="filled-in chk-col-teal"/><label for="ch6">Procces6 </label><br />
-            <input type="checkbox" id="ch7"class="filled-in chk-col-teal"/><label for="ch7">Procces7 </label> <br />
-            <input type="checkbox" id="ch8"class="filled-in chk-col-teal"/><label for="ch8">Procces8 </label> <br />
-            <input type="checkbox" id="ch9"class="filled-in chk-col-teal"/><label for="ch9">Procces9 </label> <br />
-            <input type="checkbox" id="ch10"class="filled-in chk-col-teal"/><label for="ch10">Procces10 </label> 
-    
-            </div>
+
+            <div id="processlistdiv" name="processlistdiv"class="demo-checkbox"></div>
+
             </div>       
                        
             <br>
@@ -114,11 +106,11 @@
             <div class="row clearfix">
                 <div class="demo-radio-button">
                 <div class="col-md-6">
-                    <input name="group3" type="radio" id="radio_3[]{{data}}" class="with-gap" checked="true" />
+                    <input name="group3[]{{data}}" type="radio" id="radio_3[]{{data}}" class="with-gap" checked="true" />
                     <label for="radio_3[]{{data}}">Predefined</label>
                 </div>
                 <div class="col-md-6">
-                    <input name="group3" type="radio" id="radio_4[]{{data}}" class="with-gap" />
+                    <input name="group3[]{{data}}" type="radio" id="radio_4[]{{data}}" class="with-gap" />
                     <label for="radio_4[]{{data}}">Custom</label>
                 </div>
                 </div>
@@ -185,11 +177,11 @@
             <div class="row clearfix">
                 <div class="demo-radio-button">
                     <div class="col-md-6">
-                        <input name="group2" type="radio" id="radio_1[]{{data}}" class="with-gap" checked="true" />
+                        <input name="group2[]{{data}}" type="radio" id="radio_1[]{{data}}" class="with-gap" checked="true" />
                         <label for="radio_1[]{{data}}">Single Side</label>
                     </div>
                     <div class="col-md-6">
-                        <input name="group2" type="radio" id="radio_2[]{{data}}" class="with-gap" />
+                        <input name="group2[]{{data}}" type="radio" id="radio_2[]{{data}}" class="with-gap" />
                         <label for="radio_2[]{{data}}">Double Side</label>
                     </div>
                 </div> 
@@ -204,27 +196,27 @@
                 <label for="Jobtype">Job Type</label>    
                 <div class="demo-radio-button">
                                     <div class="col-md-6">
-                                    <input name="group1" type="radio" id="radio_5" class="with-gap" checked="true" />
+                                    <input name="group1[]{{data}}" type="radio" id="radio_5" class="with-gap" checked="true" />
                                     <label for="radio_5">Invoice</label>
                                     </div>
                                     <div class="col-md-6">
-                                    <input name="group1" type="radio" id="radio_6" class="with-gap" />
+                                    <input name="group1[]{{data}}" type="radio" id="radio_6" class="with-gap" />
                                     <label for="radio_6">Job Type2</label>
                                     </div>
                                     <div class="col-md-6">
-                                    <input name="group1" type="radio" id="radio_7" class="with-gap" />
+                                    <input name="group1[]{{data}}" type="radio" id="radio_7" class="with-gap" />
                                     <label for="radio_7">Job Type3</label>
                                     </div>
                                     <div class="col-md-6">
-                                    <input name="group1" type="radio" id="radio_8" class="with-gap" />
+                                    <input name="group1[]{{data}}" type="radio" id="radio_8" class="with-gap" />
                                     <label for="radio_8">Job Type4</label>
                                     </div>
                                     <div class="col-md-6">
-                                    <input name="group1" type="radio" id="radio_9" class="with-gap" />
+                                    <input name="group1[]{{data}}" type="radio" id="radio_9" class="with-gap" />
                                     <label for="radio_9">Job Type5</label>
                                     </div>
                                     <div class="col-md-6">
-                                    <input name="group1" type="radio" id="radio_10" class="with-gap" />
+                                    <input name="group1[]{{data}}" type="radio" id="radio_10" class="with-gap" />
                                     <label for="radio_10">Job Type6</label>
                                     </div>
                           
@@ -289,4 +281,3 @@
         </div>               
     </div>
 </div>
-

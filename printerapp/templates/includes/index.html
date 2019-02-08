@@ -245,7 +245,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="{% static 'templateapp/images/user.png' %}" width="48" height="48" alt="User" />
+                    <img src="{% static 'printerapp/images/user.png' %}" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">John Doe</div>
@@ -322,7 +322,23 @@
                         </ul>
                     </li>
                     
-                    
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">assignment</i>
+                            <span>Sample</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'printerapp:paperpricing_create' %}">Paper</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'printerapp:packaging_create' %}">Packaging</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'printerapp:processpricing_create' %}">Process</a>
+                            </li>
+                        </ul>
+                    </li>
                     
 
             </div>
