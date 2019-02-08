@@ -1,4 +1,4 @@
-{% load static %}{% load rest_framework %}
+{% load static %}{% load rest_framework %}{%load common_function %}
 
 <html>
 <head>
@@ -13,7 +13,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>PAPER</h2>
+                <h2>PACKING PRICING RULE</h2>
             </div>
 
             <div class="row clearfix">
@@ -48,7 +48,7 @@
                                 <h2>Paper Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>Paper Create</h2>
+                            <h2>Packing Pricing Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
@@ -63,14 +63,68 @@
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post" name="paperfrm" id="paperfrm">{% csrf_token %}
-                                <label for="paper_type">Paper Type</label>
+                            <form method="post" name="paperpricingfrm" id="paperpricingfrm">{% csrf_token %}
+
+
+                                <div class="row clearfix">
+
+                                <div class="col-md-12">
+                                <label for="size_name">Size</label>
                                 <div class="form-group">
+                                {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
                                     <div class="form-line">
-                                        <input type="text"name="paper_name" id="paper_name" class="form-control" value="{{data.paper_name}}"placeholder="Enter Paper name">
+                                    <select class="form-control show-tick" id="size" name="size">
+                                    <option value="">-- Select Size -- </option>
+                                    {% for list_drop_val in list_drop %}
+                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                    {% endfor %}
+                                    </select>
                                     </div>
                                 </div>
+                                </div>
+
+                                </div>
+
+                                <div class="row clearfix">
+                                 
+                                    <div class="col-md-4">
+                                    <label for="qty">Quantity</label>
+                                    </div> 
+                                    <div class="col-md-4">
+                                    <label for="Price">Price</label>
+                                    </div>     
+
+                                </div>
                                 
+                                <div class="row clearfix">
+                                
+
+                                    <div class="col-md-2">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-8">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                    </div>
+                                    </div>
+                                    </div>
+
+
+                                </div>
                                
                         </div>
                     </div>
@@ -105,7 +159,7 @@ $(document).ready(function() {
     
 });
 function frmvalidation(){
-$("#paperfrm").validate({
+$("#paperpricingfrm").validate({
   rules : {
     paper_name: {
       required : true,

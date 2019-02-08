@@ -18,14 +18,14 @@ row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 @api_view(['GET','POST'])
 def customer_create(request):
     if request.method=='GET':
-        return Response({'data':'','module':'Customer'},template_name='customer/customer_create_update.html')
+        return Response({'data':'','module':'Customer'},template_name='master/customer/customer_create_update.html')
     else:
         serializer=CustomerSerializer(data=request.data)
         if serializer.is_valid():
             user_id= session_user_id(request)
             serializer.save(created_by=user_id);
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='customer/customer_create_update.html')
+                return Response({"success_data": "Data added successfully"},template_name='master/customer/customer_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
@@ -39,7 +39,7 @@ def customer_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='customer/customer_create_update.html')
+                return Response({"error_data": data},template_name='master/customer/customer_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -59,7 +59,7 @@ def customer_list(request):
         customer_data = paginator.page(paginator.num_pages)
      
     if request.accepted_renderer.format == 'html':
-        return Response({"data":customer_data,'module':'Customer',"custom_filter":custom_filter},template_name='customer/customer_list.html')
+        return Response({"data":customer_data,'module':'Customer',"custom_filter":custom_filter},template_name='master/customer/customer_list.html')
     return Response({"data":customer_data}, status=status.HTTP_200_OK)
 
 
@@ -68,7 +68,7 @@ def customer_view(request,id):
     customer_obj=Customer.objects.get(id=id)
     customer_data = CustomerSerializer(customer_obj).data
     if request.accepted_renderer.format == 'html':
-        return Response({"data":customer_data,'module':'Customer',"view_mode":1},template_name='customer/customer_create_update.html')
+        return Response({"data":customer_data,'module':'Customer',"view_mode":1},template_name='master/customer/customer_create_update.html')
     return Response({"data":customer_data,"view_mode":1}, status=status.HTTP_200_OK)
 
 @api_view(['GET','PUT','POST'])
@@ -77,7 +77,7 @@ def customer_update(request,id):
     if request.method=='GET':
         data=CustomerSerializer(customer_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='customer/customer_create_update.html')
+            return Response({'data':data},template_name='master/customer/customer_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
@@ -99,7 +99,7 @@ def customer_update(request,id):
                             }
                         }
                 if request.accepted_renderer.format=='html':
-                    return Response({"error_data": data},template_name='customer/customer_create_update.html')
+                    return Response({"error_data": data},template_name='master/customer/customer_create_update.html')
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST','Delete'])

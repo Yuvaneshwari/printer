@@ -14,15 +14,15 @@ from django.conf import  settings
 row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 
 @api_view(['GET','POST'])
-def state_create(request):
+def paperpricing_create(request):
     if request.method=='GET':
-        return Response({'data':'','module':'State'},template_name='master/state/state_create_update.html')
+        return Response({'data':'','module':'Paper'},template_name='pricingrule/paper/paper_create_update.html')
     else:
-        serializer=StateSerializer(data=request.data)
+        serializer=PaperSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='master/state/state_create_update.html')
+                return Response({"success_data": "Data added successfully"},template_name='paper/paper_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
@@ -36,53 +36,52 @@ def state_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='master/state/state_create_update.html')
+                return Response({"error_data": data},template_name='paper/paper_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 @api_view(['GET'])
-def state_list(request):
+def paperpricicng_list(request):
     custom_filter={}
     custom_filter['deleted']=0
-    state_obj = StateMaster.objects.filter(**custom_filter)
-    state_data = StateSerializer(state_obj, many=True).data
+    paper_obj = Paper.objects.filter(**custom_filter)
     page = request.GET.get('page', 1)
-    paginator = Paginator(state_data, row_per_page)
+    paginator = Paginator(paper_data, row_per_page)
     try:
-        state_data = paginator.page(page)
+        paper_data = paginator.page(page)
     except PageNotAnInteger:
-        state_data = paginator.page(1)
+        paper_data = paginator.page(1)
     except EmptyPage:
-        state_data = paginator.page(paginator.num_pages)
-    
+        paper_data = paginator.page(paginator.num_pages)
     if request.accepted_renderer.format == 'html':
-        return Response({"data":state_data,'module':'State',"custom_filter":custom_filter},template_name='master/state/state_list.html')
-    return Response({"data": state_data}, status=status.HTTP_200_OK)
-
+        return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='paper/paper_list.html')
+    return Response({"data": paper_data}, status=status.HTTP_200_OK)
+    
 
 @api_view(['GET'])
-def state_view(request,id):
-    state_obj=StateMaster.objects.get(id=id)
-    state_data = StateSerializer(state_obj).data
+def paperpricicng_view(request,id):
+    paper_obj=Paper.objects.get(id=id)
+    paper_data = PaperSerializer(paper_obj).data
     if request.accepted_renderer.format == 'html':
-        return Response({"data":state_data,'module':'State',"view_mode":1},template_name='master/state/state_create_update.html')
-    return Response({"data":state_data,"view_mode":1}, status=status.HTTP_200_OK)
+        return Response({"data":paper_data,'module':'Paper',"view_mode":1},template_name='paper/paper_create_update.html')
+    return Response({"data": paper_data,"view_mode":1}, status=status.HTTP_200_OK)
 
 @api_view(['GET','PUT','POST'])
-def state_update(request,id):
-    state_obj=StateMaster.objects.get(id=id)
+def paperpricicng_update(request,id):
+    paper_obj=Paper.objects.get(id=id)
     if request.method=='GET':
-        data=StateSerializer(state_obj).data
+        data=PaperSerializer(paper_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='master/state/state_create_update.html')
+            return Response({'data':data},template_name='paper/paper_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
-        serializer=StateSerializer(state_obj,request.data,partial=True)
+        serializer=PaperSerializer(paper_obj,request.data,partial=True)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return HttpResponseRedirect(reverse('printerapp:state_list'))
+                return HttpResponseRedirect(reverse('printerapp:paper_list'))
             return Response({"data": "Data Updated successfully"}, status=status.HTTP_200_OK)
         else:
             error_details = []
@@ -96,12 +95,12 @@ def state_update(request,id):
                             }
                         }
                 if request.accepted_renderer.format=='html':
-                    return Response({"error_data": data},template_name='master/state/state_create_update.html')
+                    return Response({"error_data": data},template_name='paper/paper_create_update.html')
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST','Delete'])
-def state_delete(request,id):
-    selected_values=StateMaster.objects.get(pk=id)
+def paperpricicng_delete(request,id):
+    selected_values=Paper.objects.get(pk=id)
     selected_values.deleted=1;
     selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:state_list'))
+    return HttpResponseRedirect(reverse('printerapp:paper_list'))

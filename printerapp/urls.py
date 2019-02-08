@@ -17,6 +17,10 @@ from printerapp.custom_views.master import company
 from printerapp.custom_views.master import customer
 from printerapp.custom_views.master import deliverymode
 from printerapp.custom_views.master import communication
+from printerapp.custom_views.pricingrule import paperpricing
+from printerapp.custom_views.pricingrule import packaging
+from printerapp.custom_views.pricingrule import processpricing
+from printerapp.custom_views.pricingrule import price_calculate
 
 app_name = 'printerapp'
 urlpatterns = [	
@@ -106,13 +110,26 @@ urlpatterns = [
     url(r'^communication/communication_delete/(?P<id>[^/]*)/$', communication.communication_delete, name='communication_delete'),
 
     url(r'^jobcard/jobcard_create/$', jobcard.jobcard_create, name='jobcard_create'),
+    url(r'^jobcard/jobcard_product_create/$', jobcard.jobcard_product_create, name='jobcard_product_create'),
+    url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
+
+    url(r'^autocomplete/customername/$', autocomplete.customer_name_autocomplete, name='customername_auto'),
+    url(r'^autocomplete/contact_no/$', autocomplete.contact_no_autocomplete, name='contact_no_auto'),
+    url(r'^autocomplete/productname/$', autocomplete.product_name_autocomplete, name='productname_auto'),
+    
+    url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
+    url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
+
+    url(r'^jobcard/pricingrule_paper/$', price_calculate.pricingrule_paper, name='pricingrule_paper'),
+
     url(r'^jobcard/jobcard_list/$', jobcard.jobcard_list, name='jobcard_list'),
     url(r'^jobcard/jobcard_view/(?P<id>[^/]*)/$', jobcard.jobcard_view, name='jobcard_view'),
     url(r'^jobcard/jobcard_update/(?P<id>[^/]*)/$',jobcard.jobcard_update, name='jobcard_update'),
     url(r'^jobcard/jobcard_delete/(?P<id>[^/]*)/$', jobcard.jobcard_delete, name='jobcard_delete'),
-    url(r'^autocomplete/productname/$', autocomplete.product_name_autocomplete, name='productname_auto'),
-    url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
-    url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
+    
+    url(r'^pricingrule/paperpricing_create/$', paperpricing.paperpricing_create, name='paperpricing_create'),
+    url(r'^pricingrule/packaging_create/$', packaging.packaging_create, name='packaging_create'),
+    url(r'^pricingrule/processpricing_create/$', processpricing.processpricing_create, name='processpricing_create'),
 
 
 

@@ -65,14 +65,13 @@
                 <form method="post" name="customerfrm" id="customerfrm">{% csrf_token %}
                     
                     <div class="col-md-3">
-                        <label for="size_name">Company Name</label>
+                        <label for="size_name">Customer Name</label>
                         <div class="form-group">
                             <div class="form-line">
                                 <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter Customer Name">
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-3">
                         <label for="primary_contact_no">Contact Person Name</label>
                         <div class="form-group">
@@ -87,7 +86,7 @@
                         <label for="primary_contact_no">Contact No</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text"name="contact_no" id="contact_no" class="form-control" value="{{data.contact_no}}"placeholder="Enter Contact No">
+                                <input type="text"name="primary_contact_no" id="primary_contact_no" class="form-control" value="{{data.primary_contact_no}}"placeholder="Enter Contact No">
                             </div>
                         </div>
                     </div>
@@ -105,7 +104,7 @@
                         <label for="primary_contact_no">What's app</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text"name="whats_no" id="whats_no" class="form-control" value="{{data.whats_no}}"placeholder="What's app No">
+                                <input type="text"name="whatsup_no" id="whatsup_no" class="form-control" value="{{data.whatsup_no}}"placeholder="What's app No">
                             </div>
                         </div>
                     </div>
@@ -116,7 +115,7 @@
                         <label for="primary_contact_no">Secondary No</label>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text"name="sec_contact_no" id="sec_contact_no" class="form-control" value="{{data.sec_contact_no}}"placeholder="Contact No">
+                                <input type="text"name="secondary_contact_no" id="secondary_contact_no" class="form-control" value="{{data.secondary_contact_no}}"placeholder="Contact No">
                             </div>
                         </div>
                     </div>
@@ -143,7 +142,7 @@
                     <label for="communicationmode">Communication</label>
                     <div class="col-md-3">
                         {% drop_down_list tableName="printerapp_communication" show_field_name="name" store_field_name="id" as list_dorp %} 
-                        <select class="form-control show-tick" id="communicationmode" name="communicationmode">
+                        <select class="form-control show-tick" id="communication_mode" name="communication_mode">
                         <option value="">-- Communication mode -- </option>
                         {% for list_val in list_dorp %}
                         <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
@@ -172,7 +171,7 @@
         {%if data.id %}
         <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
         {%else%}
-        <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+        <button type="button" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
         {%endif%}
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
@@ -197,6 +196,7 @@
 <script type="text/javascript">
 
     var count=1;
+    var customerid;
     var jQuery_3_2_1 = jQuery.noConflict();
     var productlist=[];
     var paperlist=[];
@@ -205,7 +205,10 @@
     var sizeselect=[];
     var custom_length_list=[];
     var custom_width_list=[];
-    var sideselect=[];
+    var squareinch_list=[];
+    var singleside=[];
+    var doubleside=[]
+    var side=[]
     var sides_list=[];
     var quantitylist=[];
     var partial_qty_list=[];
@@ -215,13 +218,14 @@
     var delivery_datetime_list=[];
     var partialdelivery_list=[];
 
+    var processids=[];
     var result=[];
+    var sendresult=[];
 
 jQuery_3_2_1(document).ready(function() {
     
     console.log("ready");
  
-
     $("#productaddbtn").click(function(){
     console.log(count);
     data={"count":count};
@@ -235,13 +239,50 @@ jQuery_3_2_1(document).ready(function() {
             },
             success:function(data){
                 $('#productadd').append(data);
+
             }
 
         });
     count++;
     }); 
 
-    
+
+    jQuery_3_2_1("#name").autocomplete({
+      source : "/printerapp/autocomplete/customername/",
+      select : function(event, ui) { //item selected
+      customerid=ui.item.id;
+      $('#contact_person').val(ui.item.contact_person);
+      $('#address').val(ui.item.address);
+      $('#whatsup_no').val(ui.item.whatsup_no);
+      $('#email_id').val(ui.item.email_id);
+
+      $('#primary_contact_no').val(ui.item.primary_contact_no);
+      $('#secondary_contact_no').val(ui.item.secondary_contact_no);
+      //$('#communication_mode').val(ui.item.communicationmode);
+      //$('#order_date').val(ui.item.order_date);
+
+      
+      },
+      minLength : 2,
+      });
+
+
+      jQuery_3_2_1("#primary_contact_no").autocomplete({
+      source : "/printerapp/autocomplete/contact_no/",
+      select : function(event, ui) { //item selected
+      customerid=ui.item.id;
+      $('#name').val(ui.item.customer_name);
+      $('#contact_person').val(ui.item.contact_person);
+      $('#address').val(ui.item.address);
+      $('#whatsup_no').val(ui.item.whatsup_no);
+      $('#email_id').val(ui.item.email_id);
+      $('#primary_contact_no').val(ui.item.primary_contact_no);
+      $('#secondary_contact_no').val(ui.item.secondary_contact_no);
+      //$('#communication_mode').val(ui.item.communicationmode);
+      //$('#order_date').val(ui.item.order_date);
+      },
+      minLength : 2,
+      });
 
 });
 
@@ -250,30 +291,73 @@ jQuery_3_2_1(document).ready(function() {
 
 </script>
 
-
 <script type="text/javascript">
 
-jQuery_3_2_1(document).ready(function() {
-
-
-    jQuery_3_2_1("#product_name").autocomplete({
-    source : "/printerapp/autocomplete/productname/",
-    select : function(event, ui) { //item selected
-    getid=ui.item.id;  
-      //productidarray.push(ui.item.id);
-      //jQuery_3_2_1("#product_name").val(ui.item.value);
-    calfun(getid);
-    },
-    minLength : 2,
+function getproductid(sel,data)
+{
+    processdivcount=data.count;
+    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+    data={"productid":sel.value};
+    $.ajax({
+        type:"POST",
+        url:"../getprocesslist/",
+        data:data,
+        headers : {
+            "X-CSRFToken" : crf_token
+         },
+        
+        success:function(data){
+           
+            getprocess_list(data.processlist,data.processid,data.partialdelivery,processdivcount);
+        }
     });
 
+}
 
-    $("#sub").click(function(){
+function getprocess_list(processlist,processid,partialdelivery,processdivcount){
+    
+    $('#processlistdiv').empty();
+    for(i=0;i<processlist.length ;i++){
+    var container = $('#processlistdiv');
+    var inputs = container.find('input');
+    var id = inputs.length+1;
+    $('<input />', { type: 'checkbox', id: 'processname'+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
+    $('<label />', { 'for': 'processname'+id, text: processlist[i] }).appendTo(container);
+    //$('<input />', { type: 'text', id: 'dt'+id ,size:'5',placeholder:'Date and Time'}).appendTo(container);
+    //$('<br>').appendTo(container);
+
+    }
+    processids.length=0;
+    
+    
         
+              
+}
+
+jQuery_3_2_1("#submitfrm").click(function(){
+
+      var name=$('#name').val();
+      var contact_person=$('#contact_person').val();
+      var contact_no=$('#primary_contact_no').val();
+      var whatsup_no=$('#whatsup_no').val();
+      var email_id=$('#email_id').val();  
+      var sec_contact_no=$('#secondary_contact_no').val();
+      var address=$('#address').val();
+      var communicationmode=$('#communication_mode').val();
+      var order_date=$('#order_date').val();
+
         $.each($('[id^=product_name'), function (i, item) {
         var productname = $(this).val();
         productlist.push(productname);
         //alert(productlist);
+        });
+
+        $.each($('[id^=processname'), function (i, item) {
+
+        if($(this).prop("checked") == true){
+            processids.push($(this).val()); 
+            //$('#partialdeliverydiv'+i).show();
+        }
         });
 
         $.each($('[id^=papertype'), function (i, item) {
@@ -295,7 +379,7 @@ jQuery_3_2_1(document).ready(function() {
         
         if($(this).prop("checked") == true){
             $(this).val("1");
-            sizeselect=$(this).val();    
+            sizeselect.push($(this).val());    
         }
         })
 
@@ -303,17 +387,10 @@ jQuery_3_2_1(document).ready(function() {
         
         if($(this).prop("checked") == true){
             $(this).val("2");
-            sizeselect=$(this).val();    
+            sizeselect.push($(this).val());    
             
         }
         })
-
-        if(sizeselect==1){
-            sizeselect="Predefined";
-        }
-        else{
-            sizeselect="Custom";
-        }
 
         //alert(sizeselect);
 
@@ -327,31 +404,28 @@ jQuery_3_2_1(document).ready(function() {
         custom_width_list.push(custom_width);
         })
 
+
         $.each($('[id^=radio_1'), function (i, item) {
         
         if($(this).prop("checked") == true){
             $(this).val("1");
-            sideselect=$(this).val();    
+            side.push($(this).val());    
         }
+        
         })
 
         $.each($('[id^=radio_2'), function (i, item) {
         
         if($(this).prop("checked") == true){
             $(this).val("2");
-            sideselect=$(this).val();    
+            side.push($(this).val());    
             
         }
+        
         })
+     
+        //alert(side);
 
-        if(sideselect==1){
-            sideselect="singleside";
-        }
-        else{
-            sideselect="doubleside";
-        }
-
-        //alert(sideselect);
 
         $.each($('[id^=quantity'), function (i, item) {
         var quantity = $(this).val();
@@ -361,16 +435,15 @@ jQuery_3_2_1(document).ready(function() {
         $.each($('[id^=partialdelivery'), function (i, item) {
         if($(this).prop("checked") == true){
             $(this).val("1");
-            $('#partialdeliverydiv'+i).show();
+            partialdelivery_list.push($(this).val()); 
+            //$('#partialdeliverydiv'+i).show();
         }
         else if($(this).prop("checked") == false){
             $(this).val("0");
-            $('#partialdeliverydiv'+i).hide();
+            partialdelivery_list.push($(this).val()); 
+            //$('#partialdeliverydiv'+i).hide();
         }
-        var partialdelivery = $(this).val();
-        partialdelivery_list.push(partialdelivery);
-
-        })
+        });
         //alert(partialdelivery_list);
 
         $.each($('[id^=partial_quantity'), function (i, item) {
@@ -398,23 +471,97 @@ jQuery_3_2_1(document).ready(function() {
         delivery_datetime_list.push(delivery_datetime);
         })
 
+
+
+        for(i=0;i<count-1;i++){
+            squareinch_list[i]=custom_width_list[i]*custom_length_list[i];
+        }
+       
+
         for(i=0;i<count-1;i++){
 
-            result[i] = {"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Custom length":custom_length_list[i],"Custom  Width":custom_width_list[i],"Quantity":quantitylist[i],"Partial Qty":partial_qty_list[i],"Partial DateTime":partial_datetime_list[i],"Delivery Mode":deliverymodelist[i],"Deleivery Desc":delivery_desc_list[i],"Deleivery DateTime":delivery_datetime_list[i]};
+            result[i] = {"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partial Qty":partial_qty_list[i],"Partial DateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Delivery Mode":deliverymodelist[i],"Deleivery Desc":delivery_desc_list[i],"Deleivery DateTime":delivery_datetime_list[i]};
+
         }
 
-        for(i=0;i<count-1;i++){
+        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        data={"name":name,"contact_person":contact_person,"contact_no":contact_no,"whatsup_no":whatsup_no,"email_id":email_id,"sec_contact_no":sec_contact_no,"address":address,"communicationmode":communicationmode,"order_date":order_date,"customerid":customerid};
+    
+        $.ajax({
+        type:"POST",
+        url:"../jobcard_create/",
+        data:data,
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
             
-            $.each(result[i], function(key, value){
-            $("#resultdiv").append(key + ": " + value + '<br>');
-            });
-
+        success:function(data){
+            storeproductcard(data.jobcardid);           
         }
+        });
+
+
+});
+function storeproductcard(id){
+
+    for(i=0;i<count-1;i++){
+            
+        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        data={"id":id,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
+    
+        $.ajax({
+        type:"POST",
+        url:"../jobcard_product_create/",
+        data:data,
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
+            
+        success:function(data){
+            storeprocesscard(data.jobcard_product_id);           
+        }
+        });
+
+    }
+}
+
+function storeprocesscard(jobcard_product_id){
+    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+    data={"id":jobcard_product_id,"processlist_id[]": processids};
+  
+    $.ajax({
+        type:"POST",
+        url:"../jobcard_product_process_create/",
+        data:data,
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
+            
+        success:function(data){
+            console.log(data);
+            
+        }
+    });
+
+
+}
+
+
+</script>
+
+
+<script type="text/javascript">
+
+jQuery_3_2_1(document).ready(function() {
+ 
+    $("#sub").click(function(){
+
 
     });
 
 });
 </script>
+
 {% include "includes/file_js.html" %}
 
 </html>

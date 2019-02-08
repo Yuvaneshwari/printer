@@ -18,7 +18,7 @@ row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 @api_view(['GET','POST'])
 def company_create(request):
     if request.method=='GET':
-        return Response({'data':'','module':'Company'},template_name='company/company_create_update.html')
+        return Response({'data':'','module':'Company'},template_name='master/company/company_create_update.html')
     else:
         print(request.data)
         serializer=CompanySerializer(data=request.data)
@@ -26,7 +26,7 @@ def company_create(request):
             user_id= session_user_id(request)
             serializer.save(created_by=user_id,modified_date=store_date_time(),modified_by=user_id);
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='company/company_create_update.html')
+                return Response({"success_data": "Data added successfully"},template_name='master/company/company_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
@@ -40,7 +40,7 @@ def company_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='company/company_create_update.html')
+                return Response({"error_data": data},template_name='master/company/company_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -60,7 +60,7 @@ def company_list(request):
         company_data = paginator.page(paginator.num_pages)
     
     if request.accepted_renderer.format == 'html':
-        return Response({"data":company_data,'module':'Company',"custom_filter":custom_filter},template_name='company/company_list.html')
+        return Response({"data":company_data,'module':'Company',"custom_filter":custom_filter},template_name='master/company/company_list.html')
     return Response({"data":company_data}, status=status.HTTP_200_OK)
 
 
@@ -69,7 +69,7 @@ def company_view(request,id):
     company_obj=Company.objects.get(id=id)
     company_data = CompanySerializer(company_obj).data
     if request.accepted_renderer.format == 'html':
-        return Response({"data":company_data,'module':'Company',"view_mode":1},template_name='company/company_create_update.html')
+        return Response({"data":company_data,'module':'Company',"view_mode":1},template_name='master/company/company_create_update.html')
     return Response({"data":company_data,"view_mode":1}, status=status.HTTP_200_OK)
 
 @api_view(['GET','PUT','POST'])
@@ -78,7 +78,7 @@ def company_update(request,id):
     if request.method=='GET':
         data=CompanySerializer(company_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='company/company_create_update.html')
+            return Response({'data':data},template_name='master/company/company_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
@@ -100,7 +100,7 @@ def company_update(request,id):
                             }
                         }
                 if request.accepted_renderer.format=='html':
-                    return Response({"error_data": data},template_name='company/company_create_update.html')
+                    return Response({"error_data": data},template_name='master/company/company_create_update.html')
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST','Delete'])
