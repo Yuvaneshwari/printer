@@ -21,6 +21,7 @@ def customer_create(request):
         return Response({'data':'','module':'Customer'},template_name='master/customer/customer_create_update.html')
     else:
         serializer=CustomerSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             user_id= session_user_id(request)
             serializer.save(created_by=user_id);

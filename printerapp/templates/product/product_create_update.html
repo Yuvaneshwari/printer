@@ -71,25 +71,57 @@
                                 </div>
                                 
                                 {%if data.id %}
-                                <label for="process_name">Process Names</label>
-                                <div class="form-group">
-                                    <ul>
+                                
+                                <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Process Name</th>
+                                        <th>Default</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {% for list in product_data %}
+                                <tr>
                                     {%if data.id|add:0  == list.productid|add:0 %}
                                     {%if list.product_process%}
                                     {% processlist id=list.product_process as processname %}
-                                    <li>{{processname}}<i class="material-icons">delete</i></a></li>
+                                    <td>
+                                    {{processname}}
+                                    </td>
+                                    <td>
+                                        {%if list.default_process == 1 %}
+                                        YES
+                                        {%else%}
+                                        NO
+                                        {%endif%}
+                                    </td>
+                                    <td>
+                                    <i class="material-icons">delete</i>
+                                    </td>
                                     {%endif%}                
-                                    {%endif%}{%endfor%}
-                                    </ul>
-                                </div>
+                                    {%endif%}
+                                    
+                                </tr>
+                               {%endfor%}
+                                </tbody>
+                                </table>
                                 {%endif%}
 
 
                                 <label for="process_name">Process Name</label>
                                 <div class="form-group"id='TextBoxesGroup'>
                                     <div class="form-line"id="PassBoxDiv1">
-                                        <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Process name">
+                                        <div class="row clearfix">
+                                            <div class="col-md-6">  
+                                                <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Process name">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="checkbox" id="default_process1" name="default_process1" class="filled-in chk-col-teal"/>
+                                                <label for="default_process1">Default Process</label>   
+                                            </div>
+                                        </div> 
                                     </div>
                                 </div>
                                 <label for="lab_plus" id="lab_plus">Add + </label>
@@ -128,13 +160,14 @@ var jQuery_3_2_1 = jQuery.noConflict();
 jQuery_3_2_1(document).ready(function() {
     var counter = 2;
     var processidarray=[];
+    var defaultprocess=[];
     console.log("ready");
     jQuery_3_2_1("#lab_plus").click(function () {
                 
     var newPassBoxDiv = jQuery_3_2_1(document.createElement('div')).attr({"id":'ProccessBoxDiv' + counter,"class":'form-line'});
 
-         newPassBoxDiv.after().html('<label>Process Name '+ counter + ' : </label><input type="text" class="form-control" placeholder="Enter process name" name="textbox' + counter + '" id="textbox' + counter + '" value="">');
-            
+         newPassBoxDiv.after().html('<label>Process Name '+ counter + ' : </label><div class="row clearfix"><div class="col-md-6"><input type="text" class="form-control" placeholder="Enter process name" name="textbox' + counter + '" id="textbox' + counter + '"></div><div class="col-md-6"><input type="checkbox" id="default_process' + counter + '" name="default_process' + counter + '" class="filled-in chk-col-teal"/><label for="default_process' + counter + '">Default Proccess</label></div></div>');
+   
     newPassBoxDiv.appendTo("#TextBoxesGroup");
     for (var i=1; i < counter;i++)
     {
@@ -165,11 +198,30 @@ jQuery_3_2_1(document).ready(function() {
 }); 
 jQuery_3_2_1("#submitfrm").click(function(){
 
-    for(i=0; i<counter-1; i++){
+for(i=0; i<counter-1; i++){
   console.log(processidarray[i]);
-  }
+}
+
+
+ $.each($('[id^=default_process'), function (i, item) {
+
+    if ($(this).is(":checked")) {
+            $(this).val("1");
+            defaultprocess.push($(this).val()); 
+
+        } else {
+            $(this).val("0");
+            defaultprocess.push($(this).val()); 
+        }
+
+        });
+
+for(i=0; i<counter-1; i++){
+  console.log(defaultprocess[i]);
+}
+
   var crf_token = jQuery_3_2_1('[name="csrfmiddlewaretoken"]').attr('value');
-  data={"product_name":jQuery_3_2_1('#product_name').val(),"processidarray[]":processidarray};
+  data={"product_name":jQuery_3_2_1('#product_name').val(),"processidarray[]":processidarray,"defaultprocess[]":defaultprocess};
     /* url="../../product_processupdate/";
     
     data={"product_name":jQuery_3_2_1('#product_name').val()};*/

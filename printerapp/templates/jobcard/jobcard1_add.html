@@ -17,25 +17,30 @@
     <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
     <div class="panel-body">
                         
-        <div class="col-sm-4 col-md-4">
+        <div class="col-sm-5 col-md-5">
         <div class="thumbnail">
                     
-                                    
-            <label for="product_name">Product Name</label>
+            <div class="row clearfix">
+                <div class="col-md-3">                       
+                    <label for="product_name">Product</label>
+                </div>
             <div class="form-group">
             {% drop_down_list tableName="printerapp_product" show_field_name="product_name" store_field_name="id" as list_drop %}
-            <select class="form-control show-tick" id="product_name[]{{data}}" name="product_name[]" onchange="getproductid(this,data);">
+            <div class="col-md-8">
+            <select class="form-control show-tick" id="product_name{{data}}" name="product_name[]" onchange="getproductid(this,data);">
                 <option value="">-- Select Product-- </option>   
                 {% for list_drop_val in list_drop %}
                 <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
                 {% endfor %}
             </select>
             </div>
+            </div>
+            </div>
 
             <label for="Process">Process :</label>
             <div class="container">
 
-            <div id="processlistdiv" name="processlistdiv"class="demo-checkbox"></div>
+            <div id="processlistdiv" name="processlistdiv" class="demo-checkbox"></div>
 
             </div>       
                        
@@ -48,7 +53,7 @@
                 <div class="form-group">
                 {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
                 <div class="col-md-8">
-                    <select class="form-control show-tick" id="papertype[]{{data}}" name="papertype[]">
+                    <select class="form-control show-tick" id="papertype{{data}}" name="papertype[]">
                     <option value="">-- Select Paper-- </option>   
                     {% for list_drop_val in list_drop %}
                     <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
@@ -65,7 +70,7 @@
                 <div class="form-group">
                 {% drop_down_list tableName="printerapp_gsm" show_field_name="gsm_name" store_field_name="id" as list_drop %}
                 <div class="col-md-8">           
-                    <select class="form-control show-tick" id="gsm[]{{data}}" name="gsm[]">
+                    <select class="form-control show-tick" id="gsm{{data}}" name="gsm[]">
                     <option value="">-- Select GSM -- </option>    
                     {% for list_drop_val in list_drop %}
                     <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
@@ -79,7 +84,7 @@
         </div>
 
 
-    <div class="col-sm-8 col-md-8">
+    <div class="col-sm-7 col-md-7">
     <div class="thumbnail">
                     
                                 
@@ -90,9 +95,10 @@
                     <label for="size">Size</label>
                 </div>
                 <div class="form-group">
-                {% drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" as list_drop %}
+                {% batch_drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" show_field_name1="length" show_field_name2="width" as list_drop %}
+                
                 <div class="col-md-8">
-                    <select class="form-control show-tick" id="size[]{{data}}" name="size">
+                    <select class="form-control show-tick" id="size{{data}}" name="size[]" onchange="getsizeid(this,data);">
                     <option value="">-- Select Size -- </option>
                     {% for list_drop_val in list_drop %}
                     <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
@@ -106,12 +112,12 @@
             <div class="row clearfix">
                 <div class="demo-radio-button">
                 <div class="col-md-6">
-                    <input name="group3[]{{data}}" type="radio" id="radio_3[]{{data}}" class="with-gap" checked="true" />
-                    <label for="radio_3[]{{data}}">Predefined</label>
+                    <input name="group3[]{{data}}" type="radio" id="radio_3{{data}}" class="with-gap" checked="true" />
+                    <label for="radio_3{{data}}">Predefined</label>
                 </div>
                 <div class="col-md-6">
-                    <input name="group3[]{{data}}" type="radio" id="radio_4[]{{data}}" class="with-gap" />
-                    <label for="radio_4[]{{data}}">Custom</label>
+                    <input name="group3[]{{data}}" type="radio" id="radio_4{{data}}" class="with-gap" onclick="customfunc(this,data);"/>
+                    <label for="radio_4{{data}}">Custom</label>
                 </div>
                 </div>
             </div>
@@ -121,7 +127,7 @@
                     <label for="custom_length">1.Length(inches)</label>
                     <div class="form-group">
                     <div class="form-line">
-                        <input type="text"name="custom_length[]" id="custom_length[]{{data}}" class="form-control" value=""placeholder="Length">
+                        <input type="text"name="custom_length[]" id="custom_length{{data}}" class="form-control" value=""placeholder="Length" disabled="true">
                     </div>
                     </div>
                 </div>
@@ -130,7 +136,7 @@
                     <label for="custom_width">2.Width(inches)</label>
                         <div class="form-group">
                         <div class="form-line">
-                            <input type="text"name="custom_width[]" id="custom_width[]{{data}}" class="form-control" value=""placeholder="Width">
+                            <input type="text"name="custom_width[]" id="custom_width{{data}}" class="form-control" value=""placeholder="Width" disabled="true">
                         </div>
                         </div>
                 </div>
@@ -141,14 +147,14 @@
                     <label for="Quantity">Quantity</label>
                     <div class="form-group">
                     <div class="form-line">
-                        <input type="text" name="quantity[]" id="quantity[]{{data}}" class="form-control" value=""placeholder="Quantity">
+                        <input type="text" name="quantity[]" id="quantity{{data}}" class="form-control" value=""placeholder="Quantity">
                     </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                 <div class="demo-checkbox">
-                    <br><input type="checkbox" id="partialdelivery[]{{data}}" name="partialdelivery[]" class="filled-in chk-col-teal"/>
-                    <label for="partialdelivery[]{{data}}">Partial Delivery</label>             
+                    <br><input type="checkbox"  name="partialdelivery[]" id="partialdelivery{{data}}" class="filled-in chk-col-teal" onclick="partialdelivery(this,data)"/>
+                    <label for="partialdelivery{{data}}">Partial Delivery</label>             
                 </div>
                 </div>
             </div>
@@ -159,7 +165,7 @@
                     <label for="partial_quantity">1.Quantity</label>
                     <div class="form-group">
                     <div class="form-line">
-                        <input type="text"name="partial_quantity[]" id="partial_quantity[]{{data}}" class="form-control" value=""placeholder="Partial Qty">
+                        <input type="text" name="partial_quantity[]" id="partial_quantity{{data}}" class="form-control" value=""placeholder="Partial Qty" disabled="true">
                     </div>
                     </div>
                 </div>
@@ -168,7 +174,7 @@
                     <label for="partial_datetime">2.Date & Time</label>
                     <div class="form-group">
                     <div class="form-line">
-                        <input type="text" name="partial_datetime[]" id="partial_datetime[]{{data}}" class="datetimepicker form-control" value=""placeholder="Date and Time">
+                        <input type="text" name="partial_datetime[]" id="partial_datetime{{data}}" class="datetimepicker form-control" value=""placeholder="Date and Time" disabled="true">
                     </div>
                     </div>
                 </div>
@@ -177,12 +183,12 @@
             <div class="row clearfix">
                 <div class="demo-radio-button">
                     <div class="col-md-6">
-                        <input name="group2[]{{data}}" type="radio" id="radio_1[]{{data}}" class="with-gap" checked="true" />
-                        <label for="radio_1[]{{data}}">Single Side</label>
+                        <input name="group2[]{{data}}" type="radio" id="radio_1{{data}}" class="with-gap" checked="true" />
+                        <label for="radio_1{{data}}">Single Side</label>
                     </div>
                     <div class="col-md-6">
-                        <input name="group2[]{{data}}" type="radio" id="radio_2[]{{data}}" class="with-gap" />
-                        <label for="radio_2[]{{data}}">Double Side</label>
+                        <input name="group2[]{{data}}" type="radio" id="radio_2{{data}}" class="with-gap" />
+                        <label for="radio_2{{data}}">Double Side</label>
                     </div>
                 </div> 
             </div>
@@ -193,33 +199,20 @@
 
             <div class="row clearfix">
                          
-                <label for="Jobtype">Job Type</label>    
+                <label for="Jobtype">Job Type</label>  
+                {% drop_down_list tableName="printerapp_jobtype" show_field_name="jobtype_name" store_field_name="id" as list_drop %}
+                  
                 <div class="demo-radio-button">
+                
+                     {% for list_drop_val in list_drop %}
+                     
                                     <div class="col-md-6">
-                                    <input name="group1[]{{data}}" type="radio" id="radio_5" class="with-gap" checked="true" />
-                                    <label for="radio_5">Invoice</label>
+                                    <input name="group1[]" type="radio" id="jobtype{{forloop.counter}}" value="{{list_drop_val.id}}" class="with-gap" checked="true" />
+                                    <label for="jobtype{{forloop.counter}}">{{list_drop_val.text}}</label>
                                     </div>
-                                    <div class="col-md-6">
-                                    <input name="group1[]{{data}}" type="radio" id="radio_6" class="with-gap" />
-                                    <label for="radio_6">Job Type2</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <input name="group1[]{{data}}" type="radio" id="radio_7" class="with-gap" />
-                                    <label for="radio_7">Job Type3</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <input name="group1[]{{data}}" type="radio" id="radio_8" class="with-gap" />
-                                    <label for="radio_8">Job Type4</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <input name="group1[]{{data}}" type="radio" id="radio_9" class="with-gap" />
-                                    <label for="radio_9">Job Type5</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <input name="group1[]{{data}}" type="radio" id="radio_10" class="with-gap" />
-                                    <label for="radio_10">Job Type6</label>
-                                    </div>
-                          
+
+                        {% endfor %}   
+               
                 </div>
             </div>
              <br>         
@@ -228,7 +221,7 @@
                 <label for="Expected_delivery">Expected Delivery  Date and Time</label>
                 <div class="form-group">
                 <div class="form-line">
-                    <input type="text" name="delivery_datetime[]" id="delivery_datetime[]{{data}}" class="datetimepicker form-control" value="" placeholder="Enter Expected Delivery  Date and Time">
+                    <input type="text" name="delivery_datetime[]" id="delivery_datetime{{data}}" class="datetimepicker form-control" value="" placeholder="Enter Expected Delivery  Date and Time">
                 </div>
                 </div>
             </div>
@@ -241,7 +234,7 @@
                 <div class="form-group">
                 {% drop_down_list tableName="printerapp_deliverymode" show_field_name="deliverymode" store_field_name="id" as list_dorp %} 
                                 
-                <select class="form-control show-tick" id="deliverymode[]{{data}}" name="deliverymode[]">
+                <select class="form-control show-tick" id="deliverymode{{data}}" name="deliverymode[]">
                 <option value="">-- Deliverymode-- </option>
                 {% for list_val in list_dorp %}
                 <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
@@ -257,12 +250,12 @@
                 <label for="delivery_description">Delivery Description</label>
                 <div class="form-group">
                 <div class="form-line">
-                    <textarea class="form-control" rows="3" name="delivery_description[]" id="delivery_description[]{{data}}" placeholder="Enter delivery desccription">{{data.delivery_description}}</textarea>
+                    <textarea class="form-control" rows="3" name="delivery_description[]" id="delivery_description{{data}}" placeholder="Enter delivery desccription">{{data.delivery_description}}</textarea>
                 </div>
                 </div>
             </div>
             </div>
-           
+        
         </div>
                     
                                                 

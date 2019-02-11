@@ -5,7 +5,7 @@
 
 {% include "includes/css_file.html" %}
 <style type="text/css">
-.container { border:2px solid #ccc; width:250px; height: 210px; overflow-y: scroll;
+.container { border:2px solid #ccc; width:300px; height: 270px; overflow-y: scroll;
 </style>
 </head>
 <body class="theme-red">
@@ -158,7 +158,6 @@
     </div>            
 
     <div id="productadd" name="productadd" class="productadd"></div>
-
             <!-- #END# Custom Content -->
 
     <div id="resultdiv" name="resultdiv"></div>        
@@ -195,10 +194,10 @@
 
 <script type="text/javascript">
 
-    var count=1;
+    var count=0;
     var customerid;
     var jQuery_3_2_1 = jQuery.noConflict();
-    var productlist=[];
+    var productlist=[]
     var paperlist=[];
     var sizelist=[];
     var gsmlist=[];
@@ -240,6 +239,9 @@ jQuery_3_2_1(document).ready(function() {
             success:function(data){
                 $('#productadd').append(data);
 
+                //$('#delivery_datetime'+count).addClass('datetimepicker');
+                // here diclare the datetipme picker
+
             }
 
         });
@@ -267,7 +269,7 @@ jQuery_3_2_1(document).ready(function() {
       });
 
 
-      jQuery_3_2_1("#primary_contact_no").autocomplete({
+    jQuery_3_2_1("#primary_contact_no").autocomplete({
       source : "/printerapp/autocomplete/contact_no/",
       select : function(event, ui) { //item selected
       customerid=ui.item.id;
@@ -284,57 +286,9 @@ jQuery_3_2_1(document).ready(function() {
       minLength : 2,
       });
 
-});
 
 
-
-
-</script>
-
-<script type="text/javascript">
-
-function getproductid(sel,data)
-{
-    processdivcount=data.count;
-    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-    data={"productid":sel.value};
-    $.ajax({
-        type:"POST",
-        url:"../getprocesslist/",
-        data:data,
-        headers : {
-            "X-CSRFToken" : crf_token
-         },
-        
-        success:function(data){
-           
-            getprocess_list(data.processlist,data.processid,data.partialdelivery,processdivcount);
-        }
-    });
-
-}
-
-function getprocess_list(processlist,processid,partialdelivery,processdivcount){
-    
-    $('#processlistdiv').empty();
-    for(i=0;i<processlist.length ;i++){
-    var container = $('#processlistdiv');
-    var inputs = container.find('input');
-    var id = inputs.length+1;
-    $('<input />', { type: 'checkbox', id: 'processname'+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
-    $('<label />', { 'for': 'processname'+id, text: processlist[i] }).appendTo(container);
-    //$('<input />', { type: 'text', id: 'dt'+id ,size:'5',placeholder:'Date and Time'}).appendTo(container);
-    //$('<br>').appendTo(container);
-
-    }
-    processids.length=0;
-    
-    
-        
-              
-}
-
-jQuery_3_2_1("#submitfrm").click(function(){
+$("#submitfrm").click(function(){
 
       var name=$('#name').val();
       var contact_person=$('#contact_person').val();
@@ -425,8 +379,6 @@ jQuery_3_2_1("#submitfrm").click(function(){
         })
      
         //alert(side);
-
-
         $.each($('[id^=quantity'), function (i, item) {
         var quantity = $(this).val();
         quantitylist.push(quantity);
@@ -473,12 +425,12 @@ jQuery_3_2_1("#submitfrm").click(function(){
 
 
 
-        for(i=0;i<count-1;i++){
+        for(i=0;i<count;i++){
             squareinch_list[i]=custom_width_list[i]*custom_length_list[i];
         }
        
 
-        for(i=0;i<count-1;i++){
+        for(i=0;i<count;i++){
 
             result[i] = {"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partial Qty":partial_qty_list[i],"Partial DateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Delivery Mode":deliverymodelist[i],"Deleivery Desc":delivery_desc_list[i],"Deleivery DateTime":delivery_datetime_list[i]};
 
@@ -504,7 +456,7 @@ jQuery_3_2_1("#submitfrm").click(function(){
 });
 function storeproductcard(id){
 
-    for(i=0;i<count-1;i++){
+    for(i=0;i<count;i++){
             
         var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
         data={"id":id,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
@@ -538,28 +490,173 @@ function storeprocesscard(jobcard_product_id){
         },
             
         success:function(data){
-            console.log(data);
+            document.getElementById("customerfrm").reset();  
             
         }
     });
+}
+});
 
+</script>
+
+<script type="text/javascript">
+
+
+function getproductid(sel,data)
+{
+    processdivcount=data.count;
+    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+    data={"productid":sel.value};
+    $.ajax({
+        type:"POST",
+        url:"../getprocesslist/",
+        data:data,
+        headers : {
+            "X-CSRFToken" : crf_token
+         },
+        
+        success:function(data){
+           
+            getprocess_list(data.processlist,data.processid,data.partialdelivery,processdivcount);
+        }
+    });
 
 }
 
 
-</script>
+function getprocess_list(processlist,processid,partialdelivery,processdivcount)
+{
+    //$('#processlistdiv'+processdivcount).empty();
+    $('#processlistdiv').empty();
+    for(i=0;i<processlist.length ;i++){
 
+    var container = $('#processlistdiv');
+    //var container = $('#processlistdiv'+processdivcount);
 
-<script type="text/javascript">
+    var inputs = container.find('input');
+    var id = inputs.length+1;
+    $('<input />', { type: 'checkbox', id: 'processname'+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
+    $('<label />', { 'for': 'processname'+id, text: processlist[i] }).appendTo(container);
+    $('<input />', { type: 'text', id: 'dt'+id ,size:'5',placeholder:'Date and Time'}).appendTo(container);
+    
+    }
+    processids.length=0;
+            
+}
 
-jQuery_3_2_1(document).ready(function() {
- 
-    $("#sub").click(function(){
+function getsizeid(sel,data)
+{
+    index=data.count;
+    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+    data={"sizeid":sel.value};
+    $.ajax({
+        type:"POST",
+        url:"../getsizevalues/",
+        data:data,
+        headers : {
+            "X-CSRFToken" : crf_token
+         },
+        
+        success:function(data){
 
-
+            assignvalue(data.length,data.width,index);
+       
+        }
     });
+}
+function assignvalue(length,width,index)
+{
 
-});
+//document.getElementById("custom_length").value = "Johnny Bravo";
+//document.getElementById(custom_length[1]).innerHTML = "xmlHttp.responseText";
+
+   //var custom_length = [];
+   //custom_length = document.getElementsByName('custom_length[]');
+
+    //custom_length[counter]="qwe";
+
+    //console.log(custom_length);
+   //var custom_length = $('input[name="custom_length[]"]');
+    //custom_length.eq(counter).val(length);
+
+    console.log(index);
+    console.log(length);
+    //$('#custom_length'+counter).val(length);
+    $('input[name="custom_length[]"]').eq(index).val(length);
+    $('input[name="custom_width[]"]').eq(index).val(width);
+    $('input[name="custom_length[]"]').eq(index).attr("disabled", "disabled");
+    $('input[name="custom_width[]"]').eq(index).attr("disabled", "disabled");
+    
+}
+
+
+
+function customfunc(custom,index) 
+{
+
+    if($(custom).prop("checked") == true){
+            
+            //alert("yes");
+
+            $('input[name="partial_quantity[]"]').eq(index).attr("disabled",false);
+
+            //$("#custom_length"+index).prop('disabled', true);
+
+            //document.getElementById('custom_length'+index).disabled = false;
+
+            //$('input[name="custom_length[]"]').eq(index).removeAttr("disabled");
+
+             //$("#custom_length"+index).removeAttr("disabled");
+             //var custom_length=[];
+             //custom_length = document.getElementsByName('custom_length[]');
+             //custom_length[index] ="yes";
+             //document.getElementById("custom_length"+index).value = "John";
+           
+            
+        }
+        else if($(custom).prop("checked") == false){
+
+            //alert("no");
+            //$('input[name="partial_quantity[]"]').eq(index).attr("disabled", true);
+
+            //$(this).val("0");
+            //partialdelivery_list.push($(this).val()); 
+            //$('#partialdeliverydiv'+i).hide();
+        } 
+}
+
+
+function partialdelivery(chkbox,index) 
+{
+
+    if($(chkbox).prop("checked") == true){
+            
+            //alert("yes");
+
+             $('input[name="partial_quantity[]"]').eq(index).attr("disabled",false);
+
+             //$("#partial_quantity"+index).removeAttr("disabled");
+             //var partial_quantity=[];
+             //partial_quantity = document.getElementsByName('partial_quantity[]');
+             //partial_quantity[index] ="yes";
+             //document.getElementById("partial_quantity"+index).value = "John";
+           
+            //$(this).val("1");
+            //partialdelivery_list.push($(this).val()); 
+            //$('#partialdeliverydiv'+i).show();
+        }
+        else if($(chkbox).prop("checked") == false){
+
+            //alert("no");
+            $('input[name="partial_quantity[]"]').eq(index).attr("disabled", true);
+
+            //$(this).val("0");
+            //partialdelivery_list.push($(this).val()); 
+            //$('#partialdeliverydiv'+i).hide();
+        }        
+ 
+}
+
 </script>
 
 {% include "includes/file_js.html" %}

@@ -91,7 +91,7 @@ class Product(models.Model):
 class Productdetails(models.Model):
     productid=models.ForeignKey(Product, on_delete=models.CASCADE, related_name='pd_productid')
     product_process=models.ForeignKey(Process, on_delete=models.CASCADE, related_name='pd_process',null=True,blank=True)
-
+    default_process=models.BooleanField(default=False)
 
 class Role(models.Model):
     """Details of Role Entity"""

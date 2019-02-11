@@ -10,6 +10,14 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from printerapp.custom_views.common_function import *
 
+@api_view(['GET','POST'])
+def chk(request):
+    if request.method=='GET':
+        return Response({'data':''},template_name='includes/test_page.html')
+    return Response({'data':'success'})
+
+
+
 
 @api_view(['GET','POST'])
 def create_home(request):

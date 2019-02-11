@@ -56,3 +56,16 @@ def show_single_field(tableName,show_field_name,pk):
             cursor.execute(query)
             row = cursor.fetchone()
             return row[0]
+
+
+@register.simple_tag
+def batch_drop_down_list(tableName,show_field_name,store_field_name,show_field_name1,show_field_name2):
+	data = []
+	with connection.cursor() as cursor:
+		query = "SELECT %s, %s,%s,%s FROM %s where deleted='0'" %(store_field_name,show_field_name,show_field_name1,show_field_name2,tableName)
+		#return query
+		cursor.execute(query)
+		rows = cursor.fetchall()
+		for obj in rows:
+			data.append({"id":(obj[0]),"text":(obj[1])+" -- "+(obj[2])+" -- "+(obj[3])})
+		return data

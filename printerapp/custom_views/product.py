@@ -21,14 +21,17 @@ def product_create(request):
     else:
         pname=request.POST.get('product_name')
         gprarray=request.POST.getlist('processidarray[]')
+        gdefaultarray=request.POST.getlist('defaultprocess[]')
         prarray=list(map(int,gprarray))
+        defaultarray=list(map(int,gdefaultarray))
+        
         prarray_len=len(prarray)
         data={"product_name":pname}
         productserializer=ProductSerializer(data=data)
         if productserializer.is_valid():
             productvar=productserializer.save();
             productid=productvar.id
-            add_productdetails(prarray,productid);
+            add_productdetails(prarray,defaultarray,productid);
             if request.accepted_renderer.format=='html':
                 return Response({"success_data": "Data added successfully"},template_name='product/product_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
@@ -48,11 +51,12 @@ def product_create(request):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-def add_productdetails(prarray,productid):
-    for i in prarray:
+def add_productdetails(prarray,defaultarray,productid):
+    for i,j in zip(prarray,defaultarray):
         data={
             "productid":productid,
             "product_process":i,
+            "default_process":j,
         }
         proddetails_serializer=ProductdetailsSerializer(data=data)
         if proddetails_serializer.is_valid():

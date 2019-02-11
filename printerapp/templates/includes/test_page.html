@@ -1,0 +1,42 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#chkPassport").click(function () {
+            if ($(this).is(":checked")) {
+                $("#txtPassportNumber").removeAttr("disabled");
+                $("#txtPassportNumber").focus();
+            } else {
+                $("#txtPassportNumber").attr("disabled", "disabled");
+            }
+        });
+
+        $('input[name="txt[]"]').eq(0).val("one");
+        $('input[name="txt[]"]').eq(1).val("two");
+        $('input[name="txt[]"]').eq(2).val("three");
+
+
+    });
+    
+    $(".radioBtn").click(function() {
+    $("#textField").attr("disabled", true);
+    if ($("input[name=ynRadio]:checked").val() == "yes") {
+        $("#textField").attr("disabled", false);
+    }
+});
+
+</script>
+<label for="chkPassport">
+    <input type="checkbox" id="chkPassport" />
+    Do you have Passport?
+</label>
+<br />
+Passport Number:
+<input type="text" id="txtPassportNumber" disabled="disabled" />
+<input type="text" id="txt{{forloop.counter}}" name="txt[]"/>
+<input type="text" id="txt{{forloop.counter}}" name="txt[]"/>
+<input type="text" id="txt{{forloop.counter}}" name="txt[]"/>
+<input type="radio" name="ynRadio" class="radioBtn" value="yes" /> Yes
+<input type="radio" name="ynRadio" class="radioBtn" value="no" /> No
+<br/>
+<input type="text" id="textField" />
+    
