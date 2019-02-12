@@ -239,7 +239,15 @@ def jobcard_delete(request,id):
     selected_values.save();
     return HttpResponseRedirect(reverse('printerapp:process_list'))
 
-
+@api_view(['GET','PUT','POST'])
+def getproductadd(request):
+    html=None
+    count=request.POST.get('count')
+    print(count)
+    if request.is_ajax():
+        html = render_to_string("jobcard/jobcard1_add.html",{'data': count})
+        return HttpResponse(html)
+ 
 @api_view(['GET','POST'])
 def getprocesslist(request):
 
@@ -264,13 +272,15 @@ def getprocesslist(request):
         return Response({'processlist':processlist,'processid':processid,'partialdelivery':partialdelivery},template_name='jobcard/jobcard_create_update.html')
 
 
-@api_view(['GET','PUT','POST'])
-def getproductadd(request):
-    html=None
-    count=request.POST.get('count')
-    print(count)
-    if request.is_ajax():
-        html = render_to_string("jobcard/jobcard1_add.html",{'data': count})
-        return HttpResponse(html)
+       
+
+@api_view(['GET','POST'])
+def getsizevalues(request):
+
+    if request.method=='POST':
+        get_sizeid=request.POST.get('sizeid')
+        get_size_obj=Size.objects.get(id=get_sizeid)
+    
         
+        return Response({'length':get_size_obj.length,'width':get_size_obj.width},template_name='jobcard/jobcard_create_update.html')
 

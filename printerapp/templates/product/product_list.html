@@ -39,6 +39,7 @@
                                         <th>No</th>
                                         <th>Product Name</th>
                                         <th>Process</th>
+                                        <th>Default</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -58,7 +59,17 @@
                                     {%endif%}                
                                     {%endif%}{%endfor%}
                                     </td>
-                                    
+
+                                    <td> {% for list in product_data %}
+                                    {%if lists_val.id|add:0  == list.productid|add:0 %}
+                                    {%if list.default_process == 1 %}
+                                    YES,
+                                    {%else%}
+                                    NO,
+                                    {%endif%}                
+                                    {%endif%}{%endfor%}
+                                    </td>
+
                                     <td><div class="btn-group dropright">
                                         <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>

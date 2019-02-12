@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from printerapp.models import *
 from printerapp.serializers.serializers import *
 from django.contrib.auth import authenticate, login, logout
@@ -18,9 +19,17 @@ def process_create(request):
     if request.method=='GET':
         return Response({'data':'','module':'Process'},template_name='process/process_create_update.html')
     else:
-        print(request.data)
-        serializer=ProcessSerializer(data=request.data)
+        processname=request.POST.get('process_name')
+        partialdelivery=request.POST.get('partial_delivery')
+        data={
+        "process_name":processname,
+        "is_deliveryTime":partialdelivery
+        }
+        print(processname)
+        print(partialdelivery)
+        serializer=ProcessSerializer(data=data)
         if serializer.is_valid():
+            print("valid")
             serializer.save();
             if request.accepted_renderer.format=='html':
                 return Response({"success_data": "Data added successfully"},template_name='process/process_create_update.html')

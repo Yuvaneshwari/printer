@@ -73,8 +73,8 @@
                                 </div>
 
                                 <div class="demo-checkbox">
-                                   <input type="checkbox" id="md_checkbox_29" name="md_checkbox_29" class="filled-in chk-col-teal"/>
-                                    <label for="md_checkbox_29">Delivery Time Required?</label>             
+                                   <input type="checkbox" id="partial_delivery" name="partial_delivery" class="filled-in chk-col-teal"/>
+                                    <label for="partial_delivery">Delivery Time Required?</label>             
                                 </div>
 
                               
@@ -83,9 +83,9 @@
                     </div>
                     <div {% if view_mode %} style="display:none" {% endif%}>
                     {%if data.id %}
-                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    <button type="button" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
                     {%else%}
-                    <button type="submit"  name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    <button type="button"  name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
                     {%endif%}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
@@ -109,18 +109,41 @@
 
 <script>
 $(document).ready(function() {
-    $('input[type="checkbox"]').click(function(){
-        if($(this).prop("checked") == true){
-            $(this).val("1");
-            console.log("yes")
-        }
-        else if($(this).prop("checked") == false){
-            $(this).val("0");
-        }
-    });      
+
+
+
     $("#submitfrm").click(function(){
+        
+       
+        if ($('#partial_delivery').is(":checked")) {
+            $('#partial_delivery').val("1");
+
+        } else {
+            $('#partial_delivery').val("0");
+        }
+            
         frmvalidation();
-    });
+
+
+        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        data={"partial_delivery": $('#partial_delivery').val(),"process_name": $('#process_name').val()};
+        /* url="../../product_processupdate/";
+    
+        data={"product_name":jQuery_3_2_1('#product_name').val()};*/
+    $.ajax({
+        type:"POST",
+        url:"../process_create/",
+        data:data,
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
+            
+        success:function(data){
+            document.getElementById("processfrm").reset();  
+        }
+        });     
+    }); 
+   
        
         
     

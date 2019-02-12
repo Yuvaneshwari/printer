@@ -117,9 +117,10 @@ urlpatterns = [
     url(r'^autocomplete/contact_no/$', autocomplete.contact_no_autocomplete, name='contact_no_auto'),
     url(r'^autocomplete/productname/$', autocomplete.product_name_autocomplete, name='productname_auto'),
     
-    url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
     url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
-
+    url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
+    url(r'^jobcard/getsizevalues/$', jobcard.getsizevalues, name='getsizevalues'),
+    
     url(r'^jobcard/pricingrule_paper/$', price_calculate.pricingrule_paper, name='pricingrule_paper'),
 
     url(r'^jobcard/jobcard_list/$', jobcard.jobcard_list, name='jobcard_list'),
@@ -131,6 +132,7 @@ urlpatterns = [
     url(r'^pricingrule/packaging_create/$', packaging.packaging_create, name='packaging_create'),
     url(r'^pricingrule/processpricing_create/$', processpricing.processpricing_create, name='processpricing_create'),
 
+    url(r'^test/testpage/$', chk, name='chk'),
 
 
 ]
