@@ -45,40 +45,43 @@
             </div>       
                        
             <br>
-                               
+                              
             <div class="row clearfix">
-                <div class="col-md-3">
+
+                <div class="col-md-2">
                     <label for="Paper"> Paper</label>
                 </div>
+                <div class="col-md-4">
                 <div class="form-group">
                 {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
-                <div class="col-md-8">
+
                     <select class="form-control show-tick" id="papertype{{data}}" name="papertype[]">
-                    <option value="">-- Select Paper-- </option>   
+                    <option value="">-- Paper --</option>   
                     {% for list_drop_val in list_drop %}
                     <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
                     {% endfor %}
                     </select>
                 </div>
                 </div> 
-            </div>
-                        
-            <div class="row clearfix">
-                <div class="col-md-3">      
+                
+                <div class="col-md-2">      
                     <label for="GSM"> GSM</label>
                 </div>
+                <div class="col-md-4">    
                 <div class="form-group">
                 {% drop_down_list tableName="printerapp_gsm" show_field_name="gsm_name" store_field_name="id" as list_drop %}
-                <div class="col-md-8">           
+                     
                     <select class="form-control show-tick" id="gsm{{data}}" name="gsm[]">
-                    <option value="">-- Select GSM -- </option>    
+                    <option value="">-- GSM --</option>    
                     {% for list_drop_val in list_drop %}
                     <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
                     {% endfor %}
                     </select>
                 </div>
                 </div>
-            </div>                   
+            </div>
+          
+
 
         </div>
         </div>
@@ -180,6 +183,11 @@
                 </div>
             </div>
 
+         
+        </div>   
+
+        <div class="col-md-6">
+
             <div class="row clearfix">
                 <div class="demo-radio-button">
                     <div class="col-md-6">
@@ -192,30 +200,25 @@
                     </div>
                 </div> 
             </div>
+            <br>
 
-        </div>
-
-        <div class="col-md-6">
-
-            <div class="row clearfix">
-                         
-                <label for="Jobtype">Job Type</label>  
-                {% drop_down_list tableName="printerapp_jobtype" show_field_name="jobtype_name" store_field_name="id" as list_drop %}
-                  
-                <div class="demo-radio-button">
-                
-                     {% for list_drop_val in list_drop %}
-                     
-                                    <div class="col-md-6">
-                                    <input name="group1[]" type="radio" id="jobtype{{forloop.counter}}" value="{{list_drop_val.id}}" class="with-gap" checked="true" />
-                                    <label for="jobtype{{forloop.counter}}">{{list_drop_val.text}}</label>
-                                    </div>
-
-                        {% endfor %}   
-               
+            <div class="row clearfix">    
+                <div class="col-md-4">    
+                    <label for="size">JobType</label>
+                </div>
+                <div class="form-group">
+                {% drop_down_list tableName="printerapp_jobtype" show_field_name="jobtype_name" store_field_name="id" as list_drop %}                
+                <div class="col-md-8">
+                    <select class="form-control show-tick" id="jobtype{{data}}" name="jobtype[]">
+                    <option value="">-- Select Jobtype -- </option>
+                    {% for list_drop_val in list_drop %}
+                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
                 </div>
             </div>
-             <br>         
+            <br>
             <div class="row clearfix"> 
                                    
                 <label for="Expected_delivery">Expected Delivery  Date and Time</label>

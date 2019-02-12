@@ -112,3 +112,9 @@ class Jobcard_Product_ProcessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jobcard_Product_Process
         fields = "__all__"
+
+
+class SeriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Series
+        fields = "__all__"

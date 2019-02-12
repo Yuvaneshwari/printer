@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from printerapp.models import *
+from printerapp.custom_views.common_function import *
 from django.template.loader import render_to_string 
 from printerapp.serializers.serializers import *
 from django.contrib.auth import authenticate, login, logout
@@ -52,7 +53,10 @@ def jobcard_create(request):
                 getcustid=getcustomerid.id
         else:
             getcustid=request.POST.get('customerid')
-            data={"customerid":getcustid,"order_date":order_date}
+        company_id=1
+        series_type="JOB"
+        series=create_jobcardno(company_id,series_type)
+        data={"customerid":getcustid,"order_date":order_date,"jobcard_no":series}
         jobcardserializer=JobcardSerializer(data=data)
         if jobcardserializer.is_valid():
             getjobcardid=jobcardserializer.save();
@@ -130,7 +134,7 @@ def jobcard_product_create(request):
             return Response({"data": '','jobcard_product_id':jobcard_product_id}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
-            for key in serializer.errors.keys():
+            for key in jobcard_productserializer.errors.keys():
                 error_details.append({"field": key, "message": serializer.errors[key][0]})
             data = {
             "Error": {

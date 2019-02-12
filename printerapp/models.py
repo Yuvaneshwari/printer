@@ -388,3 +388,14 @@ class Jobcard_Product_Process(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Product_Process_Created_By_User', default=1)
     modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Product_Process_Modified_By_User', default=1)
     deleted = models.BooleanField(default=False)
+
+class Series(models.Model):
+    
+    series_prefix=models.CharField(max_length=100)
+    company=models.ForeignKey(Company,on_delete=models.CASCADE, default=1)
+    series_count=models.IntegerField(default=0)
+    series_for=models.CharField(max_length=50)
+    is_default=models.BooleanField(default=True)
+
+
+    

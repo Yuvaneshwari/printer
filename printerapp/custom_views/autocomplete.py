@@ -62,6 +62,13 @@ def customer_name_autocomplete(request):
         users = Customerdetails.objects.filter(customer_name__icontains = q )[:10]
         results = []
         for user in users:
+            id=user.communication_mode_id
+
+        
+        getid=Communication.objects.get(id=id)
+        print(getid.name)
+        
+        for user in users:
             return_json = {}
             return_json['id'] = user.id
             return_json['label'] = user.customer_name
@@ -72,11 +79,10 @@ def customer_name_autocomplete(request):
             return_json['email_id'] = user.email_id
             return_json['whatsup_no'] = user.whatsup_no
             return_json['secondary_contact_no'] = user.secondary_contact_no
-            #return_json['communication_mode'] = user.communication_mode
+            return_json['communication_mode'] = getid.name
             
             #return_json['order_date'] = user.order_date
 
-           
             results.append(return_json)
         data = json.dumps(results)
     else:
