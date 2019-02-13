@@ -80,15 +80,13 @@
                                 <div class="col-md-4">
                                 <label for="jobtype">Job Type</label>
                                 <div class="form-group">
+                                    {% drop_down_list tableName="printerapp_jobtype" show_field_name="jobtype_name" store_field_name="id" as list_drop %}
                                     <div class="form-line">
                                     <select class="form-control show-tick" id="" name="">
                                     <option value="">-- Select Jobtype -- </option>
-                                    
-                                    <option value="">Invoice</option>
-                                    <option value="">Jobtype1</option>
-                                    <option value="">Jobtype2</option>
-                                    <option value="">Jobtype3</option>
-                                    
+                                    {% for list_drop_val in list_drop %}
+                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                    {% endfor %}
                                     </select>
                                     </div>
                                 </div>
@@ -98,12 +96,13 @@
                                 <label for="select">Pricing Type</label>
                                 <div class="form-group">
                                     <div class="form-line">       
-                                    <select class="form-control show-tick" id="gsm" name="gsm">
-                                    <option value="">-- Select type -- </option>    
+                                    <select class="form-control show-tick" id="pricingtype" name="pricingtype">
+                                    <option value="0">-- Select type -- </option>    
                                 
                                     <option value="1">By Time</option>
                                     <option value="2">By Quantity</option>
                                     <option value="3">By No.Of.Pages</option>
+                                    <option value="4">By Plating</option>
                                     
                                     
                                     </select>
@@ -115,6 +114,8 @@
 
                                 </div>
 
+
+                                <div id="timediv" hidden="true">
                                 <div class="row clearfix">
                                     <div class="col-md-4">
                                     <label for="squareinch">Square Inch</label>
@@ -169,8 +170,9 @@
                                     </div>
 
                                 </div>
-                               
+                                </div>
 
+                                <div id="qtydiv" hidden="true">
                                 <div class="row clearfix">
                                     <div class="col-md-4">
                                     <label for="squareinch">Square Inch</label>
@@ -226,8 +228,9 @@
                                     </div>
 
                                 </div>
-                               
+                                </div>
 
+                                <div id="pagesdiv" hidden="true">
                                 <div class="row clearfix">
                                     <div class="col-md-4">
                                     <label for=squareinch">Square Inch</label>
@@ -275,9 +278,45 @@
                                     </div>
 
                                 </div>
-                               
+                                </div>
+                                
+                                <div id="platingdiv" hidden="true">
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <label for=squareinch">Square Inch</label>
+                                    </div>   
+                                    <div class="col-md-4">
+                                    <label for="price">Price</label>
+                                    </div>    
+                                </div>
+                                
+                                <div class="row clearfix">
+                                    <div class="col-md-2">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                    </div>
+                                    </div>
+                                    </div>
 
+                                    <div class="col-md-2">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                    </div>
+                                    </div>
+                                    </div>
 
+                                    <div class="col-md-4">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                                </div>
 
 
                         </div>
@@ -306,6 +345,43 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+
+    $('#pricingtype').on('change', function() {
+        
+        if(this.value==1){
+            $('#timediv').show();
+        }
+        else{
+            $('#timediv').hide();
+        }
+        if(this.value==2){
+            $('#qtydiv').show();
+        }
+        else{
+            $('#qtydiv').hide();
+        }
+        if(this.value==3){
+            $('#pagesdiv').show();
+        }
+        else{
+            $('#pagesdiv').hide();
+        }
+        if(this.value==4){
+            $('#platingdiv').show();
+        }
+        else{
+            $('#platingdiv').hide();
+        }
+        if(this.value==0){
+            $('#timediv').hide();
+            $('#qtydiv').hide();
+            $('#pagesdiv').hide();
+            $('#platingdiv').hide();
+            
+        }
+
+    });
+
     $("#submitfrm").click(function(){
         frmvalidation();
         

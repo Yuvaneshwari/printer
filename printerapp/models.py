@@ -357,6 +357,7 @@ class Jobcard(models.Model):
 class Jobcard_Product(models.Model):
     """docstring for Jobcard_Product"""
 
+    product_no= models.CharField(max_length=50,blank=True, null=True)
     productcard = models.CharField(max_length=100)
     jobcardid = models.ForeignKey(Jobcard, on_delete=models.CASCADE, related_name='jobcardid', default=1)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE, related_name='paperid', default=1)

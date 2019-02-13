@@ -34,7 +34,7 @@ def product_create(request):
             add_productdetails(prarray,defaultarray,productid);
             if request.accepted_renderer.format=='html':
                 return Response({"success_data": "Data added successfully"},template_name='product/product_create_update.html')
-            return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
+            return Response({"data": "Data added successfully","success_data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
             for key in productserializer.errors.keys():

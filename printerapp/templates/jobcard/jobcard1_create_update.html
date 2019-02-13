@@ -5,7 +5,7 @@
 
 {% include "includes/css_file.html" %}
 <style type="text/css">
-.container { border:2px solid #ccc; width:300px; height: 270px; overflow-y: scroll;
+.container { border:2px solid #ccc; width:300px; height: 250px; overflow-y: scroll;
 </style>
 </head>
 <body class="theme-red">
@@ -36,6 +36,8 @@
         </div>
         {% endif %}
     </div>
+    <div id="jobcard" class="alert bg-red" hidden="true">
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -55,7 +57,7 @@
                             <i class="material-icons">more_vert</i>
                             </a>
                             <ul class="dropdown-menu pull-right">
-                            <li><a href="/printerapp/customer/customer_list"><i class="material-icons">visibility</i></a></li>
+                            <li><a href="/printerapp/jobcard/jobcard_list"><i class="material-icons">visibility</i></a></li>
                                        
                             </ul>
                         </li>
@@ -218,6 +220,7 @@
     var delivery_datetime_list=[];
     var partialdelivery_list=[];
 
+    var jobcardno;
     var processids=[];
     var result=[];
     var sendresult=[];
@@ -454,18 +457,19 @@ $("#submitfrm").click(function(){
         },
             
         success:function(data){
-            storeproductcard(data.jobcardid);           
+            storeproductcard(data.jobcardid,data.jobcardno); 
+            jobcardno=data.jobcardno;          
         }
         });
 
 
 });
-function storeproductcard(id){
+function storeproductcard(id,jobcardno){
 
     for(i=0;i<count;i++){
             
         var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-        data={"id":id,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
+        data={"id":id,"jobcardno":jobcardno,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
     
         $.ajax({
         type:"POST",
@@ -497,6 +501,9 @@ function storeprocesscard(jobcard_product_id){
             
         success:function(data){
             document.getElementById("customerfrm").reset();  
+            $('#productadd').empty();
+            $('#jobcard').show();
+            $('#jobcard').html(jobcardno);
             
         }
     });
@@ -524,6 +531,7 @@ function getproductid(sel,data)
         success:function(data){
            
             getprocess_list(data.processlist,data.processid,data.partialdelivery,processdivcount);
+
         }
     });
 
@@ -663,6 +671,16 @@ function partialdelivery(chkbox,index)
  
 }
 
+
+function clear_data() {
+    $('#del_qty').val("");
+    $('#del_description').val("");
+    $('#del_batch').val("");
+    $('#del_warehouse').val("");
+    $('#state').val("");
+    $('#item_name').val("");
+    $('#production').val("");
+} 
 </script>
 
 {% include "includes/file_js.html" %}

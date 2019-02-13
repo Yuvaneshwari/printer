@@ -164,8 +164,8 @@
 
 
             <div id="partialdeliverydiv[]{{data}}"class="row clearfix">
-                <div class="col-md-6">
-                    <label for="partial_quantity">1.Quantity</label>
+                <div class="col-md-5">
+                    <label for="partial_quantity">1.Part.Qty</label>
                     <div class="form-group">
                     <div class="form-line">
                         <input type="text" name="partial_quantity[]" id="partial_quantity{{data}}" class="form-control" value=""placeholder="Partial Qty" disabled="true">
@@ -173,8 +173,8 @@
                     </div>
                 </div>
                                 
-                <div class="col-md-6">
-                    <label for="partial_datetime">2.Date & Time</label>
+                <div class="col-md-7">
+                    <label for="partial_datetime">2.Part.Date/Time</label>
                     <div class="form-group">
                     <div class="form-line">
                         <input type="text" name="partial_datetime[]" id="partial_datetime{{data}}" class="datetimepicker form-control" value=""placeholder="Date and Time" disabled="true">
@@ -228,18 +228,18 @@
                 </div>
                 </div>
             </div>
-                            
+            <br>             
             <div class="row clearfix"> 
                 <div class="col-md-3">
                     <label for="deliverymode">Delivery</label>
                 </div>
                 <div class="col-md-8">
                 <div class="form-group">
-                {% drop_down_list tableName="printerapp_deliverymode" show_field_name="deliverymode" store_field_name="id" as list_dorp %} 
+                {% drop_down_list tableName="printerapp_deliverymode" show_field_name="deliverymode" store_field_name="id" as list_drop %} 
                                 
                 <select class="form-control show-tick" id="deliverymode{{data}}" name="deliverymode[]">
                 <option value="">-- Deliverymode-- </option>
-                {% for list_val in list_dorp %}
+                {% for list_val in list_drop %}
                 <option value="{{ list_val.id }}"{% if list_val.id == data.state %}selected="true"{% endif %}>{{ list_val.text }}</option>
                 {% endfor %}
                 </select>
@@ -247,13 +247,14 @@
                 </div>
             </div>
             </div>
+            <br>
 
             <div class="row clearfix"> 
             <div class="col-md-6">
                 <label for="delivery_description">Delivery Description</label>
                 <div class="form-group">
                 <div class="form-line">
-                    <textarea class="form-control" rows="3" name="delivery_description[]" id="delivery_description{{data}}" placeholder="Enter delivery desccription">{{data.delivery_description}}</textarea>
+                    <input type="text" name="delivery_description[]" id="delivery_description{{data}}" class="form-control" placeholder="Enter delivery desccription">
                 </div>
                 </div>
             </div>
