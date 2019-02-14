@@ -1,0 +1,127 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>JOBTYPE</h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>Jobtype View</h2>
+                                {%else%}
+                                <h2>Jobtype Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>Jobtype Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/jobtype/jobtype_list"><i class="material-icons">visibility</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post"name="jobtypefrm" id="jobtypefrm">{% csrf_token %}
+                                <label for="gsm_name">Enter Jobtype</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="jobtype_name" id="jobtype_name" class="form-control" value="{{data.jobtype_name}}"placeholder="Enter Jobtype">
+                                    </div>
+                                </div>
+                                
+                               
+                        </div>
+                    </div>
+                    <div {% if view_mode %} style="display:none" {% endif%}>
+                    {%if data.id %}
+                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           
+           
+</div>
+</section>
+<!-- Jquery Core Js -->
+
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+        frmvalidation();
+        
+    }); 
+    
+});
+function frmvalidation(){
+$("#jobtypefrm").validate({
+  rules : {
+    jobtype_name: {
+      required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+
+</script>
+
+{% include "includes/file_js.html" %}
+ 
+</html>

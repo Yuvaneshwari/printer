@@ -61,10 +61,11 @@ def jobcard_create(request):
         if jobcardserializer.is_valid():
             getjobcardid=jobcardserializer.save();
             jobcardid=getjobcardid.id
+            jobcardno=getjobcardid.jobcard_no
             print(jobcardid)
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully","jobcardid": jobcardid},template_name='jobcard/jobcard1_create_update.html')
-            return Response({"data": jobcardid,"jobcardid":jobcardid}, status=status.HTTP_201_CREATED)
+                return Response({"success_data": "Data added successfully","jobcardid": jobcardid,"jobcardno":jobcardno},template_name='jobcard/jobcard1_create_update.html')
+            return Response({"data": jobcardid,"jobcardid":jobcardid,"jobcardno":jobcardno}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
             for key in serializer.errors.keys():
@@ -88,6 +89,7 @@ def jobcard_product_create(request):
         return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')
     else:
         jobcardid=request.POST.get("id")
+        jobcardno=request.POST.get("jobcardno")
         pname=request.POST.get("Productname")
         paper=request.POST.get("Paper")
         gsm=request.POST.get("GSM")
@@ -104,6 +106,10 @@ def jobcard_product_create(request):
         delivery_desc=request.POST.get("DeleiveryDesc")
         delivery_datetime=request.POST.get("DeleiveryDateTime")
         #productcardcount=request.POST.get("count")
+        company_id=1
+        series_type="PRD"
+        productno=create_productno(company_id,series_type,jobcardno)
+        print(productno)
 
         data={
         "productcard":pname,
@@ -122,6 +128,7 @@ def jobcard_product_create(request):
         "jobtype":jobtype,
         "paper":paper,
         "size":size,
+        "product_no":productno
         }
 
 
@@ -163,7 +170,7 @@ def jobcard_product_process_create(request):
             return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id},template_name='jobcard/jobcard1_create_update.html')
         return Response({"data": '','jobcard_product_id':jobcard_product_id}, status=status.HTTP_201_CREATED)
 
-    return Response({'data':'success'})
+    return Response({"success_data": "Data added successfully"})
     
 
 def storeproduct_proccess(jobcard_product_id,process_ids):

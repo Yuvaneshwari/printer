@@ -88,6 +88,11 @@ class CommunicationSerializer(serializers.ModelSerializer):
         model = Communication
         fields = "__all__"
 
+class JobtypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jobtype
+        fields = "__all__"
+
 class PaperpricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paperpricing

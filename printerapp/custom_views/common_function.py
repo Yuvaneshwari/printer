@@ -41,3 +41,24 @@ def create_jobcardno(company_id,series_for):
 	return serial_no_return
        
 		
+def create_productno(company_id,series_for,jobcardno):
+	custom_filter={}
+	data=[]
+	if company_id:
+		custom_filter['company_id']=company_id
+	if series_for:
+		custom_filter['series_for']=series_for
+	series_val=Series.objects.filter(**custom_filter)
+	serial_no_return=""
+	if series_val:
+		series_count=int(series_val[0].series_count)+int(1)
+		series_prefix=jobcardno+"/"
+		id=series_val[0].id
+		series_count=str(series_count)
+		serial_no_return=str(series_prefix)+str(series_count)
+		series_det=Series.objects.get(pk=id) 
+		if series_det:
+			series_det.series_count=series_count
+			series_det.save()
+	return serial_no_return
+ 

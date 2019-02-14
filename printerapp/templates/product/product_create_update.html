@@ -15,7 +15,7 @@
                 <h2>PRODUCT</h2>
             </div>
 
-            <div class="row clearfix">
+            <div class="row clearfix" id="success">
                 {% if  error_data  or  success_data%}
                     <div class="col-md-12">
                     <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
@@ -131,9 +131,9 @@
                     </div>
                     <div {% if view_mode %} style="display:none" {% endif%}>
                     {%if data.id %}
-                    <button type="button" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    <button type="button" name="submitfrmm" id="submitfrmm" class="btn btn-primary m-t-15 waves-effect">Update</button>
                     {%else%}
-                    <button type="button" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
                     {%endif%}
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
@@ -196,6 +196,9 @@ jQuery_3_2_1(document).ready(function() {
       });
     }
 }); 
+  
+});
+
 jQuery_3_2_1("#submitfrm").click(function(){
 
 for(i=0; i<counter-1; i++){
@@ -220,8 +223,8 @@ for(i=0; i<counter-1; i++){
   console.log(defaultprocess[i]);
 }
 
-  var crf_token = jQuery_3_2_1('[name="csrfmiddlewaretoken"]').attr('value');
-  data={"product_name":jQuery_3_2_1('#product_name').val(),"processidarray[]":processidarray,"defaultprocess[]":defaultprocess};
+  var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+  data={"product_name":$('#product_name').val(),"processidarray[]":processidarray,"defaultprocess[]":defaultprocess};
     /* url="../../product_processupdate/";
     
     data={"product_name":jQuery_3_2_1('#product_name').val()};*/
@@ -234,13 +237,13 @@ for(i=0; i<counter-1; i++){
         },
             
         success:function(data){
+            console.log(data);
+            console.log(data.success_data);
+           // $('#success').html(data.success_data);
             document.getElementById("productfrm").reset();  
         }
         });     
     }); 
-  
-});
-
 
 
 </script>

@@ -17,6 +17,7 @@ from printerapp.custom_views.master import company
 from printerapp.custom_views.master import customer
 from printerapp.custom_views.master import deliverymode
 from printerapp.custom_views.master import communication
+from printerapp.custom_views.master import jobtype
 from printerapp.custom_views.pricingrule import paperpricing
 from printerapp.custom_views.pricingrule import packaging
 from printerapp.custom_views.pricingrule import processpricing
@@ -102,6 +103,12 @@ urlpatterns = [
     url(r'^deliverymode/deliverymode_view/(?P<id>[^/]*)/$', deliverymode.deliverymode_view, name='deliverymode_view'),
     url(r'^deliverymode/deliverymode_update/(?P<id>[^/]*)/$',deliverymode.deliverymode_update, name='deliverymode_update'),
     url(r'^deliverymode/deliverymode_delete/(?P<id>[^/]*)/$', deliverymode.deliverymode_delete, name='deliverymode_delete'),
+
+    url(r'^jobtype/jobtype_create/$', jobtype.jobtype_create, name='jobtype_create'),
+    url(r'^jobtype/jobtype_list/$', jobtype.jobtype_list, name='jobtype_list'),
+    url(r'^jobtype/jobtype_view/(?P<id>[^/]*)/$', jobtype.jobtype_view, name='jobtype_view'),
+    url(r'^jobtype/jobtype_update/(?P<id>[^/]*)/$',jobtype.jobtype_update, name='jobtype_update'),
+    url(r'^jobtype/jobtype_delete/(?P<id>[^/]*)/$', jobtype.jobtype_delete, name='jobtype_delete'),
 
     url(r'^communication/communication_create/$', communication.communication_create, name='communication_create'),
     url(r'^communication/communication_list/$', communication.communication_list, name='communication_list'),
