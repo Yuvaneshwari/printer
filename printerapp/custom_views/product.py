@@ -70,7 +70,7 @@ def product_list(request):
     product_obj = Product.objects.filter(**custom_filter)
     product_data = ProductSerializer(product_obj, many=True).data
 
-    proddet_obj = Productdetails.objects.all()
+    proddet_obj = Productdetails.objects.filter(**custom_filter)
     proddet_data = ProductdetailsSerializer(proddet_obj, many=True).data
 
     page = request.GET.get('page', 1)
@@ -91,7 +91,9 @@ def product_view(request,id):
     product_obj = Product.objects.get(id=id)
     product_data = ProductSerializer(product_obj).data
 
-    proddet_obj = Productdetails.objects.all()
+    custom_filter={}
+    custom_filter['deleted']=0
+    proddet_obj = Productdetails.objects.filter(**custom_filter)
     proddet_data = ProductdetailsSerializer(proddet_obj, many=True).data
     if request.accepted_renderer.format == 'html':
         return Response({"data":product_data,"product_data":proddet_data},template_name='product/product_create_update.html')
@@ -110,7 +112,9 @@ def product_update(request,id):
     if request.method=='GET':
         data=ProductSerializer(product_obj).data
 
-        proddet_obj = Productdetails.objects.all()
+        custom_filter={}
+        custom_filter['deleted']=0
+        proddet_obj = Productdetails.objects.filter(**custom_filter)
         proddet_data = ProductdetailsSerializer(proddet_obj, many=True).data
 
         if request.accepted_renderer.format == 'html':
@@ -118,12 +122,22 @@ def product_update(request,id):
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
+        pname=request.POST.get('product_name')
+        gprarray=request.POST.getlist('processidarray[]')
+        gdefaultarray=request.POST.getlist('defaultprocess[]')
+        prarray=list(map(int,gprarray))
+        defaultarray=list(map(int,gdefaultarray))
+        print(pname)
+        print(prarray)
+        print(defaultarray)
+        print(request.data)
         serializer=ProductSerializer(product_obj,request.data,partial=True)
         if serializer.is_valid():
             serializer.save();
+            add_productdetails(prarray,defaultarray,id);
             if request.accepted_renderer.format=='html':
                 return HttpResponseRedirect(reverse('printerapp:product_list'))
-            return Response({"data": "Data Updated successfully"}, status=status.HTTP_200_OK)
+            return Response({"success_data": "Data Updated successfully"}, status=status.HTTP_200_OK,template_name='product/product_list.html')
         else:
             error_details = []
             for key in serializer.errors.keys():
@@ -141,14 +155,12 @@ def product_update(request,id):
 
 @api_view(['GET','PUT','POST'])
 def product_processdelete(request,id):
-    if request.method=='POST':
-        print("hello")
         print(id)
         #print(productid)
-        #selected_values=Productdetails.objects.get(pk=id)
-        #selected_values.deleted=1;
-        #selected_values.save();
-        return HttpResponseRedirect(reverse('printerapp:product_create_update'))
+        selected_values=Productdetails.objects.get(pk=id)
+        selected_values.deleted=1;
+        selected_values.save();
+        return HttpResponseRedirect(reverse('printerapp:product_list'))
 
 @api_view(['GET','PUT','POST'])
 def product_processupdate(request):

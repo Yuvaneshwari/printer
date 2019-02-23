@@ -136,9 +136,17 @@ def jobcard_product_create(request):
         if jobcard_productserializer.is_valid():
             getjobcardproductid=jobcard_productserializer.save();
             jobcard_product_id=getjobcardproductid.id
+
+            jobcard_product=getjobcardproductid.productcard
+            product_obj=Product.objects.get(id=jobcard_product)
+            print(product_obj.product_name)
+            jobcard_product_name=product_obj.product_name
+            #product_data = ProductSerializer(product_obj).data
+            #jobcard_product_name=product_data.product_name
+
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id},template_name='jobcard/jobcard1_create_update.html')
-            return Response({"data": '','jobcard_product_id':jobcard_product_id}, status=status.HTTP_201_CREATED)
+                return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id,"productno":productno,'productname':jobcard_product_name},template_name='jobcard/jobcard1_create_update.html')
+            return Response({"data": '','jobcard_product_id':jobcard_product_id,'productno':productno,'productname':jobcard_product_name}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
             for key in jobcard_productserializer.errors.keys():
@@ -166,9 +174,15 @@ def jobcard_product_process_create(request):
         print(jobcard_product_id)
         print(process_ids)
         storeproduct_proccess(jobcard_product_id,process_ids)
+        processname=[]
+        for id in process_ids:
+            process_obj=Process.objects.get(id=id)
+            processname.append(process_obj.process_name)
+        
+        print(processname)
         if request.accepted_renderer.format=='html':
-            return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id},template_name='jobcard/jobcard1_create_update.html')
-        return Response({"data": '','jobcard_product_id':jobcard_product_id}, status=status.HTTP_201_CREATED)
+            return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id,'processlist':processname},template_name='jobcard/jobcard1_create_update.html')
+        return Response({"data": '','jobcard_product_id':jobcard_product_id,'processlist':processname}, status=status.HTTP_201_CREATED)
 
     return Response({"success_data": "Data added successfully"})
     
@@ -182,6 +196,42 @@ def storeproduct_proccess(jobcard_product_id,process_ids):
         Product_process_serializer = Jobcard_Product_ProcessSerializer(data=data)
         if Product_process_serializer.is_valid():
             Product_process_serializer.save();
+
+
+@api_view(['GET','POST'])
+def final(request):
+    print("1")
+    if request.is_ajax():
+        print("2")
+        return HttpResponse('jobcard/jobcard2.html',{'data':'','module':'Jobcard'})
+
+@api_view(['GET','POST'])
+def jobcard_pro(request):
+    processlist=[]
+    jobcard="JOB023"
+    jobcard_obj=Jobcard.objects.get(id=22)
+    jb_prd_obj=Jobcard_Product.objects.get(jobcardid=22)
+    print("JOB023")
+
+    jb_prd_obj2=Jobcard_Product_Process.objects.filter(jobcard_productid=jb_prd_obj.id)
+
+    get_proccessids=Jobcard_Product_ProcessSerializer(jb_prd_obj2, many=True).data
+
+    print(get_proccessids)
+    for k in get_proccessids:
+        for s,y in k.items():
+            if(s=='processid'):
+                get_process=Process.objects.get(id=y)
+                processlist.append(get_process.process_name)
+
+    get_prd_name=Product.objects.get(id=jb_prd_obj.productcard)
+    prd_name=get_prd_name.product_name
+    print(prd_name)
+    print(processlist)
+
+    mylist = zip(prd_name,processlist)
+    if request.method=='GET':
+        return Response({'data':'','jobcard':jobcard,'mylist':mylist,'product':prd_name,'processlist':processlist},template_name='jobcard/jobcard2.html')
 
 
 @api_view(['GET'])

@@ -97,8 +97,13 @@
                                         NO
                                         {%endif%}
                                     </td>
-                                    <td>
-                                    <i class="material-icons">delete</i>
+                                    <td><div class="btn-group dropright">
+                                        <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        </button>
+                                    <ul class="dropdown-menu">
+                                    <li><a href="/printerapp/product/product_processdelete/{{ list.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                    </ul>
                                     </td>
                                     {%endif%}                
                                     {%endif%}
@@ -111,19 +116,23 @@
 
 
                                 <label for="process_name">Process Name</label>
-                                <div class="form-group"id='TextBoxesGroup'>
-                                    <div class="form-line"id="PassBoxDiv1">
-                                        <div class="row clearfix">
-                                            <div class="col-md-6">  
-                                                <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Process name">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="checkbox" id="default_process1" name="default_process1" class="filled-in chk-col-teal"/>
-                                                <label for="default_process1">Default Process</label>   
-                                            </div>
-                                        </div> 
+                                <div class="row clearfix">
+                                    <div class="col-md-6">  
+                                    <div class="form-group" id="ProccessBoxDiv">
+                                    <div class="form-line">
+                                        
+                                        <input type="text"name="textbox1" id="textbox1" class="form-control" value=""placeholder="Enter Process name">
+                                    
                                     </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" id="default_process1" name="default_process1" class="filled-in chk-col-teal"/>
+                                        <label for="default_process1">Default Process</label>   
+                                    </div>
+
                                 </div>
+                               <div id='TextBoxesGroup'></div>
                                 <label for="lab_plus" id="lab_plus">Add + </label>
                             
 
@@ -131,7 +140,7 @@
                     </div>
                     <div {% if view_mode %} style="display:none" {% endif%}>
                     {%if data.id %}
-                    <button type="button" name="submitfrmm" id="submitfrmm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    <button type="button" name="updatefrm" id="updatefrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
                     {%else%}
                     <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
                     {%endif%}
@@ -156,17 +165,17 @@
 
 <script type="text/javascript">
 var jQuery_3_2_1 = jQuery.noConflict();
-
-jQuery_3_2_1(document).ready(function() {
     var counter = 2;
     var processidarray=[];
     var defaultprocess=[];
+jQuery_3_2_1(document).ready(function() {
+
     console.log("ready");
     jQuery_3_2_1("#lab_plus").click(function () {
                 
-    var newPassBoxDiv = jQuery_3_2_1(document.createElement('div')).attr({"id":'ProccessBoxDiv' + counter,"class":'form-line'});
+    var newPassBoxDiv = jQuery_3_2_1(document.createElement('div')).attr({"id":'ProccessBoxDiv' + counter,"class":'form-group'});
 
-         newPassBoxDiv.after().html('<label>Process Name '+ counter + ' : </label><div class="row clearfix"><div class="col-md-6"><input type="text" class="form-control" placeholder="Enter process name" name="textbox' + counter + '" id="textbox' + counter + '"></div><div class="col-md-6"><input type="checkbox" id="default_process' + counter + '" name="default_process' + counter + '" class="filled-in chk-col-teal"/><label for="default_process' + counter + '">Default Proccess</label></div></div>');
+         newPassBoxDiv.after().html('<label>Process Name '+ counter + ' : </label><div class="row clearfix"><div class="col-md-6"><div class="form-line"><input type="text" class="form-control" placeholder="Enter process name" name="textbox' + counter + '" id="textbox' + counter + '"></div></div><div class="col-md-6"><input type="checkbox" id="default_process' + counter + '" name="default_process' + counter + '" class="filled-in chk-col-teal"/><label for="default_process' + counter + '">Default Proccess</label></div></div>');
    
     newPassBoxDiv.appendTo("#TextBoxesGroup");
     for (var i=1; i < counter;i++)
@@ -238,8 +247,55 @@ for(i=0; i<counter-1; i++){
             
         success:function(data){
             console.log(data);
+            //console.log(data.success_data);
+           // $('#success').html(data.success_data);
+            document.getElementById("productfrm").reset();  
+        }
+        });     
+    }); 
+
+jQuery_3_2_1("#updatefrm").click(function(){
+
+ 
+
+ $.each($('[id^=default_process'), function (i, item) {
+
+    if ($(this).is(":checked")) {
+            $(this).val("1");
+            defaultprocess.push($(this).val()); 
+
+        } else {
+            $(this).val("0");
+            defaultprocess.push($(this).val()); 
+        }
+
+        });
+
+for(i=0; i<counter-1; i++){
+ console.log(processidarray[i]);
+}
+
+for(i=0; i<counter-1; i++){
+  console.log(defaultprocess[i]);
+}
+
+  var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+  data={"product_name":$('#product_name').val(),"processidarray[]":processidarray,"defaultprocess[]":defaultprocess};
+    /* url="../../product_processupdate/";
+    
+    data={"product_name":jQuery_3_2_1('#product_name').val()};*/
+    $.ajax({
+        type:"POST",
+        data:data,
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
+            
+        success:function(data){
+            console.log(data);
             console.log(data.success_data);
            // $('#success').html(data.success_data);
+            $('#product_name').val(" ");
             document.getElementById("productfrm").reset();  
         }
         });     

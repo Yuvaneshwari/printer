@@ -10,6 +10,7 @@ from printerapp.custom_views import role
 from printerapp.custom_views import employee
 from printerapp.custom_views import autocomplete
 from printerapp.custom_views import jobcard
+from printerapp.custom_views import processcard_jobcard
 from printerapp.custom_views.master import customergroup
 from printerapp.custom_views.master import state
 from printerapp.custom_views.master import currency
@@ -119,6 +120,10 @@ urlpatterns = [
     url(r'^jobcard/jobcard_create/$', jobcard.jobcard_create, name='jobcard_create'),
     url(r'^jobcard/jobcard_product_create/$', jobcard.jobcard_product_create, name='jobcard_product_create'),
     url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
+    url(r'^jobcard/final/$', jobcard.final, name='final'),
+
+    url(r'^processcard/processcard_create/$', processcard_jobcard.processcard_create, name='processcard_create'),
+
 
     url(r'^autocomplete/customername/$', autocomplete.customer_name_autocomplete, name='customername_auto'),
     url(r'^autocomplete/contact_no/$', autocomplete.contact_no_autocomplete, name='contact_no_auto'),
