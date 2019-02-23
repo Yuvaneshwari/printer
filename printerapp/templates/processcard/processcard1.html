@@ -1,0 +1,272 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 60%;
+  padding: 6px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 9px 20px;
+  border: none;
+  cursor: pointer;
+  width: 40%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+.square {
+  height: 75px;
+  width: 75px;
+  background-color:#f1f1f1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+text-align: center;
+  
+}
+
+</style>
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2></h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            
+              
+<div id="jobcard"  class="row clearfix">
+<div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
+    <h4><b>{{jobcard}}</b></h4>
+    <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-primary">
+            <div class="panel-heading" role="tab" id="headingOne_1">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">{{product}}</a>
+                </h4>
+            </div>
+
+         
+
+    <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
+    <div class="panel-body">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>OPEN</th>
+                <th>PROCESS</th>
+                <th>HOLD</th>
+                <th>COMPLETE</th>
+                <th>DELIVERED</th>
+            </tr>
+        </thead>
+        <tbody>
+         </tbody>
+            {%for process in processlist%}
+                  
+            <tr>
+            <td><div class="square" onclick="openForm('{{product}}','{{process}}');"><br><b>{{process}}</b></div></td>
+            <td>{{customer}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+
+            </tr>
+            {%endfor%}
+                         
+      </table> 
+  
+
+    </div>
+    </div>
+
+    </div>
+    </div>
+</div>
+</div>
+                               
+<!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           
+<!--<button class="open-button" onclick="openForm()">Open Form</button>-->
+
+<div class="form-popup" id="myForm">
+  <form action="" class="form-container">
+    <p><i class="fa fa-file-text"style="right;"></i></p>
+    <label for="prdname"><b>ProductName  :</b></label>
+    <input type="text" name="prdname" id="prdname"required>
+
+    <label for="proname"><b>ProcessName  :</b></label>
+    <input type="text" name="proname" id="proname"required>
+
+    <label for="date"><b>DeliveryDate&nbsp;&nbsp;&nbsp;:</b></label>
+    <input type="text" name="date" required>
+
+    <label for="custname"><b>Customername:</b></label>
+    <input type="text" name="custname" id="custname"required>
+
+    <label for="assign"><b>AssignedTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
+    <input type="text" name="assign" required>
+
+   
+    <hr>
+
+    <label for="comments"><b>Comments&nbsp;&nbsp;:</b></label>
+    <input type="text" name="comments" required>
+
+    <input type="file" name="file" required>
+    <hr>
+    
+    <button type="submit" class="btn">SAVE</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+
+  </form>
+</div>
+          
+</div>
+</section>
+<!-- Jquery Core Js -->
+        <!-- #END# Right Sidebar -->
+
+
+
+
+
+
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+        frmvalidation();
+        
+    }); 
+    
+});
+function frmvalidation(){
+$("#gsmfrm").validate({
+  rules : {
+    gsm_name: {
+      required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+
+</script>
+<script>
+function openForm(prodname,processname,customer) {
+   
+document.getElementById("prdname").value=prodname;
+document.getElementById("proname").value=processname;
+document.getElementById("custname").value=customer;
+document.getElementById("myForm").style.display = "block";
+
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>
+{% include "includes/file_js.html" %}
+ 
+</html>

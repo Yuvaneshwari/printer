@@ -65,17 +65,18 @@
                         <div class="body">
                             <form method="post"name="processfrm" id="processfrm">{% csrf_token %}
                                 <label for="process_name">Process Name</label>
+                               
                                 <div class="form-group">
                                     <div class="form-line">
                                         <input type="text"name="process_name" id="process_name" class="form-control" value="{{data.process_name}}"placeholder="Enter Process name">
                                     </div>
-
                                 </div>
-
+                                
                                 <div class="demo-checkbox">
                                    <input type="checkbox" id="partial_delivery" name="partial_delivery" class="filled-in chk-col-teal"/>
                                     <label for="partial_delivery">Delivery Time Required?</label>             
                                 </div>
+                                
 
                               
 
