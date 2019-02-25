@@ -181,10 +181,17 @@ def jobcard_product_process_create(request):
         
         print(processname)
         if request.accepted_renderer.format=='html':
-            return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id,'processlist':processname},template_name='jobcard/jobcard1_create_update.html')
-        return Response({"data": '','jobcard_product_id':jobcard_product_id,'processlist':processname}, status=status.HTTP_201_CREATED)
+            return Response({"success_data": "Data added successfully",'jobcard_product_id':jobcard_product_id,'processlist':processname},template_name='processcard/processcard1.html')
+        return Response({"data": '','jobcard_product_id':jobcard_product_id,'processlist':processname}, template_name='processcard/processcard1.html')
+    
+        #html=render_to_string("processcard/processcard1.html")
+        #return HttpResponse(html)
 
-    return Response({"success_data": "Data added successfully"})
+    #return HttpResponse(reverse('printerapp:processcard_create'))
+    return Response({"data": '','jobcard_product_id':jobcard_product_id,'processlist':processname}, template_name='processcard/processcard1.html')
+        
+
+    #return Response({"success_data": "Data added successfully"},template_name='processcard/processcard1.html')
     
 
 def storeproduct_proccess(jobcard_product_id,process_ids):

@@ -122,13 +122,14 @@ urlpatterns = [
     url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
     url(r'^jobcard/final/$', jobcard.final, name='final'),
 
-    url(r'^processcard/processcard_create/$', processcard_jobcard.processcard_create, name='processcard_create'),
+    url(r'^processcard/processcard_create/(?P<id>[^/]*)/$', processcard_jobcard.processcard_create, name='processcard_create'),
 
 
     url(r'^autocomplete/customername/$', autocomplete.customer_name_autocomplete, name='customername_auto'),
     url(r'^autocomplete/contact_no/$', autocomplete.contact_no_autocomplete, name='contact_no_auto'),
     url(r'^autocomplete/productname/$', autocomplete.product_name_autocomplete, name='productname_auto'),
-    
+    url(r'^autocomplete/username/$', autocomplete.user_name_autocomplete, name='username_auto'),
+
     url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
     url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
     url(r'^jobcard/getsizevalues/$', jobcard.getsizevalues, name='getsizevalues'),
