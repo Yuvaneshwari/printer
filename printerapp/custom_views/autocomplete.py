@@ -15,7 +15,8 @@ import json
 def process_name_autocomplete(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        custom_filter={}     
+        custom_filter={}    
+        custom_filter['deleted']=0 
         users = Process.objects.filter(process_name__icontains = q )[:10]
         results = []
         for user in users:
@@ -37,6 +38,7 @@ def product_name_autocomplete(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
         custom_filter={}     
+        custom_filter['deleted']=0
         users = Product.objects.filter(product_name__icontains = q )[:10]
         results = []
         for user in users:
@@ -58,7 +60,8 @@ def product_name_autocomplete(request):
 def customer_name_autocomplete(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        custom_filter={}     
+        custom_filter={} 
+        custom_filter['deleted']=0    
         users = Customerdetails.objects.filter(customer_name__icontains = q )[:10]
         results = []
         for user in users:
@@ -95,7 +98,8 @@ def customer_name_autocomplete(request):
 def contact_no_autocomplete(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        custom_filter={}     
+        custom_filter={}  
+        custom_filter['deleted']=0   
         users = Customerdetails.objects.filter(primary_contact_no__icontains = q )[:10]
         results = []
         for user in users:
@@ -120,4 +124,25 @@ def contact_no_autocomplete(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
             
+@api_view(['GET', 'POST'])
+def user_name_autocomplete(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        custom_filter={}  
+        custom_filter['deleted']=0   
+        users = User.objects.filter(username__icontains = q )[:10]
+        results = []
+        for user in users:
+            return_json = {}
+            return_json['id'] = user.id
+            return_json['label'] = user.username
+            return_json['value'] = user.username
+            
+            
+            results.append(return_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
 

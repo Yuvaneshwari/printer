@@ -497,7 +497,8 @@ function storeproductcard(id,jobcardno){
 function storeprocesscard(jobcard_product_id){
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
     data={"id":jobcard_product_id,"processlist_id[]": processids};
-  
+    
+    processcard_url="/printerapp/processcard/processcard_create/";
     $.ajax({
         type:"POST",
         url:"../jobcard_product_process_create/",
@@ -511,7 +512,8 @@ function storeprocesscard(jobcard_product_id){
             console.log("process");
             console.log(data.processlist);
             $('#productadd').empty();
-            final();
+            window.location.href=processcard_url+jobcardno;
+            //final();
            // $('#jobcard').show();
            // $('#jobcard').html(jobcardno);
 
