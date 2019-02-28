@@ -1,0 +1,180 @@
+{% load static %}{% load rest_framework %}{%load common_function%}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+<section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>JOBCARD</h2>
+            </div>
+            <!-- Basic Table -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                Jobcard List
+                            </h2>
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="/printerapp/jobcard/jobcard_create"><i class="material-icons">add</i></a></li>
+                                       
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Jobcard Number</th>
+                                        <th>Customer Name</th>
+                                        <th>Product</th>
+                                        <th>Product Number</th>
+                                        <th>Paper</th>
+                                        <th>Size</th>
+                                        <th>GSM</th>
+                                        <th>Quantity</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    {% for lists_val in jobcarddata %}
+                                    
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{lists_val.jobcard_no}}</td>
+                                    <td>{% for list in customerdata %}
+                                    {%if lists_val.customerid|add:0  == list.id|add:0 %}
+                                    
+                                    {{list.customer_name}}
+                                        
+                                    {%endif%}
+
+                                    {%endfor%}
+                                    </td>
+                                    <td>{% for list in productdata %}
+                                    {%if lists_val.id|add:0  == list.jobcardid|add:0 %}
+                                    {%show_single_field tableName="printerapp_product" show_field_name="product_name" pk=list.productcard as prodname%}
+                                    {{prodname}}
+                                        
+                                    {%endif%}
+
+                                    {%endfor%}
+                                    </td>
+                                    <td> {% for list in productdata %}
+                                    {%if lists_val.id|add:0  == list.jobcardid|add:0 %}
+                                    
+                                    {{list.product_no}},
+                                        
+                                    {%endif%}{%endfor%}
+                                    </td>
+                                     <td>{% for list in productdata %}
+                                    {%if lists_val.id|add:0  == list.jobcardid|add:0 %}
+                                    {%show_single_field tableName="printerapp_paper" show_field_name="paper_name" pk=list.paper as paper%}
+                                    {{paper}}
+                                    {%endif%}
+                                    {%endfor%}
+                                    </td>
+                                     <td>{% for list in productdata %}
+                                    {%if lists_val.id|add:0  == list.jobcardid|add:0 %}
+                                    {%show_single_field tableName="printerapp_size" show_field_name="size_name" pk=list.size as size%}
+                                    {{size}}
+                                    {%endif%}
+                                    {%endfor%}
+                                    </td>
+                                     <td>{% for list in productdata %}
+                                    {%if lists_val.id|add:0  == list.jobcardid|add:0 %}
+                                    {%show_single_field tableName="printerapp_gsm" show_field_name="gsm_name" pk=list.gsm as gsm%}
+                                    {{gsm}}
+                                    {%endif%}
+                                    {%endfor%}
+                                    </td>
+                                    
+                                    <td> {% for list in productdata %}
+                                    {%if lists_val.id|add:0  == list.jobcardid|add:0 %}
+                                    {{list.quantity}}
+                                    {%endif%}
+                                    {%endfor%}
+                                    </td>
+                                    <td><div class="btn-group dropright">
+                                        <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                        <li><a href=""><i class="material-icons">create</i></a></li>
+                                        <li><a href="/printerapp/jobcard/jobcard_delete/{{ lists_val.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                        <li><a href=""><i class="material-icons">visibility</i></a><li>
+                                        </ul>
+                                        </div>
+                                    </td>
+                                   
+
+                                </tr>
+                                {% endfor %}
+                               
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+</section> 
+
+
+{% if data.has_other_pages %}
+<div>
+<div class=""style="float: right">
+<ul class="pagination">
+    {% if data.has_previous %}
+    <li class="paginate_button previous"  tabindex="0" >
+        <a href="?page={{ data.previous_page_number }}">Previous</a>
+    </li>
+    {% else %}
+    <li class="paginate_button previous disabled"  tabindex="0" >
+        <a href="#">Previous</a>
+    </li>
+    {% endif %}
+    {% for i in data.paginator.page_range %}
+    {% if data.number == i %}
+    <li class="paginate_button active"  tabindex="0">
+        <a href="?page={{ i }}">{{ i }}</a>
+    </li> {% else %}
+    <li class="paginate_button "  tabindex="0">
+        <a href="?page={{ i }}">{{ i }}</a>
+    </li>{% endif %}
+    {% endfor %}
+    {% if data.has_next %}
+    <li class="paginate_button next"  tabindex="0" id="datatable_next">
+        <a href="?page={{ lists.next_page_number }}">Next</a>
+    {% else %}
+    <li class="paginate_button next disabled"  tabindex="0">
+        <a href="#">Next</a>
+    {% endif %}         
+    </li>
+</ul>
+</div>
+</div>
+{% endif %}  
+
+
+                    
+                    
+{% include "includes/file_js.html" %}
+ 
+   
+</body>
+
+</html>

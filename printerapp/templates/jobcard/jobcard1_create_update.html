@@ -251,7 +251,8 @@ jQuery_3_2_1(document).ready(function() {
 
         });
     count++;
-    }); 
+    });
+
 
 
     jQuery_3_2_1("#name").autocomplete({
@@ -290,6 +291,7 @@ jQuery_3_2_1(document).ready(function() {
       },
       minLength : 2,
       });
+
 
 
 
@@ -465,8 +467,10 @@ $("#submitfrm").click(function(){
         }
         });
 
-
 });
+
+
+});  
 function storeproductcard(id,jobcardno){
 
     for(i=0;i<count;i++){
@@ -513,7 +517,7 @@ function storeprocesscard(jobcard_product_id){
             console.log(data.processlist);
             $('#productadd').empty();
             window.location.href=processcard_url+jobcardno;
-            //final();
+            
            // $('#jobcard').show();
            // $('#jobcard').html(jobcardno);
 
@@ -522,30 +526,7 @@ function storeprocesscard(jobcard_product_id){
     });
 }
 
-function final(){
-    var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-   // data={"id":jobcard_product_id,"processlist_id[]": processids};
-  
-    $.ajax({
-        
-        url:"../final/",
-        
-        headers : {
-        "X-CSRFToken" : crf_token
-        },
-            
-        success:function(data){
-     
-            console.log("nav");
-          
-
-            
-        }
-    });
-}
-
-});
-
+ 
 </script>
 
 <script type="text/javascript">
@@ -566,7 +547,7 @@ function getproductid(sel,data)
         
         success:function(data){
            
-            getprocess_list(data.processlist,data.processid,data.partialdelivery,processdivcount);
+            getprocess_list(data.processlist,data.processid,data.partialdelivery,data.defaultprocess,processdivcount);
 
         }
     });
@@ -574,10 +555,11 @@ function getproductid(sel,data)
 }
 
 
-function getprocess_list(processlist,processid,partialdelivery,processdivcount)
+function getprocess_list(processlist,processid,partialdelivery,defaultprocess,processdivcount)
 {
     //$('#processlistdiv'+processdivcount).empty();
     $('#processlistdiv').empty();
+    console.log(partialdelivery);
     for(i=0;i<processlist.length ;i++){
 
     var container = $('#processlistdiv');
@@ -587,8 +569,15 @@ function getprocess_list(processlist,processid,partialdelivery,processdivcount)
     var id = inputs.length+1;
     $('<input />', { type: 'checkbox', id: 'processname'+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
     $('<label />', { 'for': 'processname'+id, text: processlist[i] }).appendTo(container);
-    $('<input />', { type: 'text', id: 'dt'+id ,size:'5',placeholder:'Date and Time'}).appendTo(container);
-    
+    $('<input />', { type: 'text', id: 'datetime'+id ,placeholder:'Date and Time',disabled:"true"}).appendTo(container);
+    if(defaultprocess[i]==true){
+        $( "#processname"+id).prop('checked', true);
+      
+    }
+    if(partialdelivery[i]==true){
+        
+        $( "#datetime"+id).prop('disabled', false);
+    }
     }
     processids.length=0;
             

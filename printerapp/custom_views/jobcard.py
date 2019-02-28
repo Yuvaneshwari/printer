@@ -205,60 +205,37 @@ def storeproduct_proccess(jobcard_product_id,process_ids):
             Product_process_serializer.save();
 
 
-@api_view(['GET','POST'])
-def final(request):
-    print("1")
-    if request.is_ajax():
-        print("2")
-        return HttpResponse('jobcard/jobcard2.html',{'data':'','module':'Jobcard'})
-
-@api_view(['GET','POST'])
-def jobcard_pro(request):
-    processlist=[]
-    jobcard="JOB023"
-    jobcard_obj=Jobcard.objects.get(id=22)
-    jb_prd_obj=Jobcard_Product.objects.get(jobcardid=22)
-    print("JOB023")
-
-    jb_prd_obj2=Jobcard_Product_Process.objects.filter(jobcard_productid=jb_prd_obj.id)
-
-    get_proccessids=Jobcard_Product_ProcessSerializer(jb_prd_obj2, many=True).data
-
-    print(get_proccessids)
-    for k in get_proccessids:
-        for s,y in k.items():
-            if(s=='processid'):
-                get_process=Process.objects.get(id=y)
-                processlist.append(get_process.process_name)
-
-    get_prd_name=Product.objects.get(id=jb_prd_obj.productcard)
-    prd_name=get_prd_name.product_name
-    print(prd_name)
-    print(processlist)
-
-    mylist = zip(prd_name,processlist)
-    if request.method=='GET':
-        return Response({'data':'','jobcard':jobcard,'mylist':mylist,'product':prd_name,'processlist':processlist},template_name='jobcard/jobcard2.html')
-
 
 @api_view(['GET'])
 def jobcard_list(request):
     custom_filter={}
     custom_filter['deleted']=0
-    process_obj = Process.objects.filter(**custom_filter)
-    process_data = ProcessSerializer(process_obj, many=True).data
+
+    cust_obj = Customerdetails.objects.filter(**custom_filter)
+    cust_data = CustomerdetailsSerializer(cust_obj, many=True).data
+
+
+    jobcard_obj = Jobcard.objects.filter(**custom_filter)
+    jobcard_data = JobcardSerializer(jobcard_obj, many=True).data
+
+    product_obj = Jobcard_Product.objects.filter(**custom_filter)
+    product_data = Jobcard_ProductSerializer(product_obj, many=True).data
+
+    process_obj = Jobcard_Product_Process.objects.filter(**custom_filter)
+    process_data = Jobcard_Product_ProcessSerializer(process_obj, many=True).data
+
     page = request.GET.get('page', 1)
-    paginator = Paginator(process_data, row_per_page)
+    paginator = Paginator(jobcard_data, row_per_page)
     try:
-        process_data = paginator.page(page)
+        jobcard_data = paginator.page(page)
     except PageNotAnInteger:
-        process_data = paginator.page(1)
+        jobcard_data = paginator.page(1)
     except EmptyPage:
-        process_data = paginator.page(paginator.num_pages)
+        jobcard_data = paginator.page(paginator.num_pages)
     
     if request.accepted_renderer.format == 'html':
-        return Response({"data":process_data,'module':'Process',"custom_filter":custom_filter},template_name='productcard/product_list.html')
-    return Response({"data": process_data}, status=status.HTTP_200_OK)
+        return Response({"data":jobcard_data,'module':'Jobcard',"customerdata":cust_data,"jobcarddata":jobcard_data,"productdata":product_data,"processdata":process_data},template_name='jobcard/jobcard_list.html')
+    return Response({"data":jobcard_data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -266,7 +243,7 @@ def jobcard_view(request,id):
     process_obj=Process.objects.get(id=id)
     process_data = ProcessSerializer(process_obj).data
     if request.accepted_renderer.format == 'html':
-        return Response({"data":process_data,'module':'Process',"view_mode":1},template_name='productcard/product_create_update.html')
+        return Response({"data":process_data,'module':'Process',"view_mode":1},template_name='productcard/jobcard1_create_update.html')
     return Response({"data":process_data,"view_mode":1}, status=status.HTTP_200_OK)
 
 @api_view(['GET','PUT','POST'])
@@ -275,7 +252,7 @@ def jobcard_update(request,id):
     if request.method=='GET':
         data=ProcessSerializer(process_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='productcard/product_create_update.html')
+            return Response({'data':data},template_name='productcard/jobcard1_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
@@ -283,7 +260,7 @@ def jobcard_update(request,id):
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return HttpResponseRedirect(reverse('printerapp:process_list'))
+                return HttpResponseRedirect(reverse('printerapp:jobcard_list'))
             return Response({"data": "Data Updated successfully"}, status=status.HTTP_200_OK)
         else:
             error_details = []
@@ -302,10 +279,10 @@ def jobcard_update(request,id):
 
 @api_view(['GET', 'POST','Delete'])
 def jobcard_delete(request,id):
-    selected_values=Process.objects.get(pk=id)
+    selected_values=Jobcard.objects.get(pk=id)
     selected_values.deleted=1;
     selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:process_list'))
+    return HttpResponseRedirect(reverse('printerapp:jobcard_list'))
 
 @api_view(['GET','PUT','POST'])
 def getproductadd(request):
@@ -328,16 +305,19 @@ def getprocesslist(request):
         processlist=[]
         processid=[]
         partialdelivery=[]
+        defaultprocess=[]
         for k in get_process_data:
             for s,y in k.items():
                 if(s=='product_process'):
                     get_process_id=Process.objects.get(id=y)
-                    print(get_process_id.process_name)
                     processlist.append(get_process_id.process_name)
                     processid.append(get_process_id.id)
                     partialdelivery.append(get_process_id.is_deliveryTime)
-          
-        return Response({'processlist':processlist,'processid':processid,'partialdelivery':partialdelivery},template_name='jobcard/jobcard_create_update.html')
+                if(s=='default_process'):
+                    defaultprocess.append(y)
+
+        
+        return Response({'processlist':processlist,'processid':processid,'partialdelivery':partialdelivery,'defaultprocess':defaultprocess},template_name='jobcard/jobcard_create_update.html')
 
 
        

@@ -10,6 +10,7 @@ from printerapp.custom_views import role
 from printerapp.custom_views import employee
 from printerapp.custom_views import autocomplete
 from printerapp.custom_views import jobcard
+from printerapp.custom_views import rectangle
 from printerapp.custom_views import processcard_jobcard
 from printerapp.custom_views.master import customergroup
 from printerapp.custom_views.master import state
@@ -120,8 +121,7 @@ urlpatterns = [
     url(r'^jobcard/jobcard_create/$', jobcard.jobcard_create, name='jobcard_create'),
     url(r'^jobcard/jobcard_product_create/$', jobcard.jobcard_product_create, name='jobcard_product_create'),
     url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
-    url(r'^jobcard/final/$', jobcard.final, name='final'),
-
+   
     url(r'^processcard/processcard_create/(?P<id>[^/]*)/$', processcard_jobcard.processcard_create, name='processcard_create'),
 
 
@@ -146,6 +146,7 @@ urlpatterns = [
     url(r'^pricingrule/processpricing_create/$', processpricing.processpricing_create, name='processpricing_create'),
 
     url(r'^test/testpage/$', chk, name='chk'),
+    url(r'^rectangle/logic/$', rectangle.logic_create, name='logic_create'),
 
 
 ]

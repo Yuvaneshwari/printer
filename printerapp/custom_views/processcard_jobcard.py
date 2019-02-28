@@ -24,6 +24,7 @@ def processcard_create(request,id):
     if request.method=='GET':
         
         processlist=[]
+        productnolist=[]
         jobcard=id
         jobcard_obj=Jobcard.objects.get(jobcard_no=jobcard)
         jobcardid=jobcard_obj.id
@@ -33,6 +34,7 @@ def processcard_create(request,id):
 
         jb_prd_obj=Jobcard_Product.objects.get(jobcardid=jobcardid)
         del_date=jb_prd_obj.delivery_datetime
+        productnolist.append(jb_prd_obj.product_no)
 
         get_prd=Product.objects.get(id=jb_prd_obj.productcard)
         prd_name=get_prd.product_name
@@ -48,5 +50,5 @@ def processcard_create(request,id):
                     processlist.append(get_process.process_name)
 
        
-        return Response({'data':'','jobcard':jobcard,'customer':customer,'product':prd_name,'processlist':processlist,'delivery_date':del_date},template_name='processcard/processcard1.html')
+        return Response({'data':'','jobcard':jobcard,'productnolist':productnolist,'customer':customer,'product':prd_name,'processlist':processlist,'delivery_date':del_date},template_name='processcard/processcard1.html')
  

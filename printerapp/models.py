@@ -385,6 +385,7 @@ class Jobcard_Product_Process(models.Model):
     """Details of Jobcard_Product_Process Entity"""
     jobcard_productid= models.ForeignKey(Jobcard_Product, on_delete=models.CASCADE, related_name='jobcardproductid', default=1)
     processid = models.ForeignKey(Process, on_delete=models.CASCADE, related_name='jobcardprocessid', default=1)
+    datetime = models.DateTimeField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobcard_Product_Process_Created_By_User', default=1)

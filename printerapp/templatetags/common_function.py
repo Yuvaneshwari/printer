@@ -34,6 +34,11 @@ def userlist():
 	return user_data;
 
 @register.simple_tag
+def productlist(id):
+	product_obj=Product.objects.get(id=id)
+	return product_obj.product_name;
+
+@register.simple_tag
 def drop_down_list(tableName,show_field_name,store_field_name):
 	data = []
 	with connection.cursor() as cursor:

@@ -263,7 +263,7 @@
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MAIN NAVIGATION</li>
+                     <!--<li class="header">MAIN NAVIGATION</li>-->
                     <li class="active">
                         <a href="{% url 'printerapp:home' %}">
                             <i class="material-icons">home</i>
@@ -271,6 +271,9 @@
                         </a>
                     </li>
                         
+                    
+
+                    
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">assignment</i>
@@ -294,12 +297,6 @@
                                 <a href="{% url 'printerapp:product_list' %}">Product</a>
                             </li>
                             <li>
-                                <a href="{% url 'printerapp:jobcard_create' %}">Job Card</a>
-                            </li>
-                            <li>
-                                <a href="">Process Card</a>
-                            </li>
-                             <li>
                                 <a href="{% url 'printerapp:deliverymode_list' %}">Deliverymode</a>
                             </li>
                             <li>
@@ -324,6 +321,27 @@
                                 <a href="{% url 'printerapp:customer_list' %}">Customer</a>
                             </li>
                         
+                            
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">assignment</i>
+                            <span>Jobcard</span>
+                        </a>
+                        <ul class="ml-menu">
+                            
+                            <li>
+                                <a href="{% url 'printerapp:jobcard_create' %}">Job Card</a>
+                            </li>
+                             <li>
+                                <a href="{% url 'printerapp:jobcard_list' %}">Job Card List</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'printerapp:logic_create' %}">Rectangle</a>
+                            </li>
+                            
                             
                         </ul>
                     </li>
