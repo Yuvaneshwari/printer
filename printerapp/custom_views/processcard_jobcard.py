@@ -22,24 +22,39 @@ row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 @api_view(['GET','POST'])
 def processcard_create(request,id):
     if request.method=='GET':
-        
-        processlist=[]
-        productnolist=[]
+        i=0
+        process_list=[]
+        productno_list=[]
+        del_date_list=[]
+        productname_list=[]
         jobcard=id
         jobcard_obj=Jobcard.objects.get(jobcard_no=jobcard)
         jobcardid=jobcard_obj.id
-       
+        print("jobcard")
+        print(jobcard)
         get_custname=Customerdetails.objects.get(id=jobcard_obj.customerid_id)
         customer=get_custname.customer_name
+        print("cust")
+        print(customer)
+        jb_prd_obj=Jobcard_Product.objects.filter(jobcardid=jobcardid)
+        jb_prd_data = Jobcard_ProductSerializer(jb_prd_obj, many=True).data
+        print("product")
+        print(len(jb_prd_obj))
+        productlen=len(jb_prd_obj)
+        while(i<productlen):
+            print(jb_prd_obj[i].product_no)
+            print(jb_prd_obj[i].delivery_datetime)
+            productno_list.append(jb_prd_obj[i].product_no)
+            del_date_list.append(jb_prd_obj[i].delivery_datetime)
+            get_prd=Product.objects.get(id=jb_prd_obj[i].productcard)
+            productname_list.append(get_prd.product_name)
 
-        jb_prd_obj=Jobcard_Product.objects.get(jobcardid=jobcardid)
-        del_date=jb_prd_obj.delivery_datetime
-        productnolist.append(jb_prd_obj.product_no)
+            i=i+1
 
-        get_prd=Product.objects.get(id=jb_prd_obj.productcard)
-        prd_name=get_prd.product_name
 
-        jb_prd_obj2=Jobcard_Product_Process.objects.filter(jobcard_productid=jb_prd_obj.id)
+        
+    
+        jb_prd_obj2=Jobcard_Product_Process.objects.filter(jobcard_productid=59)
         get_proccessids=Jobcard_Product_ProcessSerializer(jb_prd_obj2, many=True).data
 
         #print(get_proccessids)
@@ -47,8 +62,8 @@ def processcard_create(request,id):
             for s,y in k.items():
                 if(s=='processid'):
                     get_process=Process.objects.get(id=y)
-                    processlist.append(get_process.process_name)
+                    process_list.append(get_process.process_name)
 
-       
-        return Response({'data':'','jobcard':jobcard,'productnolist':productnolist,'customer':customer,'product':prd_name,'processlist':processlist,'delivery_date':del_date},template_name='processcard/processcard1.html')
+        mylist=zip(productno_list,productname_list,del_date_list)       
+        return Response({'data':'','jobcard':jobcard,'mylist':mylist,'productnolist':productno_list,'customer':customer,'product':productname_list,'processlist':process_list,'delivery_date':del_date_list},template_name='processcard/processcard1.html')
  

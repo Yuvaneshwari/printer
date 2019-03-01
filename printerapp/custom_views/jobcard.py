@@ -332,3 +332,15 @@ def getsizevalues(request):
         
         return Response({'length':get_size_obj.length,'width':get_size_obj.width},template_name='jobcard/jobcard_create_update.html')
 
+
+@api_view(['GET','POST'])
+def resetseries(request):
+    custom_filter={}
+    series_for="PRD"
+    custom_filter['series_for']=series_for
+    series_det=Series.objects.get(series_for=series_for)
+    if series_det:
+        series_det.series_count=0
+        series_det.save()
+   
+    return Response({"data": ''}, status=status.HTTP_201_CREATED)    

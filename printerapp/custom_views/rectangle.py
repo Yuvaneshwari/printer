@@ -19,7 +19,6 @@ def logic_create(request):
     if request.method=='GET':
         return Response({'data':'','module':'Logic'},template_name='rectangle/logic.html')
     else:
-        
         sheetlength=int(request.POST.get('sheetlength'))
         sheetwidth=int(request.POST.get('sheetwidth'))
         cardlength=int(request.POST.get('cardlength'))
@@ -39,6 +38,6 @@ def logic_create(request):
             print(rect)
 
         if request.accepted_renderer.format=='html':
-            return Response({"success_dat": "Data added successfully","rect":rect},template_name='rectangle/logic.html')
+            return Response({"success_dat": "Data added successfully","rect":rect,"sheetlength":sheetlength,"sheetwidth":sheetwidth,"cardlength":cardlength,"cardwidth":cardwidth},template_name='rectangle/logic.html')
         return Response({"data": "Data added successfully","rect":rect}, status=status.HTTP_201_CREATED)
     

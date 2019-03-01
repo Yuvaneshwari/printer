@@ -129,15 +129,15 @@ body {font-family: Arial, Helvetica, sans-serif;}
             </div>
             <!-- Vertical Layout -->
             
-              
+{%for x,y,z in mylist%}              
 <div id="jobcard"  class="row clearfix">
 <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
-    <h4><b>{{productnolist}}</b></h4>
+    <h4><b>{{x}}</b></h4>
     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
         <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingOne_1">
                 <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">{{product}}</a>
+                    <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">{{y}}</a>
                 </h4>
             </div>
 
@@ -160,7 +160,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
             {%for process in processlist%}
                   
             <tr>
-            <td><div class="square" onclick="openForm('{{product}}','{{process}}','{{delivery_date}}','{{customer}}');"><br><b>{{process}}</b></div></td>
+            <td><div class="square" onclick="openForm('{{y}}','{{process}}','{{z}}','{{customer}}');"><br><b>{{process}}</b></div></td>
             <td></td>
             <td></td>
             <td></td>
@@ -179,7 +179,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </div>
 </div>
 </div>
-                               
+{%endfor%}                               
 <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
            

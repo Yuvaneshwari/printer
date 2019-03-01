@@ -121,7 +121,7 @@ urlpatterns = [
     url(r'^jobcard/jobcard_create/$', jobcard.jobcard_create, name='jobcard_create'),
     url(r'^jobcard/jobcard_product_create/$', jobcard.jobcard_product_create, name='jobcard_product_create'),
     url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
-   
+    
     url(r'^processcard/processcard_create/(?P<id>[^/]*)/$', processcard_jobcard.processcard_create, name='processcard_create'),
 
 
@@ -133,7 +133,8 @@ urlpatterns = [
     url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
     url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
     url(r'^jobcard/getsizevalues/$', jobcard.getsizevalues, name='getsizevalues'),
-    
+    url(r'^jobcard/resetseries/$', jobcard.resetseries, name='resetseries'),
+   
     url(r'^jobcard/pricingrule_paper/$', price_calculate.pricingrule_paper, name='pricingrule_paper'),
 
     url(r'^jobcard/jobcard_list/$', jobcard.jobcard_list, name='jobcard_list'),

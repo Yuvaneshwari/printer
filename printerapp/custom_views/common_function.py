@@ -61,4 +61,12 @@ def create_productno(company_id,series_for,jobcardno):
 			series_det.series_count=series_count
 			series_det.save()
 	return serial_no_return
- 
+
+def resetseries():
+    custom_filter={}
+    series_for="PRD"
+    custom_filter['series_for']=series_for
+    series_det=Series.objects.filter(**custom_filter)
+    if series_det:
+        series_det.series_count=0
+        series_det.save()

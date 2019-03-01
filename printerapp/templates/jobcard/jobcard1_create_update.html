@@ -512,9 +512,7 @@ function storeprocesscard(jobcard_product_id){
         },
             
         success:function(data){
-            document.getElementById("customerfrm").reset();  
-            console.log("process");
-            console.log(data.processlist);
+            resetseries();
             $('#productadd').empty();
             window.location.href=processcard_url+jobcardno;
             
@@ -526,7 +524,21 @@ function storeprocesscard(jobcard_product_id){
     });
 }
 
- 
+ function resetseries(){
+        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+
+        $.ajax({
+        type:"POST",
+        url:"../resetseries/",
+        headers : {
+        "X-CSRFToken" : crf_token
+        },
+            
+        success:function(data){
+            
+        }
+    });
+ }
 </script>
 
 <script type="text/javascript">
@@ -557,13 +569,15 @@ function getproductid(sel,data)
 
 function getprocess_list(processlist,processid,partialdelivery,defaultprocess,processdivcount)
 {
-    //$('#processlistdiv'+processdivcount).empty();
-    $('#processlistdiv').empty();
-    console.log(partialdelivery);
+    //alert(processdivcount);
+    console.log(processdivcount);
+    $('#processlistdiv'+processdivcount).empty();
+    //$('#processlistdiv').empty();
+    //console.log(partialdelivery);
     for(i=0;i<processlist.length ;i++){
 
-    var container = $('#processlistdiv');
-    //var container = $('#processlistdiv'+processdivcount);
+    //var container = $('#processlistdiv');
+    var container = $('#processlistdiv'+processdivcount);
 
     var inputs = container.find('input');
     var id = inputs.length+1;
@@ -572,10 +586,8 @@ function getprocess_list(processlist,processid,partialdelivery,defaultprocess,pr
     $('<input />', { type: 'text', id: 'datetime'+id ,placeholder:'Date and Time',disabled:"true"}).appendTo(container);
     if(defaultprocess[i]==true){
         $( "#processname"+id).prop('checked', true);
-      
     }
     if(partialdelivery[i]==true){
-        
         $( "#datetime"+id).prop('disabled', false);
     }
     }
@@ -618,7 +630,7 @@ function assignvalue(length,width,index)
    //var custom_length = $('input[name="custom_length[]"]');
     //custom_length.eq(counter).val(length);
 
-    //console.log(index);
+    console.log(index);
     //console.log(length);
     //$('#custom_length'+counter).val(length);
     $('input[name="custom_length[]"]').eq(index).val(length);
@@ -630,33 +642,34 @@ function assignvalue(length,width,index)
 
 
 
-function customfunc(custom,index) 
+function customfunc(custom,data) 
 {
+    index=data.count;
 
     if($(custom).prop("checked") == true){
-            
-            //alert("yes");
 
-            $('input[name="partial_quantity[]"]').eq(index).attr("disabled",false);
+            $('input[name="custom_length[]"]').eq(index).val("");
+            $('input[name="custom_width[]"]').eq(index).val("");
+            $('input[name="custom_length[]"]').eq(index).attr("disabled",false);
+            $('input[name="custom_width[]"]').eq(index).attr("disabled",false);
 
             //$("#custom_length"+index).prop('disabled', true);
-
             //document.getElementById('custom_length'+index).disabled = false;
-
             //$('input[name="custom_length[]"]').eq(index).removeAttr("disabled");
-
-             //$("#custom_length"+index).removeAttr("disabled");
-             //var custom_length=[];
-             //custom_length = document.getElementsByName('custom_length[]');
-             //custom_length[index] ="yes";
-             //document.getElementById("custom_length"+index).value = "John";
+            //$("#custom_length"+index).removeAttr("disabled");
+            //var custom_length=[];
+            //custom_length = document.getElementsByName('custom_length[]');
+            //custom_length[index] ="yes";
+            //document.getElementById("custom_length"+index).value = "John";
            
             
         }
         else if($(custom).prop("checked") == false){
 
-            //alert("no");
-            //$('input[name="partial_quantity[]"]').eq(index).attr("disabled", true);
+            $('input[name="custom_length[]"]').eq(index).val("");
+            $('input[name="custom_width[]"]').eq(index).val("");           
+            $('input[name="custom_length[]"]').eq(index).attr("disabled", true);
+            $('input[name="custom_width[]"]').eq(index).attr("disabled", true);
 
             //$(this).val("0");
             //partialdelivery_list.push($(this).val()); 
@@ -665,14 +678,17 @@ function customfunc(custom,index)
 }
 
 
-function partialdelivery(chkbox,index) 
+function partialdelivery(chkbox,data) 
 {
+    index=data.count;
 
     if($(chkbox).prop("checked") == true){
             
             //alert("yes");
-
-             $('input[name="partial_quantity[]"]').eq(index).attr("disabled",false);
+            //alert(index);
+            console.log(index);
+            $('input[name="partial_quantity[]"]').eq(index).attr("disabled",false);
+            $('input[name="partial_datetime[]"]').eq(index).attr("disabled",false);
 
              //$("#partial_quantity"+index).removeAttr("disabled");
              //var partial_quantity=[];
@@ -686,8 +702,10 @@ function partialdelivery(chkbox,index)
         }
         else if($(chkbox).prop("checked") == false){
 
-            //alert("no");
             $('input[name="partial_quantity[]"]').eq(index).attr("disabled", true);
+            $('input[name="partial_datetime[]"]').eq(index).attr("disabled", true);
+            
+            //$('input[name="partial_quantity[]"]').eq(index).attr("disabled", true);
 
             //$(this).val("0");
             //partialdelivery_list.push($(this).val()); 
