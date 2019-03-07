@@ -123,3 +123,14 @@ class SeriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Series
         fields = "__all__"
+
+class ProcesscardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Processcard
+        fields = "__all__"
+
+
+class CommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = "__all__"

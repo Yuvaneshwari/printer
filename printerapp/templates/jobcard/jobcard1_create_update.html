@@ -177,7 +177,8 @@
         {%endif%}
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-
+<button type="button" name="submitfr" id="submitfr"class="btn btn-primary m-t-15 waves-effect">Check</button>
+        
        
     </div>
     </form>
@@ -225,7 +226,7 @@
     var processids=[];
     var result=[];
     var sendresult=[];
-
+    var j=0;
 jQuery_3_2_1(document).ready(function() {
     
     console.log("ready");
@@ -292,7 +293,19 @@ jQuery_3_2_1(document).ready(function() {
       minLength : 2,
       });
 
+$("#submitfr").click(function(){
+    console.log("enter");
+    for(counter=0;counter<count;counter++){
+        $.each($('[id^=processname'+counter), function (i, item) {
 
+        if($(this).prop("checked") == true){
+
+            console.log($(this).val()); 
+            //$('#partialdeliverydiv'+i).show();
+        }
+    });
+    }
+});
 
 
 $("#submitfrm").click(function(){
@@ -312,6 +325,7 @@ $("#submitfrm").click(function(){
         productlist.push(productname);
         //alert(productlist);
         });
+       
 
         $.each($('[id^=processname'), function (i, item) {
 
@@ -501,7 +515,7 @@ function storeproductcard(id,jobcardno){
 function storeprocesscard(jobcard_product_id){
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
     data={"id":jobcard_product_id,"processlist_id[]": processids};
-    
+    console.log(data);
     processcard_url="/printerapp/processcard/processcard_create/";
     $.ajax({
         type:"POST",
@@ -573,7 +587,7 @@ function getprocess_list(processlist,processid,partialdelivery,defaultprocess,pr
     console.log(processdivcount);
     $('#processlistdiv'+processdivcount).empty();
     //$('#processlistdiv').empty();
-    //console.log(partialdelivery);
+    console.log(processlist);
     for(i=0;i<processlist.length ;i++){
 
     //var container = $('#processlistdiv');
@@ -581,14 +595,14 @@ function getprocess_list(processlist,processid,partialdelivery,defaultprocess,pr
 
     var inputs = container.find('input');
     var id = inputs.length+1;
-    $('<input />', { type: 'checkbox', id: 'processname'+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
-    $('<label />', { 'for': 'processname'+id, text: processlist[i] }).appendTo(container);
-    $('<input />', { type: 'text', id: 'datetime'+id ,placeholder:'Date and Time',disabled:"true"}).appendTo(container);
+    $('<input />', { type: 'checkbox', id: 'processname'+processdivcount+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
+    $('<label />', { 'for': 'processname'+processdivcount+id, text: processlist[i] }).appendTo(container);
+    $('<input />', { type: 'text', id: 'datetime'+processdivcount+id ,placeholder:'Date and Time',disabled:"true"}).appendTo(container);
     if(defaultprocess[i]==true){
-        $( "#processname"+id).prop('checked', true);
+        $( "#processname"+processdivcount+id).prop('checked', true);
     }
     if(partialdelivery[i]==true){
-        $( "#datetime"+id).prop('disabled', false);
+        $( "#datetime"+processdivcount+id).prop('disabled', false);
     }
     }
     processids.length=0;

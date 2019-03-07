@@ -149,3 +149,5 @@ MEDIA_URL = '/media/'
 #STATIC_ROOT ='/Python34/Lib/site-packages/Projects/printers/static/'
 #STATIC_URL='/Python34/Lib/site-packages/Projects/printers/static/'
 #STATICFILES_DIR ='/Python34/Lib/site-packages/Projects/printers/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
