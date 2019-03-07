@@ -74,3 +74,20 @@ def batch_drop_down_list(tableName,show_field_name,store_field_name,show_field_n
 		for obj in rows:
 			data.append({"id":(obj[0]),"text":(obj[1])+" -- "+(obj[2])+" -- "+(obj[3])})
 		return data
+
+@register.simple_tag
+def getprocesslist(id):
+	print(id)
+	i=0
+	process_list=[]
+	user_obj=Jobcard_Product_Process.objects.filter(jobcard_productid=id)
+	user_data = Jobcard_Product_ProcessSerializer(user_obj, many=True).data
+
+	for k in user_data:
+		for s,y in k.items():
+			if(s=='processid'):
+				get_process=Process.objects.get(id=y)
+				process_list.append(get_process.process_name)
+
+	print(process_list)
+	return process_list;

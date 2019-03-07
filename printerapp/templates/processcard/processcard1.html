@@ -129,7 +129,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
             </div>
             <!-- Vertical Layout -->
             
-{%for x,y,z in mylist%}              
+{%for x,y,z,a in mylist%}              
 <div id="jobcard"  class="row clearfix">
 <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
     <h4><b>{{x}}</b></h4>
@@ -157,10 +157,11 @@ body {font-family: Arial, Helvetica, sans-serif;}
         </thead>
         <tbody>
          </tbody>
+            {%getprocesslist id=a as processlist%}
             {%for process in processlist%}
                   
             <tr>
-            <td><div class="square" onclick="openForm('{{y}}','{{process}}','{{z}}','{{customer}}');"><br><b>{{process}}</b></div></td>
+            <td><div class="square" onclick="openForm('{{y}}','{{process}}','{{z}}','{{customer}}','{{jobcardid}}','{{x}}');"><br><b>{{process}}</b></div></td>
             <td></td>
             <td></td>
             <td></td>
@@ -186,9 +187,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
 <!--<button class="open-button" onclick="openForm()">Open Form</button>-->
 
 <div class="form-popup" id="myForm">
-  <form action="" class="form-container">
+  <form method="post" name="proccesscaardfrm" id="proccesscaardfrm"class="form-container" enctype="multipart/form-data">{% csrf_token %}
+
 <br>
-    <p><i class="fa fa-file-text"style="float:right;"></i></p>
+    <p><i class="fa fa-file-text"style="float:right;"></i></p><input type="hidden" name="jobcardid" id="jobcardid"required><input type="hidden" name="productno" id="productno"required>
     <label for="prdname"><b>ProductName:</b></label>
     <input type="text" name="prdname" id="prdname"required>
 
@@ -202,14 +204,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
     <input type="text" name="custname" id="custname"required>
 
     <label for="assign"><b>AssignedTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
-    <input type="text" name="assign" id="assign"required>
+    <input type="text" name="assign" id="assign"required><input type="hidden" name="assignto" id="assignto"required>
     <hr>
 
     <i class="material-icons">insert_comment</i>:
     <input type="text" name="comments" id="comments" style="width:85%;" required>
 
     <!--<i class="material-icons">insert_photo</i>:-->
-    <input type="file" name="file" style="width:85%;"required>
+    <input type="file" name="file_name" id="file_name" value="{{data.file_name}}" required>
     <hr>
     
     <button type="submit" class="btn">SAVE</button>
@@ -246,18 +248,13 @@ body {font-family: Arial, Helvetica, sans-serif;}
       source : "/printerapp/autocomplete/username/",
       select : function(event, ui) { //item selected
       userid=ui.item.id;
-
+      jQuery_3_2_1("#assignto").val(ui.item.id);
       
       },
       minLength : 2,
       });
 
 
-
-    $("#submitfrm").click(function(){
-        frmvalidation();
-        
-    }); 
     
 });
 function frmvalidation(){
@@ -277,19 +274,32 @@ $("#gsmfrm").validate({
 
 </script>
 <script>
-function openForm(prodname,processname,del_date,customer) {
+function openForm(prodname,processname,del_date,customer,jobcardid,productno) {
    
 document.getElementById("prdname").value=prodname;
 document.getElementById("proname").value=processname;
 document.getElementById("date").value=del_date;
 document.getElementById("custname").value=customer;
 document.getElementById("myForm").style.display = "block";
+document.getElementById("jobcardid").value=jobcardid;
+document.getElementById("productno").value=productno;
 
 }
 
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
+function save()
+{
+  var jobcardid=$("#jobcardid").val();
+  var productno=$("#productno").val();
+  var prdname=$("#prdname").val();
+  var balance_qty=$("#bal_qty").val();
+  var move_qty=$("#moving_qty").val();
+  var batch=$("#batch").val();
+  
+}
+
 </script>
 {% include "includes/file_js.html" %}
  

@@ -401,4 +401,30 @@ class Series(models.Model):
     is_default=models.BooleanField(default=True)
 
 
+class Processcard(models.Model):
+    """Details of Processcard Entity"""
+    jobcardid = models.ForeignKey(Jobcard, on_delete=models.CASCADE, related_name='jobcard_id', default=1)
+    jobcard_productno= models.CharField(max_length=50,blank=True, null=True)
+    productid = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_id', default=1)
+    processid = models.ForeignKey(Process, on_delete=models.CASCADE, related_name='process_id', default=1)
+    del_datetime = models.DateTimeField(blank=True, null=True)
+    customerid = models.ForeignKey(Customerdetails, on_delete=models.CASCADE, related_name='customer_id', default=1)
+    assigned_to= models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_id', default=1)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Processcard_Created_By_User', default=1)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Processcard_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+
+class Comments(models.Model):
     
+    comment=models.CharField(max_length=200,blank=True, null=True)
+    file=models.FileField(max_length=200,blank=True, null=True)
+    ref_id=models.ForeignKey(Processcard, on_delete=models.CASCADE, related_name='Processcard_id', default=1)
+    ref_type=models.CharField(max_length=50)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Comments_Created_By_User', default=1)
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Comments_Modified_By_User', default=1)
+    deleted = models.BooleanField(default=False)
+

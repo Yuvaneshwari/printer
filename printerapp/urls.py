@@ -123,6 +123,7 @@ urlpatterns = [
     url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
     
     url(r'^processcard/processcard_create/(?P<id>[^/]*)/$', processcard_jobcard.processcard_create, name='processcard_create'),
+    url(r'^processcard/comments_create/$', processcard_jobcard.comments_create, name='comments_create'),
 
 
     url(r'^autocomplete/customername/$', autocomplete.customer_name_autocomplete, name='customername_auto'),
