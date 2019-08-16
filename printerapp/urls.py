@@ -26,7 +26,7 @@ from printerapp.custom_views.pricingrule import processpricing
 from printerapp.custom_views.pricingrule import price_calculate
 
 app_name = 'printerapp'
-urlpatterns = [	
+urlpatterns = [ 
     
  
     url(r'^home/$', create_home, name='home'),
@@ -48,8 +48,8 @@ urlpatterns = [
     url(r'^size/size_view/(?P<id>[^/]*)/$', size.size_view, name='size_view'),
     url(r'^size/size_update/(?P<id>[^/]*)/$',size.size_update, name='size_update'),
     url(r'^size/size_delete/(?P<id>[^/]*)/$', size.size_delete, name='size_delete'),
-	
-	url(r'^gsm/gsm_create/$', gsm.gsm_create, name='gsm_create'),
+    
+    url(r'^gsm/gsm_create/$', gsm.gsm_create, name='gsm_create'),
     url(r'^gsm/gsm_list/$', gsm.gsm_list, name='gsm_list'),
     url(r'^gsm/gsm_view/(?P<id>[^/]*)/$', gsm.gsm_view, name='gsm_view'),
     url(r'^gsm/gsm_update/(?P<id>[^/]*)/$',gsm.gsm_update, name='gsm_update'),
@@ -149,6 +149,5 @@ urlpatterns = [
 
     url(r'^test/testpage/$', chk, name='chk'),
     url(r'^rectangle/logic/$', rectangle.logic_create, name='logic_create'),
-
 
 ]

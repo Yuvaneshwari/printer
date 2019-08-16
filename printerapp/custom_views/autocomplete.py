@@ -17,7 +17,7 @@ def process_name_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={}    
         custom_filter['deleted']=0 
-        users = Process.objects.filter(process_name__icontains = q )[:10]
+        users = Process.objects.filter(process_name__icontains = q ,deleted=0)[:10]
         results = []
         for user in users:
             return_json = {}
@@ -39,7 +39,7 @@ def product_name_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={}     
         custom_filter['deleted']=0
-        users = Product.objects.filter(product_name__icontains = q )[:10]
+        users = Product.objects.filter(product_name__icontains = q,deleted=0 )[:10]
         results = []
         for user in users:
             return_json = {}
@@ -62,14 +62,12 @@ def customer_name_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={} 
         custom_filter['deleted']=0    
-        users = Customerdetails.objects.filter(customer_name__icontains = q )[:10]
+        users = Customerdetails.objects.filter(customer_name__icontains = q,deleted=0 )[:10]
         results = []
         for user in users:
             id=user.communication_mode_id
-
-        
-        getid=Communication.objects.get(id=id)
-        print(getid.name)
+            getid=Communication.objects.get(id=id)
+            print(getid.name)
         
         for user in users:
             return_json = {}
@@ -130,7 +128,7 @@ def user_name_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={}  
         custom_filter['deleted']=0   
-        users = User.objects.filter(username__icontains = q )[:10]
+        users = User.objects.filter(username__icontains = q ,deleted=0)[:10]
         results = []
         for user in users:
             return_json = {}

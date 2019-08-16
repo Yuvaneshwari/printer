@@ -16,7 +16,7 @@
         <div class="block-header">
             <h2>JOB CARD</h2>
         </div>
-  	<div class="row clearfix">
+    <div class="row clearfix">
         {% if  error_data  or  success_data%}
         <div class="col-md-12">
         <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
@@ -226,8 +226,9 @@
     var processids=[];
     var result=[];
     var sendresult=[];
-    var j=0;
-jQuery_3_2_1(document).ready(function() {
+    var a=[];
+    
+    jQuery_3_2_1(document).ready(function() {
     
     console.log("ready");
  
@@ -456,12 +457,6 @@ $("#submitfrm").click(function(){
         }
        
 
-        for(i=0;i<count;i++){
-
-            result[i] = {"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partial Qty":partial_qty_list[i],"Partial DateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":jobtypelist[i],"Delivery Mode":deliverymodelist[i],"Deleivery Desc":delivery_desc_list[i],"Deleivery DateTime":delivery_datetime_list[i]};
-
-        }
-
         var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
         data={"name":name,"contact_person":contact_person,"contact_no":contact_no,"whatsup_no":whatsup_no,"email_id":email_id,"sec_contact_no":sec_contact_no,"address":address,"communicationmode":communicationmode,"order_date":order_date,"customerid":customerid};
     
@@ -476,8 +471,8 @@ $("#submitfrm").click(function(){
         success:function(data){
             storeproductcard(data.jobcardid,data.jobcardno); 
             jobcardno=data.jobcardno;   
-            console.log("jobcard");
-            console.log(jobcardno);       
+            //console.log("jobcard");
+            //console.log(jobcardno);       
         }
         });
 
@@ -488,9 +483,20 @@ $("#submitfrm").click(function(){
 function storeproductcard(id,jobcardno){
 
     for(i=0;i<count;i++){
-            
+        a.length=0;
+        $.each($('[id^=processname'+i), function (i, item) {
+
+        if($(this).prop("checked") == true){
+
+            console.log($(this).val()); 
+            a.push($(this).val());
+            //$('#partialdeliverydiv'+i).show();
+        }
+        });    
+        processcard_url="/printerapp/processcard/processcard_create/";
+   
         var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-        data={"id":id,"jobcardno":jobcardno,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
+        data={"a[]":a,"id":id,"jobcardno":jobcardno,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
     
         $.ajax({
         type:"POST",
@@ -501,11 +507,14 @@ function storeproductcard(id,jobcardno){
         },
             
         success:function(data){
-            console.log("productno");
-            console.log(data.productno);
-            console.log("productname");
-            console.log(data.productname);
-            storeprocesscard(data.jobcard_product_id);           
+            resetseries();
+            $('#productadd').empty();
+            window.location.href=processcard_url+jobcardno;
+            //console.log("productno");
+            //console.log(data.productno);
+            //console.log("productname");
+            //console.log(data.productname);
+            //storeprocesscard(data.jobcard_product_id);           
         }
         });
 
@@ -514,8 +523,11 @@ function storeproductcard(id,jobcardno){
 
 function storeprocesscard(jobcard_product_id){
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+
+
+
     data={"id":jobcard_product_id,"processlist_id[]": processids};
-    console.log(data);
+    //console.log(data);
     processcard_url="/printerapp/processcard/processcard_create/";
     $.ajax({
         type:"POST",
@@ -528,7 +540,7 @@ function storeprocesscard(jobcard_product_id){
         success:function(data){
             resetseries();
             $('#productadd').empty();
-            window.location.href=processcard_url+jobcardno;
+           // window.location.href=processcard_url+jobcardno;
             
            // $('#jobcard').show();
            // $('#jobcard').html(jobcardno);
@@ -584,7 +596,7 @@ function getproductid(sel,data)
 function getprocess_list(processlist,processid,partialdelivery,defaultprocess,processdivcount)
 {
     //alert(processdivcount);
-    console.log(processdivcount);
+    //console.log(processdivcount);
     $('#processlistdiv'+processdivcount).empty();
     //$('#processlistdiv').empty();
     console.log(processlist);
@@ -644,7 +656,7 @@ function assignvalue(length,width,index)
    //var custom_length = $('input[name="custom_length[]"]');
     //custom_length.eq(counter).val(length);
 
-    console.log(index);
+    //console.log(index);
     //console.log(length);
     //$('#custom_length'+counter).val(length);
     $('input[name="custom_length[]"]').eq(index).val(length);

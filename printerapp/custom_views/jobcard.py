@@ -62,7 +62,7 @@ def jobcard_create(request):
             getjobcardid=jobcardserializer.save();
             jobcardid=getjobcardid.id
             jobcardno=getjobcardid.jobcard_no
-            print(jobcardid)
+            #print(jobcardid)
             if request.accepted_renderer.format=='html':
                 return Response({"success_data": "Data added successfully","jobcardid": jobcardid,"jobcardno":jobcardno},template_name='jobcard/jobcard1_create_update.html')
             return Response({"data": jobcardid,"jobcardid":jobcardid,"jobcardno":jobcardno}, status=status.HTTP_201_CREATED)
@@ -105,12 +105,15 @@ def jobcard_product_create(request):
         delivery_mode=request.POST.get("Deliverymode")
         delivery_desc=request.POST.get("DeleiveryDesc")
         delivery_datetime=request.POST.get("DeleiveryDateTime")
-        #productcardcount=request.POST.get("count")
+        processlist_id=request.POST.getlist("a[]")
+        process_ids=list(map(int,processlist_id))
+
         company_id=1
         series_type="PRD"
         productno=create_productno(company_id,series_type,jobcardno)
         print(productno)
-
+        print("A")
+        print(process_ids)
         data={
         "productcard":pname,
         "size_custom":sizeselect,
@@ -141,6 +144,7 @@ def jobcard_product_create(request):
             product_obj=Product.objects.get(id=jobcard_product)
             print(product_obj.product_name)
             jobcard_product_name=product_obj.product_name
+            storeproduct_proccess(jobcard_product_id,process_ids)
             #product_data = ProductSerializer(product_obj).data
             #jobcard_product_name=product_data.product_name
 
@@ -171,7 +175,7 @@ def jobcard_product_process_create(request):
         jobcard_product_id=request.POST.get("id")
         processlist_id=request.POST.getlist("processlist_id[]")
         process_ids=list(map(int,processlist_id))
-        print(jobcard_product_id)
+        #print(jobcard_product_id)
         print(process_ids)
         storeproduct_proccess(jobcard_product_id,process_ids)
         processname=[]
