@@ -15,11 +15,12 @@ def role_create(request):
     if request.method=='GET':
         return Response({'data':'','module':'Role'},template_name='role/role_create_update.html')
     else:
+        print("enter")
         serializer=RoleSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='role/role_create_update.html')
+                return Response({"success_data": "Data added successfully",'module':'Role'},template_name='role/role_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
@@ -33,7 +34,7 @@ def role_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='role/role_create_update.html')
+                return Response({"error_data": data,'module':'Role'},template_name='role/role_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -64,7 +65,7 @@ def role_update(request,id):
     if request.method=='GET':
         data=RoleSerializer(role_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='role/role_create_update.html')
+            return Response({'data':data,'module':'Role'},template_name='role/role_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
@@ -88,6 +89,26 @@ def role_update(request,id):
                 if request.accepted_renderer.format=='html':
                     return Response({"error_data": data},template_name='role/role_create_update.html')
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST','Delete'])
+#@permission_classes((IsAuthenticated, ))
+def role_view(request, id):
+    data_obj = Role.objects.get(id=id)
+    
+    #loginuser=session_user_id(request)
+    #print(loginuser)
+    #print(loginuser.get_all_permissions())
+    
+    if request.method == "GET":
+        #if loginuser.has_perm('ERP.view_permissions'):
+            #print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data": data_obj,"view_mode":1,'module':'Role'}, template_name='role/role_create_update.html')
+        return Response({"data": ser_data,"view_mode":1}, status=status.HTTP_200_OK)
+        #else:
+            #print("no")
+            #return Response({"data": ''}, template_name='includes/page_not_found.html')
 
 @api_view(['GET', 'POST','Delete'])
 def role_delete(request,id):

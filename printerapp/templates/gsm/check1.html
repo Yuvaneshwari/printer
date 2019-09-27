@@ -1,0 +1,202 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>GSM</h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>GSM View</h2>
+                                {%else%}
+                                <h2>GSM Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>GSM Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                
+                                <a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a>
+                                       
+                                   
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <form method="post"name="gsmfrm" id="gsmfrm">{% csrf_token %}
+                                <label for="gsm_name">Enter GSM</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="gsm_name" id="gsm_name" class="form-control" value="{{data.gsm_name}}"placeholder="Enter GSM">
+                                    </div>
+                                </div>
+                                <select class='form-control show-tick' id="machine" name="machine"><option value='0'>-Select Machine-</option></select>
+                                <br>
+
+                                <select id='myColors' name='myColors'>
+                                <option value="Red">Red</option>
+                                <option value="Green">Green</option>
+                                <option value="White">White</option>
+                                <option value="Black">Black</option>
+                                </select>
+                                <br>
+                                <select class="country" id="country" name="country">
+                                <option value="usa">United States</option>
+                                <option value="india">India</option>
+                                <option value="uk">United Kingdom</option>
+                                </select>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+            <div class="row clearfix" {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            {%else%}
+                            <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            <button type="button" name="check" id="check" class="btn btn-primary m-t-15 waves-effect" onclick="functioncal()">Check</button>
+                            
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+</div>
+</section>
+<!-- Jquery Core Js -->
+
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script type="text/javascript">
+
+//var jQuery_3_2_1 = jQuery.noConflict();
+      
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+        frmvalidation();
+        
+    }); 
+    
+var sel = document.getElementById('country');
+
+// create new option element
+var opt = document.createElement('option');
+
+// create text node to add to option element (opt)
+opt.appendChild( document.createTextNode('New Option Text') );
+
+// set value property of opt
+opt.value = 'option value'; 
+
+// add opt to end of select box (sel)
+sel.appendChild(opt); 
+//jQuery_3_2_1("select.country").append("<option value='"+ 'yournewv' +"' >"+ 'yournewv' +"</option>");
+//$('#country').append($("<option></option>").attr("value","key").text("hhj")); 
+//$('#country').append(new Option('Option #1', '1', true, false));
+        
+    $("select.country").change(function(){
+   // $('select').children('option:not(:first)').remove();
+
+        var selectedCountry = $(this).children("option:selected").val();
+        console.log($(this).val());
+        $('select').children();
+
+        alert("You have selected the country - " + selectedCountry);
+        //$('.country').append(new Option('Option #1', '1', true, false));
+
+        //jQuery_3_2_1('.country').append(new Option('Option #1', '1', true, false));
+       //jQuery_3_2_1("select.country").append("<option value='"+ 'yournewv' +"' >"+ 'yournewv' +"</option>");
+
+    });
+    
+});
+function frmvalidation(){
+$("#gsmfrm").validate({
+  rules : {
+    gsm_name: {
+      required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+function functioncal(){
+       
+console.log("enter");
+// get reference to select element
+var sel = document.getElementById('country');
+
+// create new option element
+var opt = document.createElement('option');
+
+// create text node to add to option element (opt)
+opt.appendChild( document.createTextNode('New Option Text') );
+
+// set value property of opt
+opt.value = 'option value'; 
+
+// add opt to end of select box (sel)
+sel.appendChild(opt); 
+//$('.country').append(new Option('Option #1', '1', true, false));
+//$("#myColors").append(new Option('Option #2', '1', true, false));
+//$("#machine").append(new Option('Option #3', '1', true, false));
+
+//$('#country').append($("<option></option>").attr("value","key").text("hhj")); 
+
+}
+</script>
+
+{% include "includes/file_js.html" %}
+ 
+</html>

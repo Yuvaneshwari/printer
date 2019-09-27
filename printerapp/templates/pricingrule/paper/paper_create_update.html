@@ -43,23 +43,17 @@
                         <div class="header">
                             {% if data.id %}
                                 {%if view_mode%}
-                                <h2>Paper View</h2>
+                                <h2>{{module}} View</h2>
                                 {%else%}
-                                <h2>Paper Update</h2>
+                                <h2>{{module}} Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>Paper Pricing Create</h2>
+                            <h2>{{module}} Create</h2>
                             {%endif%}
-                            <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href=""><i class="material-icons">visibility</i></a></li>
-                                       
-                                    </ul>
-                                </li>
+                            <ul class="header-dropdown m-r--5">                               
+                                    
+                                <a href="/printerapp/pricingrule/paperpricing_list/"><i class="material-icons">visibility</i></a>                                   
+                                 
                             </ul>
                         </div>
                         <div class="body">
@@ -73,10 +67,11 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                     {% drop_down_list tableName="printerapp_paper" show_field_name="paper_name" store_field_name="id" as list_drop %}
-                                    <select class="form-control show-tick" id="papertype" name="papertyp[]">
+                                    <select class="form-control show-tick" id="papertype" name="papertype">
                                     <option value="">-- Select Paper-- </option>   
                                     {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
+                                    <option value="{{ list_drop_val.id }}"{% if data.papertype == list_drop_val.id %}
+            checked="true" selected="true"{% endif%}> {{ list_drop_val.text }} </option>
                                     {% endfor %}
                                     </select>
                                     </div>
@@ -91,7 +86,8 @@
                                     <select class="form-control show-tick" id="size" name="size">
                                     <option value="">-- Select Size -- </option>
                                     {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                    <option value="{{ list_drop_val.id }}"{% if data.size == list_drop_val.id %}
+            checked="true" selected="true"{% endif%}>{{list_drop_val.text}}</option>
                                     {% endfor %}
                                     </select>
                                     </div>
@@ -106,7 +102,8 @@
                                     <select class="form-control show-tick" id="gsm" name="gsm">
                                     <option value="">-- Select GSM -- </option>    
                                     {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
+                                    <option value="{{ list_drop_val.id }}"{% if data.gsm == list_drop_val.id %}
+            checked="true" selected="true"{% endif%}>{{list_drop_val.text}}</option>
                                     {% endfor %}
                                     </select>
                                     </div>
@@ -131,7 +128,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="squareinch_from" id="squareinch_from" class="form-control" value="{{data.squareinch_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -139,7 +136,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="squareinch_to" id="squareinch_to" class="form-control" value="{{data.squareinch_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -147,7 +144,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="quality_from" id="quality_from" class="form-control" value="{{data.quality_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -155,7 +152,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="quality_to" id="quality_to" class="form-control" value="{{data.quality_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -163,7 +160,7 @@
                                     <div class="col-md-4">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                        <input type="text"name="price" id="price" class="form-control" value="{{data.price}}" placeholder="Enter Price">
                                     </div>
                                     </div>
                                     </div>
@@ -172,21 +169,30 @@
                                
                         </div>
                     </div>
-                    <div {% if view_mode %} style="display:none" {% endif%}>
-                    {%if data.id %}
-                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
-                    {%else%}
-                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
-                    {%endif%}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-                    </div>
-                    </form>
+                    
                 </div>
             </div>
             <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
-           
+            <div class="row clearfix"  {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+                            {%else%}
+                            <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>      
            
 </div>
 </section>
@@ -197,24 +203,13 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#submitfrm").click(function(){
-        frmvalidation();
+        console.log("readyyyy");
+        //frmvalidation();
         
     }); 
     
 });
-function frmvalidation(){
-$("#paperpricingfrm").validate({
-  rules : {
-    paper_name: {
-      required : true,
-      },
-      submitHandler : function(form) {
-        form.submit();
 
-      }
-    }
-  });
-}
 
 
 </script>

@@ -1,8 +1,9 @@
-{% load static %}{% load rest_framework %}
+{% load static %}{% load rest_framework %}{% load common_function %}
 
 <html>
 <head>
 {% include "includes/css_file.html" %}
+
 </head>
 <body class="theme-red">
 {% include "includes/index.html" %}
@@ -50,71 +51,121 @@
                             <h2>User Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/user/user_list"><i class="material-icons">visibility</i></a></li>
-                                       
-                                    </ul>
-                                </li>
+                                <a href="/printerapp/user/user_list"><i class="material-icons">visibility</i></a>
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post" name="loginfrm" id="loginfrm">
+                            <form method="post" name="loginfrm" id="loginfrm">{% csrf_token %}
                                 <label for="size_name">User Name</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="username" id="username" class="form-control" value="{{data.username}}"placeholder="Enter User name">
+                                        <input type="text"name="username" id="username" class="form-control" value="{{data.username}}" placeholder="Enter User name">
+                                        <input type="hidden" class="form-control" id="id" name="id" placeholder="Enter Name" value="{{data.id}}">
                                     </div>
                                 </div>
 
-                                <label for="size_name">First Name</label>
                                 <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text"name="first_name" id="first_name" class="form-control" value="{{data.first_name}}"placeholder="Enter First Name">
-                                    </div>
+                                    <label for="country">Password</label>
+                                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter Password">
                                 </div>
-                                
-                                <label for="size_name">Last Name</label>
                                 <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text"name="last_name" id="last_name" class="form-control" value="{{data.last_name}}"placeholder="Enter Last Name">
-                                    </div>
+                                    <label for="password">Confirm Password</label>
+                                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Enter Confirm Password">
                                 </div>
-                               
-                               <label for="size_name">Email</label>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="email" name="email" id="last_name" class="form-control" value="{{data.email}}"placeholder="Enter Email Id">
-                                    </div>
+                                <div class="form-group">                                      
+                                    {% drop_down_list tableName="printerapp_role" show_field_name="name" store_field_name="id" as role %}
+                                       
+                                    <label for="designation">Role</label>
+                                    <select class="form-control" id="role" name="role">
+                                    <option value="0">-- Select Role -- </option>
+                                    {% for list_drop_val in role %}
+                                    <option value="{{ list_drop_val.id }}" {% if list_drop_val.id == data_profile.role %} selected="true" {% endif%}>{{ list_drop_val.text }} </option>
+                                    {% endfor %}                                      
+                                    </select>
                                 </div>
                         </div>
                     </div>
-                    <div {% if view_mode %} style="display:none" {% endif%}>
-                    {%if data.id %}
-                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Update</button>
-                    {%else%}
-                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Submit</button>
-                    {%endif%}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-                    </div>
-                    </form>
+                    
                 </div>
             </div>
             <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
+            <div class="row clearfix" {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                            
+                            {%else%}
+                            <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
            
            
 </div>
 </section>
-{% include "includes/file_js.html" %}
                             
  
                   
 
 </body>
+
+
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    //alert("TEFSDfs");
+    if($("#id").val() != ""){
+        document.getElementById("username").readOnly = true;
+        //$("#password1").val("");
+    }
+    if($("#id").val() == ""){
+        console.log("enter");
+        //document.getElementById("username").value= "";
+        $("#password1").val(" ");
+        $("#username").val(" ");
+    }
+    $("#submitfrm").click(function(){
+        FrmValidate();
+        
+    }); 
+     
+});
+function FrmValidate(){
+      
+    
+    
+    $("#loginfrm").validate({
+        rules : {
+            username : {
+                required : true,
+            },
+            password1 : {
+                required : true,
+                
+            },
+            password2 : {
+                required : true,
+                equalTo : "#password1"
+            }, 
+            role : { required: function(element) { return $("#role").val() == 0 } },
+                           
+            
+        }
+    });
+}
+</script>
+
+{% include "includes/file_js.html" %}
 
 </html>

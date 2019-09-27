@@ -12,12 +12,24 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import  settings
+from printerapp.custom_views.common_function import *
+
 row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 
 @api_view(['GET','POST'])
 def paper_create(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     if request.method=='GET':
-        return Response({'data':'','module':'Paper'},template_name='paper/paper_create_update.html')
+        if loginuser.has_perm('printerapp.add_paper'):
+            print("yes")
+            return Response({'data':'','module':'Paper'},template_name='paper/paper_create_update.html')
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_not_found.html')
+
+
     else:
         serializer=PaperSerializer(data=request.data)
         if serializer.is_valid():
@@ -43,6 +55,9 @@ def paper_create(request):
 
 @api_view(['GET'])
 def paper_list(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     custom_filter={}
     custom_filter['deleted']=0
     paper_obj = Paper.objects.filter(**custom_filter)
@@ -55,28 +70,51 @@ def paper_list(request):
         paper_data = paginator.page(1)
     except EmptyPage:
         paper_data = paginator.page(paginator.num_pages)
+    if loginuser.has_perm('printerapp.list_paper'):
+        print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='paper/paper_list.html')
+        return Response({"data": paper_data}, status=status.HTTP_200_OK)
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
 
-    if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='paper/paper_list.html')
-    return Response({"data": paper_data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def paper_view(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     paper_obj=Paper.objects.get(id=id)
     paper_data = PaperSerializer(paper_obj).data
-    if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"view_mode":1},template_name='paper/paper_create_update.html')
-    return Response({"data": paper_data,"view_mode":1}, status=status.HTTP_200_OK)
+    if loginuser.has_perm('printerapp.view_paper'):
+        print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":paper_data,'module':'Paper',"view_mode":1},template_name='paper/paper_create_update.html')
+        return Response({"data": paper_data,"view_mode":1}, status=status.HTTP_200_OK)
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
+
 
 @api_view(['GET','PUT','POST'])
 def paper_update(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     paper_obj=Paper.objects.get(id=id)
     if request.method=='GET':
         data=PaperSerializer(paper_obj).data
-        if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='paper/paper_create_update.html')
-        return Response({"data": data}, status=status.HTTP_200_OK)
+        if loginuser.has_perm('printerapp.change_paper'):
+            print("yes")
+            if request.accepted_renderer.format == 'html':
+                return Response({'data':data},template_name='paper/paper_create_update.html')
+            return Response({"data": data}, status=status.HTTP_200_OK)
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_not_found.html')
 
     else:
         serializer=PaperSerializer(paper_obj,request.data,partial=True)
@@ -102,7 +140,16 @@ def paper_update(request,id):
 
 @api_view(['GET', 'POST','Delete'])
 def paper_delete(request,id):
-    selected_values=Paper.objects.get(pk=id)
-    selected_values.deleted=1;
-    selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:paper_list'))
+    loginuser=session_user_id(request)
+    print(loginuser)
+    if loginuser.has_perm('printerapp.delete_paper'):
+        print("yes")
+        selected_values=Paper.objects.get(pk=id)
+        selected_values.deleted=1;
+        selected_values.save();
+        return HttpResponseRedirect(reverse('printerapp:paper_list'))
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
+

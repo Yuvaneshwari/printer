@@ -1,0 +1,34 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Add options to a drop-down list using jQuery.</title>
+</head>
+<body>
+<p>List of Colors :</p>
+<select id='myColors'>
+<option value="Red">Red</option>
+<option value="Green">Green</option>
+<option value="White">White</option>
+ <option value="Black">Black</option>
+ </select>
+ </body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+ <script>
+
+var myOptions = {
+    val1 : 'Blue',
+    val2 : 'Orange'
+};
+var mySelect = $('#myColors');
+$.each(myOptions, function(val, text) {
+    mySelect.append(
+        $('<option></option>').val(val).html(text)
+    );
+});
+</script>
+</html>
+

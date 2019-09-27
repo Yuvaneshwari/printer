@@ -241,19 +241,20 @@
     <!-- #Top Bar -->
     <section>
         <!-- Left Sidebar -->
-        <aside id="leftsidebar" class="sidebar">
+        <aside id="leftsidebar" class="sidebar" style="width: 260px;">
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
                     <img src="{% static 'printerapp/images/user.png' %}" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">John Doe</div>
-                    <div class="email">john.doe@example.com</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</div>
+                    <div class="email">{{ user.email }}</div>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
                             <li><a href="{% url 'printerapp:user_list' %}"><i class="material-icons">person</i>Profile</a></li>
+                            <li><a href="{% url 'printerapp:role_list' %}"><i class="material-icons">person</i>Role</a></li>    
                             <li><a href="{% url 'printerapp:logout_user' %}"><i class="material-icons">input</i>Sign Out</a></li>
                         </ul>
                     </div>
@@ -303,9 +304,6 @@
                                 <a href="{% url 'printerapp:communication_list' %}">Communication</a>
                             </li>
                             <li>
-                                <a href="{% url 'printerapp:jobtype_list' %}">Job Type</a>
-                            </li>
-                            <li>
                                 <a href="{% url 'printerapp:state_list' %}">State</a>
                             </li>
                             <li>
@@ -326,24 +324,17 @@
                     </li>
                     
                     <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
+                        <a href="{% url 'printerapp:jobcard_list' %}">
                             <i class="material-icons">assignment</i>
                             <span>Jobcard</span>
                         </a>
-                        <ul class="ml-menu">
-                            
-                            <li>
-                                <a href="{% url 'printerapp:jobcard_create' %}">Job Card</a>
-                            </li>
-                             <li>
-                                <a href="{% url 'printerapp:jobcard_list' %}">Job Card List</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'printerapp:logic_create' %}">Rectangle</a>
-                            </li>
-                            
-                            
-                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'printerapp:processcard_list' %}">
+                            <i class="material-icons">assignment</i>
+                            <span>Processcard</span>
+                        </a>
                     </li>
                     
                     <li>
@@ -353,24 +344,42 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="{% url 'printerapp:paperpricing_create' %}">Paper</a>
+                                <a href="{% url 'printerapp:paperpricing_list' %}">Paper</a>
                             </li>
                             <li>
-                                <a href="{% url 'printerapp:packaging_create' %}">Packaging</a>
+                                <a href="{% url 'printerapp:packaging_list' %}">Packaging</a>
                             </li>
                             <li>
-                                <a href="{% url 'printerapp:processpricing_create' %}">Process</a>
+                                <a href="{% url 'printerapp:processpricing_list' %}">Process</a>
                             </li>
                         </ul>
                     </li>
                     
+                    <li>
+                        <a href="{% url 'printerapp:form_list' %}">
+                            <i class="material-icons">assignment</i>
+                            <span>Form</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">assignment</i>
+                            <span>Add On</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'printerapp:logic_create' %}">Rectangle</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
 
             </div>
             <!-- #Menu -->
             <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    &copy; 2016 - 2017 <a href="javascript:void(0);">PRINTER - Material Design</a>.
+                    &copy; 2019 - 2020 <a href="javascript:void(0);">PRINTER - Material Design</a>.
                 </div>
                 <div class="version">
                     <b>Version: </b> 1.0.5

@@ -1,4 +1,4 @@
-{% load static %}{% load rest_framework %}
+{% load static %}{% load rest_framework %}{% load common_function %}
 
 <html>
 <head>
@@ -24,15 +24,8 @@
                                 Process List
                             </h2>
                             <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/process/process_create"><i class="material-icons">add</i></a></li>
-                                       
-                                    </ul>
-                                </li>
+                                <a href="/printerapp/process/process_create"><i class="material-icons">add</i></a>
+                                  
                             </ul>
                         </div>
                         <div class="body table-responsive">
@@ -42,6 +35,8 @@
                                         <th>No</th>
                                         <th>Process Name</th>
                                         <th>Partial Delivery Time Need</th>
+                                        <th>Machines</th>
+                                        <th>Default User</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -53,6 +48,15 @@
                                     <td>{{forloop.counter}}</td>
                                     <td>{{lists_val.process_name}}</td>
                                     <td>{% if lists_val.is_deliveryTime == 1|add:0%}Yes{%else%}No{%endif%}</td>
+                                    <td>{% if lists_val.machine1 == 1|add:0%}Machine1,{%endif%}
+                                        {% if lists_val.machine2 == 1|add:0%}Machine2,{%endif%}
+                                        {% if lists_val.machine3 == 1|add:0%}Machine3,{%endif%}
+                                        {% if lists_val.machine4 == 1|add:0%}Machine4,{%endif%}
+                                        {% if lists_val.machine5 == 1|add:0%}Machine5{%endif%}
+                                    </td>
+                                    <td>
+                                    {% show_single_field tableName="auth_user" show_field_name="username" pk=lists_val.default_user as default_user %} {{default_user}}
+                                    </td>
                                     <td><div class="btn-group dropright">
                                         <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
@@ -68,7 +72,8 @@
 
                                 </tr>
                                 {% endfor %}
-                               
+                                <tr style="border: 0"><td></td><td></td><td></td><td></td><td></td><td></tr></tr>
+                                
                                 </tbody>
                             </table>
                         </div>

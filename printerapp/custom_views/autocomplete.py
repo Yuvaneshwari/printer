@@ -62,25 +62,25 @@ def customer_name_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={} 
         custom_filter['deleted']=0    
-        users = Customerdetails.objects.filter(customer_name__icontains = q,deleted=0 )[:10]
+        users = Customer.objects.filter(name__icontains = q,deleted=0 )[:10]
         results = []
-        for user in users:
-            id=user.communication_mode_id
-            getid=Communication.objects.get(id=id)
-            print(getid.name)
+        #for user in users:
+            #id=user.communication_mode_id
+            #getid=Communication.objects.get(id=id)
+            #print(getid.name)
         
         for user in users:
             return_json = {}
             return_json['id'] = user.id
-            return_json['label'] = user.customer_name
-            return_json['value'] = user.customer_name
+            return_json['label'] = user.name
+            return_json['value'] = user.name
             return_json['contact_person'] = user.contact_person
             return_json['primary_contact_no'] = user.primary_contact_no
             return_json['address'] = user.address
             return_json['email_id'] = user.email_id
-            return_json['whatsup_no'] = user.whatsup_no
+            return_json['whatsup_no'] = user.whatsup_number
             return_json['secondary_contact_no'] = user.secondary_contact_no
-            return_json['communication_mode'] = getid.name
+            #return_json['communication_mode'] = getid.name
             
             #return_json['order_date'] = user.order_date
 
@@ -98,18 +98,18 @@ def contact_no_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={}  
         custom_filter['deleted']=0   
-        users = Customerdetails.objects.filter(primary_contact_no__icontains = q )[:10]
+        users = Customer.objects.filter(primary_contact_no__icontains = q )[:10]
         results = []
         for user in users:
             return_json = {}
             return_json['id'] = user.id
             return_json['label'] = user.primary_contact_no
             return_json['value'] = user.primary_contact_no
-            return_json['customer_name'] = user.customer_name
+            return_json['customer_name'] = user.name
             return_json['contact_person'] = user.contact_person
             return_json['address'] = user.address
             return_json['email_id'] = user.email_id
-            return_json['whatsup_no'] = user.whatsup_no
+            return_json['whatsup_no'] = user.whatsup_number
             return_json['secondary_contact_no'] = user.secondary_contact_no
             #return_json['communication_mode'] = user.communication_mode
             #return_json['order_date'] = user.order_date
@@ -128,7 +128,7 @@ def user_name_autocomplete(request):
         q = request.GET.get('term', '')
         custom_filter={}  
         custom_filter['deleted']=0   
-        users = User.objects.filter(username__icontains = q ,deleted=0)[:10]
+        users = User.objects.filter(username__icontains = q,is_active=1)[:10]
         results = []
         for user in users:
             return_json = {}

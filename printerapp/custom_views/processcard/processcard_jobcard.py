@@ -28,13 +28,14 @@ def processcard_create(request,id):
         productid_list=[]
         del_date_list=[]
         productname_list=[]
+        
         jobcard=id
         jobcard_obj=Jobcard.objects.get(jobcard_no=jobcard)
         jobcardid=jobcard_obj.id
         print("jobcard")
         print(jobcard)
-        get_custname=Customerdetails.objects.get(id=jobcard_obj.customerid_id)
-        customer=get_custname.customer_name
+        get_custname=Customer.objects.get(id=jobcard_obj.customerid_id)
+        customer=get_custname.name
         print("cust")
         print(customer)
         jb_prd_obj=Jobcard_Product.objects.filter(jobcardid=jobcardid)
@@ -67,7 +68,7 @@ def processcard_create(request,id):
                 if(s=='processid'):
                     get_process=Process.objects.get(id=y)
                     process_list.append(get_process.process_name)
-
+                    
         print(process_list)
         mylist=zip(productno_list,productname_list,del_date_list,productid_list)   
         print("get")    
@@ -77,13 +78,7 @@ def processcard_create(request,id):
         print("enterrr")
         print(request.data)
         jobid=int(request.POST.get('jobcardid'))
-        #print(request.POST.get('comments'))
-        #print(request.POST.get('file'))
-        #print(request.POST.get('custname'))
-        #print(request.POST.get('prdname'))
-        #print(request.POST.get('assignto'))
-        #print(request.POST.get('date'))
-        get_custname=Customerdetails.objects.get(customer_name=request.POST.get('custname'))
+        get_custname=Customer.objects.get(name=request.POST.get('custname'))
         customer=get_custname.id
         print("cust")
         print(customer)
@@ -94,13 +89,17 @@ def processcard_create(request,id):
         process=get_process.id
         jobcard_obj=Jobcard.objects.get(id=jobid)
         jobcard=jobcard_obj.jobcard_no
+        print("ass")
+        print(int(request.POST.get('assignto')))
         data={
         "jobcardid":int(request.POST.get('jobcardid')),
         "jobcard_productno":request.POST.get('productno'),
-        "assign_to":int(request.POST.get('assignto')),
+        "assigned_to":int(request.POST.get('assignto')),
         "customerid":customer,
         "productid":productname,
         "processid":process,
+        "machine":int(request.POST.get('machine')),
+        "supplierid":int(request.POST.get('supplier')),
         "del_datetime":"2019-03-04 19:43:24"
         }
         print(data)
@@ -130,8 +129,8 @@ def processcard_create(request,id):
     jobcardid=jobcard_obj.id
     print("jobcard")
     print(jobcard)
-    get_custname=Customerdetails.objects.get(id=jobcard_obj.customerid_id)
-    customer=get_custname.customer_name
+    get_custname=Customer.objects.get(id=jobcard_obj.customerid_id)
+    customer=get_custname.name
     print("cust")
     print(customer)
     jb_prd_obj=Jobcard_Product.objects.filter(jobcardid=jobcardid)
@@ -184,4 +183,150 @@ def comments_create(request,id):
         print(request.POST.get('assignto'))
         print(request.POST.get('date'))
         return Response({'data',''},template_name='processcard/processcard1.html')
+
+
+
+@api_view(['GET'])
+def processcard_view(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
+    processcard_obj=Processcard.objects.get(id=id)
+    data=ProcesscardSerializer(processcard_obj).data
+        
+    print("jobcardid")
+    print(processcard_obj.jobcardid_id)
+    print("productid")
+    print(print(processcard_obj.productid_id))
+    print("processid")
+    print(processcard_obj.processid_id)
+    print("customerid")
+    print(processcard_obj.customerid_id)
+    customer_obj=Customer.objects.get(id=processcard_obj.customerid_id)
+    customer_data=CustomerSerializer(customer_obj).data
+    print(customer_obj.name)
+    comments_obj=Comments.objects.get(ref_id_id=id)
+    comments_data=CommentsSerializer(comments_obj).data
+    if loginuser.has_perm('printerapp.view_processcard'):
+        print("yes")    
+        if request.accepted_renderer.format == 'html':
+            return Response({'data':data,'module':'Processcard','obj':processcard_obj,'comments_data':comments_data,'customer':customer_obj.name,"view_mode":1},template_name='processcard/processcard_update.html')
+        return Response({"data":gsm_data,"view_mode":1}, status=status.HTTP_200_OK)
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
+
+
+@api_view(['GET','PUT','POST'])
+def processcard_update(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
+    processcard_obj=Processcard.objects.get(id=id)
+    data=ProcesscardSerializer(processcard_obj).data
+        
+    print("jobcardid")
+    print(processcard_obj.jobcardid_id)
+    print("productid")
+    print(print(processcard_obj.productid_id))
+    print("processid")
+    print(processcard_obj.processid_id)
+    print("customerid")
+    print(processcard_obj.customerid_id)
+    customer_obj=Customer.objects.get(id=processcard_obj.customerid_id)
+    customer_data=CustomerSerializer(customer_obj).data
+    print(customer_obj.name)
+    comments_obj=Comments.objects.get(ref_id_id=id)
+    comments_data=CommentsSerializer(comments_obj).data
+    
+    if request.method=='GET':
+        if loginuser.has_perm('printerapp.change_processcard'):
+            print("yes") 
+            if request.accepted_renderer.format == 'html':
+                return Response({'data':data,'module':'Processcard','obj':processcard_obj,'comments_data':comments_data,'customer':customer_obj.name},template_name='processcard/processcard_update.html')
+            return Response({"data": data}, status=status.HTTP_200_OK)
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_not_found.html')
+
+
+    else:
+        print("enter")
+        processcardid=int(id)
+
+        data ={
+            "comment":request.POST.get('comments'),
+            "file":request.FILES.get('file_name'),
+            "ref_id":processcardid,
+            "ref_type":"1",
+            }
+        print(data)
+        comments_obj = Comments.objects.get(ref_id_id=id)
+        comments_data=CommentsSerializer(comments_obj,data=data,partial=True)
+    
+        if comments_data.is_valid():
+            print("valid2")
+            comments_data.save();
+        #serializer=ProcesscardSerializer(processcard_obj,request.data,partial=True)
+        #if serializer.is_valid():
+            #serializer.save();
+            if request.accepted_renderer.format=='html':
+                return HttpResponseRedirect(reverse('printerapp:processcard_list'))
+            return Response({"data": "Data Updated successfully"}, status=status.HTTP_200_OK)
+        else:
+            error_details = []
+            for key in serializer.errors.keys():
+                error_details.append({"field": key, "message": serializer.errors[key][0]})
+                data = {
+                        "Error": {
+                            "status": 400,
+                            "message": "Your submitted data was not valid - please correct the below errors",
+                            "error_details": error_details
+                            }
+                        }
+                if request.accepted_renderer.format=='html':
+                    return Response({"error_data": data},template_name='processcard/processcard_create_update.html')
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST','Delete'])
+def processcard_delete(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+    if loginuser.has_perm('printerapp.delete_processcard'):
+        print("yes")
+        selected_values=Processcard.objects.get(pk=id)
+        selected_values.deleted=1;
+        selected_values.save();
+        return HttpResponseRedirect(reverse('printerapp:processcard_list'))
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
+
+@api_view(['GET'])
+def processcard_list(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
+    custom_filter={}
+    custom_filter['deleted']=0
+    processcard_obj = Processcard.objects.filter(**custom_filter)
+    processcard_data = ProcesscardSerializer(processcard_obj, many=True).data
+    page = request.GET.get('page', 1)
+    paginator = Paginator(processcard_obj, row_per_page)
+    try:
+        processcard_data = paginator.page(page)
+    except PageNotAnInteger:
+        processcard_data = paginator.page(1)
+    except EmptyPage:
+        processcard_data = paginator.page(paginator.num_pages)
+    if loginuser.has_perm('printerapp.list_processcard'):
+        print("yes")                
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":processcard_data,'module':'Processcard',"custom_filter":custom_filter},template_name='processcard/processcard_list.html')
+        return Response({"data": processcard_data}, status=status.HTTP_200_OK)
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
 

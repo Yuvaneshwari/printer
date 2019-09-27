@@ -80,6 +80,14 @@ def getprocesslist(id):
 	print(id)
 	i=0
 	process_list=[]
+	default_user_id=[]
+	default_user=[]
+	machine1_list=[]
+	machine2_list=[]
+	machine3_list=[]
+	machine4_list=[]
+	machine5_list=[]
+
 	user_obj=Jobcard_Product_Process.objects.filter(jobcard_productid=id)
 	user_data = Jobcard_Product_ProcessSerializer(user_obj, many=True).data
 
@@ -88,6 +96,34 @@ def getprocesslist(id):
 			if(s=='processid'):
 				get_process=Process.objects.get(id=y)
 				process_list.append(get_process.process_name)
+				machine1_list.append(get_process.machine1)
+				machine2_list.append(get_process.machine2)
+				machine3_list.append(get_process.machine3)
+				machine4_list.append(get_process.machine4)
+				machine5_list.append(get_process.machine5)
+				
+				if(get_process.default_user_id!=None):
+					get_user=User.objects.get(id=get_process.default_user_id)
+					default_user.append(get_user.username)
+					default_user_id.append(get_process.default_user_id)
+				else:
+					default_user_id.append(i)
+					default_user.append(i)
 
 	print(process_list)
-	return process_list;
+	print(default_user_id)
+	print(default_user)
+	get_process_list=zip(process_list,default_user,default_user_id,machine1_list,machine2_list,machine3_list,machine4_list,machine5_list)
+	return get_process_list;
+
+
+@register.simple_tag
+def show_single_field_role(tableName,show_field_name,user):
+    data = []
+    with connection.cursor() as cursor:
+        if tableName and user and show_field_name:
+            query = "SELECT  `%s` FROM %s where user_id=%s" %(show_field_name,tableName,user)
+            #return query
+            cursor.execute(query)
+            row = cursor.fetchone()
+            return row[0]

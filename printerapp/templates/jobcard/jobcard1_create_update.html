@@ -5,7 +5,18 @@
 
 {% include "includes/css_file.html" %}
 <style type="text/css">
-.container { border:2px solid #ccc; width:300px; height: 250px; overflow-y: scroll;
+.container { border:2px solid #ccc; width:460px; height: 250px; overflow-y: scroll;}
+.checkboxlabel {
+    width:15px;
+    display: inline;
+    font-size: 50px;
+}
+table .a{
+    padding: 25px;
+    table-layout: auto;
+    width: 180px;
+    
+}
 </style>
 </head>
 <body class="theme-red">
@@ -53,15 +64,8 @@
                     <h2>Customer Create</h2>
                     {%endif%}
                     <ul class="header-dropdown m-r--5">
-                        <li class="dropdown">
-                            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                            <li><a href="/printerapp/jobcard/jobcard_list"><i class="material-icons">visibility</i></a></li>
-                                       
-                            </ul>
-                        </li>
+                       <a href="/printerapp/jobcard/jobcard_list"><i class="material-icons">visibility</i></a>
+                          
                     </ul>
                 </div>
                 <div class="body">
@@ -169,20 +173,26 @@
     </div>
 
     <br><br>           
-    <div {% if view_mode %} style="display:none" {% endif%}>
-        {%if data.id %}
-        <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
-        {%else%}
-        <button type="button" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
-        {%endif%}
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-<button type="button" name="submitfr" id="submitfr"class="btn btn-primary m-t-15 waves-effect">Check</button>
-        
-       
-    </div>
-    </form>
-        
+    
+     <div class="row clearfix" {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+                            {%else%}
+                            <button type="button" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            <!--<button type="button" name="submitfr" id="submitfr"class="btn btn-primary m-t-15 waves-effect">Check</button>-->
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>   
 
 </div>
 </section>
@@ -227,12 +237,14 @@
     var result=[];
     var sendresult=[];
     var a=[];
+    var jobtype=[];
     
     jQuery_3_2_1(document).ready(function() {
     
     console.log("ready");
  
     $("#productaddbtn").click(function(){
+    console.log("count");
     console.log(count);
     data={"count":count};
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
@@ -469,6 +481,7 @@ $("#submitfrm").click(function(){
         },
             
         success:function(data){
+            console.log(data);
             storeproductcard(data.jobcardid,data.jobcardno); 
             jobcardno=data.jobcardno;   
             //console.log("jobcard");
@@ -481,22 +494,32 @@ $("#submitfrm").click(function(){
 
 });  
 function storeproductcard(id,jobcardno){
-
+    console.log("enter");
+        
     for(i=0;i<count;i++){
         a.length=0;
         $.each($('[id^=processname'+i), function (i, item) {
 
         if($(this).prop("checked") == true){
 
-            console.log($(this).val()); 
+            //console.log($(this).val()); 
             a.push($(this).val());
             //$('#partialdeliverydiv'+i).show();
         }
         });    
+        $.each($('[id^=jobtype'+i), function (i, item) {        
+            console.log("job")
+            console.log($(this).val()); 
+            jobtype.push($(this).val());
+            
+        }); 
+        console.log("jobtype");
+        console.log(jobtype);
         processcard_url="/printerapp/processcard/processcard_create/";
-   
+        console.log("a");
+        console.log(a);
         var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-        data={"a[]":a,"id":id,"jobcardno":jobcardno,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Jobtype":"1","Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
+        data={"a[]":a,"id":id,"jobtype[]":jobtype,"jobcardno":jobcardno,"Productname": productlist[i],"Paper":paperlist[i],"GSM":gsmlist[i],"Size":sizelist[i],"Sizeselect":sizeselect[i],"squareinch":squareinch_list[i],"Quantity":quantitylist[i],"PartialDelivery":partialdelivery_list[i],"Partialqty":partial_qty_list[i],"PartialDateTime":partial_datetime_list[i],"Sides":side[i],"Deliverymode":deliverymodelist[i],"DeleiveryDesc":delivery_desc_list[i],"DeleiveryDateTime":delivery_datetime_list[i]};
     
         $.ajax({
         type:"POST",
@@ -572,7 +595,11 @@ function storeprocesscard(jobcard_product_id){
 
 function getproductid(sel,data)
 {
-    processdivcount=data.count;
+    //processdivcount=data.count;
+    getcount=sel.id;
+    var splitcount = getcount.substring(12);
+    console.log("split count");
+    console.log(splitcount);
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
     data={"productid":sel.value};
     $.ajax({
@@ -585,7 +612,7 @@ function getproductid(sel,data)
         
         success:function(data){
            
-            getprocess_list(data.processlist,data.processid,data.partialdelivery,data.defaultprocess,processdivcount);
+            getprocess_list(data.processlist,data.processid,data.partialdelivery,data.defaultprocess,splitcount);
 
         }
     });
@@ -607,9 +634,22 @@ function getprocess_list(processlist,processid,partialdelivery,defaultprocess,pr
 
     var inputs = container.find('input');
     var id = inputs.length+1;
-    $('<input />', { type: 'checkbox', id: 'processname'+processdivcount+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
-    $('<label />', { 'for': 'processname'+processdivcount+id, text: processlist[i] }).appendTo(container);
-    $('<input />', { type: 'text', id: 'datetime'+processdivcount+id ,placeholder:'Date and Time',disabled:"true"}).appendTo(container);
+    //$('<input />', { type: 'checkbox', id: 'processname'+processdivcount+id, value: processid[i] ,class:"filled-in chk-col-teal"}).appendTo(container);
+    //$('<label />', { 'for': 'processname'+processdivcount+id, text: processlist[i],class:"checkboxlabel" }).appendTo(container);
+    ///$('<input />', { type: 'text', id: 'datetime'+processdivcount+id ,placeholder:'Date and Time',disabled:"true"}).appendTo(container);
+    //$('<select>',{id:'jobtype'+processdivcount+id ,name:'jobtype[]'}).append('<option value="1">Inhouse</option><option value="2">ScreenPrint</option>').appendTo(container);
+    //$('<option/>',{value:'1',text:'Inhouse'});
+    //$('<option/>',{value:'2',text:'Screen Print'});
+    //$('<select/>').appendTo(container);
+
+    //data="<select class='form-control' id='jobtype"+processdivcount+id+"' name='jobtype[]' style='width:100px;'><option value='0'>-JobType-</option><option value='1'>Inhouse</option><option value='2'>Screen Print</option></select>";
+    //container.append(data);
+    
+    getdata ="<tr><td width='20px'><input type='checkbox' class='filled-in chk-col-teal' name='processname[]' id='processname"+processdivcount+id+"' value="+processid[i]+" /><label for='processname"+processdivcount+id+"'>"+processlist[i]+"</label></td><td><input type='text' class='form-control' id='datetime"+processdivcount+id+"' name='datetime[]' style='width:150px;' placeholder='date and time' disabled='true'/></td><td><select class='form-control' id='jobtype"+processdivcount+id+"' name='jobtype[]' style='width:120px;'><option value='0'>-JobType-</option><option value='1'>Inhouse</option><option value='2'>Screen Print</option><option value='3'>Digital Print</option></select></td></tr>";
+      
+    container.append(getdata);
+    
+
     if(defaultprocess[i]==true){
         $( "#processname"+processdivcount+id).prop('checked', true);
     }
@@ -623,6 +663,13 @@ function getprocess_list(processlist,processid,partialdelivery,defaultprocess,pr
 
 function getsizeid(sel,data)
 {
+    getcount=sel.id;
+    console.log("getcount");
+    console.log(getcount);
+
+    var splitcount = getcount.substring(4);
+    console.log("split count");
+    console.log(splitcount);
     index=data.count;
     var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
     data={"sizeid":sel.value};
@@ -636,7 +683,7 @@ function getsizeid(sel,data)
         
         success:function(data){
 
-            assignvalue(data.length,data.width,index);
+            assignvalue(data.length,data.width,splitcount);
        
         }
     });
@@ -670,8 +717,15 @@ function assignvalue(length,width,index)
 
 function customfunc(custom,data) 
 {
-    index=data.count;
+    getcount=custom.id;
+    console.log("getcount");
+    console.log(getcount);
 
+    var splitcount = getcount.substring(7);
+    console.log("split count");
+    console.log(splitcount);
+    index=splitcount;
+    
     if($(custom).prop("checked") == true){
 
             $('input[name="custom_length[]"]').eq(index).val("");
@@ -706,8 +760,14 @@ function customfunc(custom,data)
 
 function partialdelivery(chkbox,data) 
 {
-    index=data.count;
+    getcount=chkbox.id;
+    console.log("getcount");
+    console.log(getcount);
 
+    var splitcount = getcount.substring(15);
+    console.log("split count");
+    console.log(splitcount);
+    index=splitcount;
     if($(chkbox).prop("checked") == true){
             
             //alert("yes");

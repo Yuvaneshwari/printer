@@ -1,0 +1,1002 @@
+{% load static %}{% load rest_framework %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+<style type="text/css">
+
+#submitcontainer{
+    float:right;
+}
+.myTable { 
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse; 
+  }
+.myTable th { 
+  color: black; 
+  font-weight: bold;
+  padding: 5px;
+  border: 1px solid black; 
+  font-size: 20px;
+  text-align: center;
+}
+.myTable td{ 
+  padding: 5px;
+  border: 1px solid goldenrod; 
+  font-size: 18px;
+  text-align: left;
+            
+  }
+</style>
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <form method="POST" name="rolefrm" id="rolefrm">{% csrf_token %}
+                            
+            <div class="block-header">
+                <h2>{{module}}</h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            {% if data.id %}
+                                {%if view_mode%}
+                                <h2>{{module}} View</h2>
+                                {%else%}
+                                <h2>{{module}}Update</h2>
+                                {%endif%}
+                            {%else%}
+                            <h2>{{module}} Create</h2>
+                            {%endif%}
+                            <ul class="header-dropdown m-r--5">
+                                <a href="/printerapp/role/role_list/"><i class="material-icons">visibility</i></a>
+                            </ul>
+                        </div>
+                        <div class="body">
+                                <label for="paper_type">Role</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="name" id="name" class="form-control" value="{{data.name}}"placeholder="Enter Role name">
+                                    </div>
+                                </div>
+                                
+                               
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Forms</h2>
+                        </div>
+                        <div class="body">
+                            <table class="myTable" border="2">
+                                <tr>
+                                    <th align="right">Forms</th>
+                                    <th><input type="checkbox" id="select_all1" name="select_all1" class="filled-in chk-col-teal" onclick="return selectall()" {% if data.select_all == 1 %} checked="true" selected="true"{% endif%}><label for="select_all1">Select All</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="select_all" name="select_all" value="{{data.select_all}}">
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td align="center"><b>Size</b></td>
+                                    <td>
+                                        <input type="checkbox" id="size_create1" name="size_create1" class="filled-in chk-col-teal" {% if data.size_create == 1 %} checked="true" selected="true"{% endif%}/>
+                                        <label for="size_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="hidden" id="size_create" name="size_create" value="{{data.size_create}}">
+                                        <input type="checkbox" id="size_update1" name="size_update1" class="filled-in chk-col-teal" {% if data.size_update == 1 %} checked="true" selected="true"{% endif%}><label for="size_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="hidden" id="size_update" name="size_update" value="{{data.size_update}}">
+                                        <input type="checkbox" id="size_delete1" name="size_delete1" class="filled-in chk-col-teal"{% if data.size_delete == 1 %} checked="true" selected="true"{% endif%}><label for="size_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="hidden" id="size_delete" name="size_delete" value="{{data.size_delete}}">
+                                        <input type="checkbox" id="size_list1" name="size_list1" class="filled-in chk-col-teal"{% if data.size_list == 1 %} checked="true" selected="true"{% endif%}><label for="size_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="hidden" id="size_list" name="size_list" value="{{data.size_list}}">
+                                        <input type="checkbox" id="size_view1" name="size_view1" class="filled-in chk-col-teal" {% if data.size_view == 1 %} checked="true" selected="true"{% endif%}><label class="checkbox-inline" for="size_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="hidden" id="size_view" name="size_view" value="{{data.size_view}}">
+                                        <input type="checkbox" id="size_all1" name="size_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.size_create == 1 and data.size_update == 1 and data.size_delete == 1 and data.size_list == 1 and data.size_view == 1 %} checked="true" selected="true"{% endif%}><label class="checkbox-inline" for="size_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="hidden" id="size_all" name="size_all" value="{{data.size_all}}">                               
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                <td align="center"><b>GSM</b></td>
+                                <td>
+                                    <input type="checkbox" id="gsm_create1" name="gsm_create1" class="filled-in chk-col-teal" {% if data.gsm_create == 1 %} checked="true" selected="true"{% endif%}/><label for="gsm_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="gsm_create" name="gsm_create" value="{{data.gsm_create}}">
+                                    <input type="checkbox" id="gsm_update1" name="gsm_update1" class="filled-in chk-col-teal" {% if data.gsm_update == 1 %} checked="true" selected="true"{% endif%}><label for="gsm_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="gsm_update" name="gsm_update" value="{{data.gsm_update}}">
+                                    <input type="checkbox" id="gsm_delete1" name="gsm_delete1" class="filled-in chk-col-teal"{% if data.gsm_delete == 1 %} checked="true" selected="true"{% endif%}><label for="gsm_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="gsm_delete" name="gsm_delete" value="{{data.gsm_delete}}">
+                                    <input type="checkbox" id="gsm_list1" name="gsm_list1" class="filled-in chk-col-teal"{% if data.gsm_list == 1 %} checked="true" selected="true"{% endif%}><label for="gsm_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="gsm_list" name="gsm_list" value="{{data.gsm_list}}">
+                                    <input type="checkbox" id="gsm_view1" name="gsm_view1" class="filled-in chk-col-teal" {% if data.gsm_view == 1 %} checked="true" selected="true"{% endif%}><label for="gsm_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="gsm_view" name="gsm_view" value="{{data.gsm_view}}">
+                                    <input type="checkbox" id="gsm_all1" name="gsm_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.gsm_create == 1 and data.gsm_update == 1 and data.gsm_delete == 1 and data.gsm_list == 1 and data.gsm_view == 1 %} checked="true" selected="true"{% endif%}><label for="gsm_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="gsm_all" name="gsm_all" value="{{data.gsm_all}}">                               
+                                </td>
+                                </tr>
+
+                                <tr>
+                                <td align="center"><b>Paper</b></td>
+                                <td>
+                                    <input type="checkbox" id="paper_create1" name="paper_create1" class="filled-in chk-col-teal" {% if data.paper_create == 1 %} checked="true" selected="true"{% endif%}/><label for="paper_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="paper_create" name="paper_create" value="{{data.paper_create}}">
+                                    <input type="checkbox" id="paper_update1" name="paper_update1" class="filled-in chk-col-teal" {% if data.paper_update == 1 %} checked="true" selected="true"{% endif%}><label for="paper_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="paper_update" name="paper_update" value="{{data.paper_update}}">
+                                    <input type="checkbox" id="paper_delete1" name="paper_delete1" class="filled-in chk-col-teal"{% if data.paper_delete == 1 %} checked="true" selected="true"{% endif%}><label for="paper_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="paper_delete" name="paper_delete" value="{{data.paper_delete}}">
+                                    <input type="checkbox" id="paper_list1" name="paper_list1" class="filled-in chk-col-teal"{% if data.paper_list == 1 %} checked="true" selected="true"{% endif%}><label for="paper_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="paper_list" name="paper_list" value="{{data.paper_list}}">
+                                    <input type="checkbox" id="paper_view1" name="paper_view1" class="filled-in chk-col-teal" {% if data.paper_view == 1 %} checked="true" selected="true"{% endif%}><label for="paper_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="paper_view" name="paper_view" value="{{data.paper_view}}">
+                                    <input type="checkbox" id="paper_all1" name="paper_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.paper_create == 1 and data.paper_update == 1 and data.paper_delete == 1 and data.paper_list == 1 and data.paper_view == 1 %} checked="true" selected="true"{% endif%}><label for="paper_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="paper_all" name="paper_all" value="{{data.paper_all}}">                               
+                                </td>
+                                </tr>
+
+                                <tr>
+                                <td align="center"><b>Process</b></td>
+                                <td>
+                                    <input type="checkbox" id="process_create1" name="process_create1" class="filled-in chk-col-teal" {% if data.process_create == 1 %} checked="true" selected="true"{% endif%}/><label for="process_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="process_create" name="process_create" value="{{data.process_create}}">
+                                    <input type="checkbox" id="process_update1" name="process_update1" class="filled-in chk-col-teal" {% if data.process_update == 1 %} checked="true" selected="true"{% endif%}><label for="process_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="process_update" name="process_update" value="{{data.process_update}}">
+                                    <input type="checkbox" id="process_delete1" name="process_delete1" class="filled-in chk-col-teal"{% if data.process_delete == 1 %} checked="true" selected="true"{% endif%}><label for="process_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="process_delete" name="process_delete" value="{{data.process_delete}}">
+                                    <input type="checkbox" id="process_list1" name="process_list1" class="filled-in chk-col-teal"{% if data.process_list == 1 %} checked="true" selected="true"{% endif%}><label for="process_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="process_list" name="process_list" value="{{data.process_list}}">
+                                    <input type="checkbox" id="process_view1" name="process_view1" class="filled-in chk-col-teal" {% if data.process_view == 1 %} checked="true" selected="true"{% endif%}><label for="process_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="process_view" name="process_view" value="{{data.process_view}}">
+                                    <input type="checkbox" id="process_all1" name="process_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.process_create == 1 and data.process_update == 1 and data.process_delete == 1 and data.process_list == 1 and data.process_view == 1 %} checked="true" selected="true"{% endif%}><label for="process_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="process_all" name="process_all" value="{{data.process_all}}">                               
+                                </td>
+                                </tr>
+                                <tr>
+                                <td align="center"><b>Product</b></td>
+                                <td>
+                                    <input type="checkbox" id="product_create1" name="product_create1" class="filled-in chk-col-teal" {% if data.product_create == 1 %} checked="true" selected="true"{% endif%}/><label for="product_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="product_create" name="product_create" value="{{data.product_create}}">
+                                    <input type="checkbox" id="product_update1" name="product_update1" class="filled-in chk-col-teal" {% if data.product_update == 1 %} checked="true" selected="true"{% endif%}><label for="product_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="product_update" name="product_update" value="{{data.product_update}}">
+                                    <input type="checkbox" id="product_delete1" name="product_delete1" class="filled-in chk-col-teal"{% if data.product_delete == 1 %} checked="true" selected="true"{% endif%}><label for="product_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="product_delete" name="product_delete" value="{{data.product_delete}}">
+                                    <input type="checkbox" id="product_list1" name="product_list1" class="filled-in chk-col-teal"{% if data.product_list == 1 %} checked="true" selected="true"{% endif%}><label for="product_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="product_list" name="product_list" value="{{data.product_list}}">
+                                    <input type="checkbox" id="product_view1" name="product_view1" class="filled-in chk-col-teal" {% if data.product_view == 1 %} checked="true" selected="true"{% endif%}><label for="product_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="product_view" name="product_view" value="{{data.product_view}}">
+                                    <input type="checkbox" id="product_all1" name="product_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.product_create == 1 and data.product_update == 1 and data.product_delete == 1 and data.product_list == 1 and data.product_view == 1 %} checked="true" selected="true"{% endif%}><label for="product_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="product_all" name="product_all" value="{{data.product_all}}">                               
+                                </td>
+                                </tr>
+
+                                <tr>
+                                <td align="center"><b>Delivery Mode</b></td>
+                                <td>
+                                    <input type="checkbox" id="delivery_create1" name="delivery_create1" class="filled-in chk-col-teal" {% if data.delivery_create == 1 %} checked="true" selected="true"{% endif%}/><label for="delivery_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="delivery_create" name="delivery_create" value="{{data.delivery_create}}">
+                                    <input type="checkbox" id="delivery_update1" name="delivery_update1" class="filled-in chk-col-teal" {% if data.delivery_update == 1 %} checked="true" selected="true"{% endif%}><label for="delivery_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="delivery_update" name="delivery_update" value="{{data.delivery_update}}">
+                                    <input type="checkbox" id="delivery_delete1" name="delivery_delete1" class="filled-in chk-col-teal"{% if data.delivery_delete == 1 %} checked="true" selected="true"{% endif%}><label for="delivery_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="delivery_delete" name="delivery_delete" value="{{data.delivery_delete}}">
+                                    <input type="checkbox" id="delivery_list1" name="delivery_list1" class="filled-in chk-col-teal"{% if data.delivery_list == 1 %} checked="true" selected="true"{% endif%}><label for="delivery_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="delivery_list" name="delivery_list" value="{{data.delivery_list}}">
+                                    <input type="checkbox" id="delivery_view1" name="delivery_view1" class="filled-in chk-col-teal" {% if data.delivery_view == 1 %} checked="true" selected="true"{% endif%}><label for="delivery_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="delivery_view" name="delivery_view" value="{{data.delivery_view}}">
+                                    <input type="checkbox" id="delivery_all1" name="delivery_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.delivery_create == 1 and data.delivery_update == 1 and data.delivery_delete == 1 and data.delivery_list == 1 and data.delivery_view == 1 %} checked="true" selected="true"{% endif%}><label for="delivery_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="delivery_all" name="delivery_all" value="{{data.delivery_all}}">                               
+                                </td>
+                                </tr>
+                                <tr>
+                                <td align="center"><b>Communication</b></td>
+                                <td>
+                                    <input type="checkbox" id="communication_create1" name="communication_create1" class="filled-in chk-col-teal" {% if data.communication_create == 1 %} checked="true" selected="true"{% endif%}/><label for="communication_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="communication_create" name="communication_create" value="{{data.communication_create}}">
+                                    <input type="checkbox" id="communication_update1" name="communication_update1" class="filled-in chk-col-teal" {% if data.communication_update == 1 %} checked="true" selected="true"{% endif%}><label for="communication_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="communication_update" name="communication_update" value="{{data.communication_update}}">
+                                    <input type="checkbox" id="communication_delete1" name="communication_delete1" class="filled-in chk-col-teal"{% if data.communication_delete == 1 %} checked="true" selected="true"{% endif%}><label for="communication_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="communication_delete" name="communication_delete" value="{{data.communication_delete}}">
+                                    <input type="checkbox" id="communication_list1" name="communication_list1" class="filled-in chk-col-teal"{% if data.communication_list == 1 %} checked="true" selected="true"{% endif%}><label for="communication_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="communication_list" name="communication_list" value="{{data.communication_list}}">
+                                    <input type="checkbox" id="communication_view1" name="communication_view1" class="filled-in chk-col-teal" {% if data.communication_view == 1 %} checked="true" selected="true"{% endif%}><label for="communication_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="communication_view" name="communication_view" value="{{data.communication_view}}">
+                                    <input type="checkbox" id="communication_all1" name="communication_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.communication_create == 1 and data.communication_update == 1 and data.communication_delete == 1 and data.communication_list == 1 and data.communication_view == 1 %} checked="true" selected="true"{% endif%}><label for="communication_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="communication_all" name="communication_all" value="{{data.communication_all}}">                               
+                                </td>
+                                </tr>
+                                <tr>
+                                <td align="center"><b>Company</b></td>
+                                <td>
+                                    <input type="checkbox" id="company_create1" name="company_create1" class="filled-in chk-col-teal" {% if data.company_create == 1 %} checked="true" selected="true"{% endif%}/><label for="company_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="company_create" name="company_create" value="{{data.company_create}}">
+                                    <input type="checkbox" id="company_update1" name="company_update1" class="filled-in chk-col-teal" {% if data.company_update == 1 %} checked="true" selected="true"{% endif%}><label for="company_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="company_update" name="company_update" value="{{data.company_update}}">
+                                    <input type="checkbox" id="company_delete1" name="company_delete1" class="filled-in chk-col-teal"{% if data.company_delete == 1 %} checked="true" selected="true"{% endif%}><label for="company_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="company_delete" name="company_delete" value="{{data.company_delete}}">
+                                    <input type="checkbox" id="company_list1" name="company_list1" class="filled-in chk-col-teal"{% if data.company_list == 1 %} checked="true" selected="true"{% endif%}><label for="company_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="company_list" name="company_list" value="{{data.company_list}}">
+                                    <input type="checkbox" id="company_view1" name="company_view1" class="filled-in chk-col-teal" {% if data.company_view == 1 %} checked="true" selected="true"{% endif%}><label for="company_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="company_view" name="company_view" value="{{data.company_view}}">
+                                    <input type="checkbox" id="company_all1" name="company_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.company_create == 1 and data.company_update == 1 and data.company_delete == 1 and data.company_list == 1 and data.company_view == 1 %} checked="true" selected="true"{% endif%}><label for="company_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="company_all" name="company_all" value="{{data.company_all}}">                               
+                                </td>
+                                </tr>
+                                <tr>
+                                <td align="center"><b>Jobcard</b></td>
+                                <td>
+                                    <input type="checkbox" id="jobcard_create1" name="jobcard_create1" class="filled-in chk-col-teal" {% if data.jobcard_create == 1 %} checked="true" selected="true"{% endif%}/><label for="jobcard_create1">Create</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="jobcard_create" name="jobcard_create" value="{{data.jobcard_create}}">
+                                    <input type="checkbox" id="jobcard_update1" name="jobcard_update1" class="filled-in chk-col-teal" {% if data.jobcard_update == 1 %} checked="true" selected="true"{% endif%}><label for="jobcard_update1">Update</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="jobcard_update" name="jobcard_update" value="{{data.jobcard_update}}">
+                                    <input type="checkbox" id="jobcard_delete1" name="jobcard_delete1" class="filled-in chk-col-teal"{% if data.jobcard_delete == 1 %} checked="true" selected="true"{% endif%}><label for="jobcard_delete1">Delete</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="jobcard_delete" name="jobcard_delete" value="{{data.jobcard_delete}}">
+                                    <input type="checkbox" id="jobcard_list1" name="jobcard_list1" class="filled-in chk-col-teal"{% if data.jobcard_list == 1 %} checked="true" selected="true"{% endif%}><label for="jobcard_list1">List</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="jobcard_list" name="jobcard_list" value="{{data.jobcard_list}}">
+                                    <input type="checkbox" id="jobcard_view1" name="jobcard_view1" class="filled-in chk-col-teal" {% if data.jobcard_view == 1 %} checked="true" selected="true"{% endif%}><label for="jobcard_view1">View</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="jobcard_view" name="jobcard_view" value="{{data.jobcard_view}}">
+                                    <input type="checkbox" id="jobcard_all1" name="jobcard_all1" class="filled-in chk-col-teal" onclick="return each_all()" {% if data.jobcard_create == 1 and data.jobcard_update == 1 and data.jobcard_delete == 1 and data.jobcard_list == 1 and data.jobcard_view == 1 %} checked="true" selected="true"{% endif%}><label for="jobcard_all1">All</label> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="hidden" id="jobcard_all" name="jobcard_all" value="{{data.jobcard_all}}">                               
+                                </td>
+                                </tr>
+
+
+
+
+
+                            </table>
+                        </div><!--end body-->
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <!--end-->
+
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" {% if view_mode %} style="display:none" {% endif%}>         
+                    <div class="card">
+                        <div class="body">
+                                
+                                   
+                    {%if data.id %}
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+                    {%else%}
+                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                    {%endif%}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>                     
+                    </div>
+                </div>
+            </div>
+            </form>
+            <!--end -->
+           
+</div>
+</section>
+   
+</body>
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#submitfrm").click(function(){
+        console.log("enter2");
+        //frmvalidation();
+        get_all_values();
+        
+    }); 
+    
+});
+function frmvalidation(){
+$("#paperfrm").validate({
+  rules : {
+    name: {
+    required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+function each_all(){
+    if($("#size_all1").is(":checked")){
+        $("#size_create1").prop('checked', true);
+        $("#size_update1").prop('checked', true);
+        $("#size_delete1").prop('checked', true);
+        $("#size_view1").prop('checked', true);
+        $("#size_list1").prop('checked', true);     
+       
+    }
+    else if($("#size_all1").is(":not(:checked)")){
+        $("#size_create1").prop('checked', false);
+        $("#size_update1").prop('checked', false);
+        $("#size_delete1").prop('checked', false);
+        $("#size_view1").prop('checked', false);
+        $("#size_list1").prop('checked', false);      
+       
+    }
+    if($("#gsm_all1").is(":checked")){
+        $("#gsm_create1").prop('checked', true);
+        $("#gsm_update1").prop('checked', true);
+        $("#gsm_delete1").prop('checked', true);
+        $("#gsm_view1").prop('checked', true);
+        $("#gsm_list1").prop('checked', true);     
+       
+    }
+    else if($("#gsm_all1").is(":not(:checked)")){
+        $("#gsm_create1").prop('checked', false);
+        $("#gsm_update1").prop('checked', false);
+        $("#gsm_delete1").prop('checked', false);
+        $("#gsm_view1").prop('checked', false);
+        $("#gsm_list1").prop('checked', false);      
+       
+    }
+    if($("#paper_all1").is(":checked")){
+        $("#paper_create1").prop('checked', true);
+        $("#paper_update1").prop('checked', true);
+        $("#paper_delete1").prop('checked', true);
+        $("#paper_view1").prop('checked', true);
+        $("#paper_list1").prop('checked', true);     
+       
+    }
+    else if($("#paper_all1").is(":not(:checked)")){
+        $("#paper_create1").prop('checked', false);
+        $("#paper_update1").prop('checked', false);
+        $("#paper_delete1").prop('checked', false);
+        $("#paper_view1").prop('checked', false);
+        $("#paper_list1").prop('checked', false);      
+       
+    }
+    if($("#process_all1").is(":checked")){
+        $("#process_create1").prop('checked', true);
+        $("#process_update1").prop('checked', true);
+        $("#process_delete1").prop('checked', true);
+        $("#process_view1").prop('checked', true);
+        $("#process_list1").prop('checked', true);     
+       
+    }
+    else if($("#process_all1").is(":not(:checked)")){
+        $("#process_create1").prop('checked', false);
+        $("#process_update1").prop('checked', false);
+        $("#process_delete1").prop('checked', false);
+        $("#process_view1").prop('checked', false);
+        $("#process_list1").prop('checked', false);      
+       
+    }
+    if($("#product_all1").is(":checked")){
+        $("#product_create1").prop('checked', true);
+        $("#product_update1").prop('checked', true);
+        $("#product_delete1").prop('checked', true);
+        $("#product_view1").prop('checked', true);
+        $("#product_list1").prop('checked', true);     
+       
+    }
+    else if($("#product_all1").is(":not(:checked)")){
+        $("#product_create1").prop('checked', false);
+        $("#product_update1").prop('checked', false);
+        $("#product_delete1").prop('checked', false);
+        $("#product_view1").prop('checked', false);
+        $("#product_list1").prop('checked', false);      
+       
+    }
+    if($("#communication_all1").is(":checked")){
+        $("#communication_create1").prop('checked', true);
+        $("#communication_update1").prop('checked', true);
+        $("#communication_delete1").prop('checked', true);
+        $("#communication_view1").prop('checked', true);
+        $("#communication_list1").prop('checked', true);     
+       
+    }
+    else if($("#communication_all1").is(":not(:checked)")){
+        $("#communication_create1").prop('checked', false);
+        $("#communication_update1").prop('checked', false);
+        $("#communication_delete1").prop('checked', false);
+        $("#communication_view1").prop('checked', false);
+        $("#communication_list1").prop('checked', false);      
+    }
+    if($("#delivery_all1").is(":checked")){
+        $("#delivery_create1").prop('checked', true);
+        $("#delivery_update1").prop('checked', true);
+        $("#delivery_delete1").prop('checked', true);
+        $("#delivery_view1").prop('checked', true);
+        $("#delivery_list1").prop('checked', true);     
+       
+    }
+    else if($("#delivery_all1").is(":not(:checked)")){
+        $("#delivery_create1").prop('checked', false);
+        $("#delivery_update1").prop('checked', false);
+        $("#delivery_delete1").prop('checked', false);
+        $("#delivery_view1").prop('checked', false);
+        $("#delivery_list1").prop('checked', false);      
+       
+    }
+     if($("#company_all1").is(":checked")){
+        $("#company_create1").prop('checked', true);
+        $("#company_update1").prop('checked', true);
+        $("#company_delete1").prop('checked', true);
+        $("#company_view1").prop('checked', true);
+        $("#company_list1").prop('checked', true);        
+    }
+    else if($("#company_all1").is(":not(:checked)")){
+        $("#company_create1").prop('checked', false);
+        $("#company_update1").prop('checked', false);
+        $("#company_delete1").prop('checked', false);
+        $("#company_view1").prop('checked', false);
+        $("#company_list1").prop('checked', false);      
+    }
+    if($("#jobcard_all1").is(":checked")){
+        $("#jobcard_create1").prop('checked', true);
+        $("#jobcard_update1").prop('checked', true);
+        $("#jobcard_delete1").prop('checked', true);
+        $("#jobcard_view1").prop('checked', true);
+        $("#jobcard_list1").prop('checked', true);     
+       
+    }
+    else if($("#jobcard_all1").is(":not(:checked)")){
+        $("#jobcard_create1").prop('checked', false);
+        $("#jobcard_update1").prop('checked', false);
+        $("#jobcard_delete1").prop('checked', false);
+        $("#jobcard_view1").prop('checked', false);
+        $("#jobcard_list1").prop('checked', false);      
+       
+    }
+}
+
+function get_all_values(){
+    if($("#size_create1").is(":checked")){
+        $("#size_create").val(1);
+        console.log($("#size_create").val());
+    }
+    else if($("#size_create1").is(":not(:checked)")){
+        $("#size_create").val(0);
+        console.log($("#size_create").val());
+    }
+    if($("#size_update1").is(":checked")){
+        $("#size_update").val(1);
+        console.log($("#size_update").val());
+    }
+    else if($("#size_update1").is(":not(:checked)")){
+        $("#size_update").val(0);
+        console.log($("#size_update").val());
+    }
+    if($("#size_delete1").is(":checked")){
+        $("#size_delete").val(1);
+        console.log($("#size_delete").val());
+    }
+    else if($("#size_delete1").is(":not(:checked)")){
+        $("#size_delete").val(0);
+        console.log($("#size_delete").val());
+    }
+    if($("#size_list1").is(":checked")){
+        $("#size_list").val(1);
+        console.log($("#size_list").val());
+    }
+    else if($("#size_list1").is(":not(:checked)")){
+        $("#size_list").val(0);
+        console.log($("#size_list").val());
+    }
+    if($("#size_view1").is(":checked")){
+        $("#size_view").val(1);
+        console.log($("#size_view").val());
+    }
+    else if($("#size_view1").is(":not(:checked)")){
+        $("#size_view").val(0);
+        console.log($("#size_view").val());
+    }
+    //gsm
+    if($("#gsm_create1").is(":checked")){
+        $("#gsm_create").val(1);
+        console.log($("#gsm_create").val());
+    }
+    else if($("#gsm_create1").is(":not(:checked)")){
+        $("#gsm_create").val(0);
+        console.log($("#gsm_create").val());
+    }
+    if($("#gsm_update1").is(":checked")){
+        $("#gsm_update").val(1);
+        console.log($("#gsm_update").val());
+    }
+    else if($("#gsm_update1").is(":not(:checked)")){
+        $("#gsm_update").val(0);
+        console.log($("#gsm_update").val());
+    }
+    if($("#gsm_delete1").is(":checked")){
+        $("#gsm_delete").val(1);
+        console.log($("#gsm_delete").val());
+    }
+    else if($("#gsm_delete1").is(":not(:checked)")){
+        $("#gsm_delete").val(0);
+        console.log($("#gsm_delete").val());
+    }
+    if($("#gsm_list1").is(":checked")){
+        $("#gsm_list").val(1);
+        console.log($("#gsm_list").val());
+    }
+    else if($("#gsm_list1").is(":not(:checked)")){
+        $("#gsm_list").val(0);
+        console.log($("#gsm_list").val());
+    }
+    if($("#gsm_view1").is(":checked")){
+        $("#gsm_view").val(1);
+        console.log($("#gsm_view").val());
+    }
+    else if($("#gsm_view1").is(":not(:checked)")){
+        $("#gsm_view").val(0);
+        console.log($("#gsm_view").val());
+    }
+    //paper
+    if($("#paper_create1").is(":checked")){
+        $("#paper_create").val(1);
+        console.log($("#paper_create").val());
+    }
+    else if($("#paper_create1").is(":not(:checked)")){
+        $("#paper_create").val(0);
+        console.log($("#paper_create").val());
+    }
+    if($("#paper_update1").is(":checked")){
+        $("#paper_update").val(1);
+        console.log($("#paper_update").val());
+    }
+    else if($("#paper_update1").is(":not(:checked)")){
+        $("#paper_update").val(0);
+        console.log($("#paper_update").val());
+    }
+    if($("#paper_delete1").is(":checked")){
+        $("#paper_delete").val(1);
+        console.log($("#paper_delete").val());
+    }
+    else if($("#paper_delete1").is(":not(:checked)")){
+        $("#paper_delete").val(0);
+        console.log($("#paper_delete").val());
+    }
+    if($("#paper_list1").is(":checked")){
+        $("#paper_list").val(1);
+        console.log($("#paper_list").val());
+    }
+    else if($("#paper_list1").is(":not(:checked)")){
+        $("#paper_list").val(0);
+        console.log($("#paper_list").val());
+    }
+    if($("#paper_view1").is(":checked")){
+        $("#paper_view").val(1);
+        console.log($("#paper_view").val());
+    }
+    else if($("#paper_view1").is(":not(:checked)")){
+        $("#paper_view").val(0);
+        console.log($("#paper_view").val());
+    }
+    //process
+    if($("#process_create1").is(":checked")){
+        $("#process_create").val(1);
+        console.log($("#process_create").val());
+    }
+    else if($("#process_create1").is(":not(:checked)")){
+        $("#process_create").val(0);
+        console.log($("#process_create").val());
+    }
+    if($("#process_update1").is(":checked")){
+        $("#process_update").val(1);
+        console.log($("#process_update").val());
+    }
+    else if($("#process_update1").is(":not(:checked)")){
+        $("#process_update").val(0);
+        console.log($("#process_update").val());
+    }
+    if($("#process_delete1").is(":checked")){
+        $("#process_delete").val(1);
+        console.log($("#process_delete").val());
+    }
+    else if($("#process_delete1").is(":not(:checked)")){
+        $("#process_delete").val(0);
+        console.log($("#process_delete").val());
+    }
+    if($("#process_list1").is(":checked")){
+        $("#process_list").val(1);
+        console.log($("#process_list").val());
+    }
+    else if($("#process_list1").is(":not(:checked)")){
+        $("#process_list").val(0);
+        console.log($("#process_list").val());
+    }
+    if($("#process_view1").is(":checked")){
+        $("#process_view").val(1);
+        console.log($("#process_view").val());
+    }
+    else if($("#process_view1").is(":not(:checked)")){
+        $("#process_view").val(0);
+        console.log($("#process_view").val());
+    }
+    //prodcut
+    if($("#product_create1").is(":checked")){
+        $("#product_create").val(1);
+        console.log($("#product_create").val());
+    }
+    else if($("#product_create1").is(":not(:checked)")){
+        $("#product_create").val(0);
+        console.log($("#product_create").val());
+    }
+    if($("#product_update1").is(":checked")){
+        $("#product_update").val(1);
+        console.log($("#product_update").val());
+    }
+    else if($("#product_update1").is(":not(:checked)")){
+        $("#product_update").val(0);
+        console.log($("#product_update").val());
+    }
+    if($("#product_delete1").is(":checked")){
+        $("#product_delete").val(1);
+        console.log($("#product_delete").val());
+    }
+    else if($("#product_delete1").is(":not(:checked)")){
+        $("#product_delete").val(0);
+        console.log($("#product_delete").val());
+    }
+    if($("#product_list1").is(":checked")){
+        $("#product_list").val(1);
+        console.log($("#product_list").val());
+    }
+    else if($("#product_list1").is(":not(:checked)")){
+        $("#product_list").val(0);
+        console.log($("#product_list").val());
+    }
+    if($("#product_view1").is(":checked")){
+        $("#product_view").val(1);
+        console.log($("#product_view").val());
+    }
+    else if($("#product_view1").is(":not(:checked)")){
+        $("#product_view").val(0);
+        console.log($("#product_view").val());
+    }
+    //communication
+    if($("#communication_create1").is(":checked")){
+        $("#communication_create").val(1);
+        console.log($("#communication_create").val());
+    }
+    else if($("#communication_create1").is(":not(:checked)")){
+        $("#communication_create").val(0);
+        console.log($("#communication_create").val());
+    }
+    if($("#communication_update1").is(":checked")){
+        $("#communication_update").val(1);
+        console.log($("#communication_update").val());
+    }
+    else if($("#communication_update1").is(":not(:checked)")){
+        $("#communication_update").val(0);
+        console.log($("#communication_update").val());
+    }
+    if($("#communication_delete1").is(":checked")){
+        $("#communication_delete").val(1);
+        console.log($("#communication_delete").val());
+    }
+    else if($("#communication_delete1").is(":not(:checked)")){
+        $("#communication_delete").val(0);
+        console.log($("#communication_delete").val());
+    }
+    if($("#communication_list1").is(":checked")){
+        $("#communication_list").val(1);
+        console.log($("#communication_list").val());
+    }
+    else if($("#communication_list1").is(":not(:checked)")){
+        $("#communication_list").val(0);
+        console.log($("#communication_list").val());
+    }
+    if($("#communication_view1").is(":checked")){
+        $("#communication_view").val(1);
+        console.log($("#communication_view").val());
+    }
+    else if($("#communication_view1").is(":not(:checked)")){
+        $("#communication_view").val(0);
+        console.log($("#communication_view").val());
+    }
+    //delivery
+    if($("#delivery_create1").is(":checked")){
+        $("#delivery_create").val(1);
+        console.log($("#delivery_create").val());
+    }
+    else if($("#delivery_create1").is(":not(:checked)")){
+        $("#delivery_create").val(0);
+        console.log($("#delivery_create").val());
+    }
+    if($("#delivery_update1").is(":checked")){
+        $("#delivery_update").val(1);
+        console.log($("#delivery_update").val());
+    }
+    else if($("#delivery_update1").is(":not(:checked)")){
+        $("#delivery_update").val(0);
+        console.log($("#delivery_update").val());
+    }
+    if($("#delivery_delete1").is(":checked")){
+        $("#delivery_delete").val(1);
+        console.log($("#delivery_delete").val());
+    }
+    else if($("#delivery_delete1").is(":not(:checked)")){
+        $("#delivery_delete").val(0);
+        console.log($("#delivery_delete").val());
+    }
+    if($("#delivery_list1").is(":checked")){
+        $("#delivery_list").val(1);
+        console.log($("#delivery_list").val());
+    }
+    else if($("#delivery_list1").is(":not(:checked)")){
+        $("#delivery_list").val(0);
+        console.log($("#delivery_list").val());
+    }
+    if($("#delivery_view1").is(":checked")){
+        $("#delivery_view").val(1);
+        console.log($("#delivery_view").val());
+    }
+    else if($("#delivery_view1").is(":not(:checked)")){
+        $("#delivery_view").val(0);
+        console.log($("#delivery_view").val());
+    }
+    //company
+    if($("#company_create1").is(":checked")){
+        $("#company_create").val(1);
+        console.log($("#company_create").val());
+    }
+    else if($("#company_create1").is(":not(:checked)")){
+        $("#company_create").val(0);
+        console.log($("#company_create").val());
+    }
+    if($("#company_update1").is(":checked")){
+        $("#company_update").val(1);
+        console.log($("#company_update").val());
+    }
+    else if($("#company_update1").is(":not(:checked)")){
+        $("#company_update").val(0);
+        console.log($("#company_update").val());
+    }
+    if($("#company_delete1").is(":checked")){
+        $("#company_delete").val(1);
+        console.log($("#company_delete").val());
+    }
+    else if($("#company_delete1").is(":not(:checked)")){
+        $("#company_delete").val(0);
+        console.log($("#company_delete").val());
+    }
+    if($("#company_list1").is(":checked")){
+        $("#company_list").val(1);
+        console.log($("#company_list").val());
+    }
+    else if($("#company_list1").is(":not(:checked)")){
+        $("#company_list").val(0);
+        console.log($("#company_list").val());
+    }
+    if($("#company_view1").is(":checked")){
+        $("#company_view").val(1);
+        console.log($("#company_view").val());
+    }
+    else if($("#company_view1").is(":not(:checked)")){
+        $("#company_view").val(0);
+        console.log($("#company_view").val());
+    }
+    //jobcard
+    if($("#jobcard_create1").is(":checked")){
+        $("#jobcard_create").val(1);
+        console.log($("#jobcard_create").val());
+    }
+    else if($("#jobcard_create1").is(":not(:checked)")){
+        $("#jobcard_create").val(0);
+        console.log($("#jobcard_create").val());
+    }
+    if($("#jobcard_update1").is(":checked")){
+        $("#jobcard_update").val(1);
+        console.log($("#jobcard_update").val());
+    }
+    else if($("#jobcard_update1").is(":not(:checked)")){
+        $("#jobcard_update").val(0);
+        console.log($("#jobcard_update").val());
+    }
+    if($("#jobcard_delete1").is(":checked")){
+        $("#jobcard_delete").val(1);
+        console.log($("#jobcard_delete").val());
+    }
+    else if($("#jobcard_delete1").is(":not(:checked)")){
+        $("#jobcard_delete").val(0);
+        console.log($("#jobcard_delete").val());
+    }
+    if($("#jobcard_list1").is(":checked")){
+        $("#jobcard_list").val(1);
+        console.log($("#jobcard_list").val());
+    }
+    else if($("#jobcard_list1").is(":not(:checked)")){
+        $("#jobcard_list").val(0);
+        console.log($("#jobcard_list").val());
+    }
+    if($("#jobcard_view1").is(":checked")){
+        $("#jobcard_view").val(1);
+        console.log($("#jobcard_view").val());
+    }
+    else if($("#jobcard_view1").is(":not(:checked)")){
+        $("#jobcard_view").val(0);
+        console.log($("#jobcard_view").val());
+    }
+
+}
+
+function selectall(){
+    console.log("enter");
+    if($("#select_all1").is(":checked")){
+        $("#select_all").val(1);
+        $("#size_create1").prop('checked', true);
+        $("#size_update1").prop('checked', true);
+        $("#size_delete1").prop('checked', true);
+        $("#size_view1").prop('checked', true);
+        $("#size_list1").prop('checked', true);
+        $("#size_all1").prop('checked',true);
+        
+        $("#gsm_create1").prop('checked', true);
+        $("#gsm_update1").prop('checked', true);
+        $("#gsm_delete1").prop('checked', true);
+        $("#gsm_view1").prop('checked', true);
+        $("#gsm_list1").prop('checked', true); 
+        $("#gsm_all1").prop('checked',true);
+
+        $("#paper_create1").prop('checked', true);
+        $("#paper_update1").prop('checked', true);
+        $("#paper_delete1").prop('checked', true);
+        $("#paper_view1").prop('checked', true);
+        $("#paper_list1").prop('checked', true);     
+        $("#paper_all1").prop('checked',true);
+
+        $("#process_create1").prop('checked', true);
+        $("#process_update1").prop('checked', true);
+        $("#process_delete1").prop('checked', true);
+        $("#process_view1").prop('checked', true);
+        $("#process_list1").prop('checked', true);     
+        $("#process_all1").prop('checked',true);
+
+        $("#product_create1").prop('checked', true);
+        $("#product_update1").prop('checked', true);
+        $("#product_delete1").prop('checked', true);
+        $("#product_view1").prop('checked', true);
+        $("#product_list1").prop('checked', true);     
+        $("#product_all1").prop('checked',true);
+
+        $("#communication_create1").prop('checked', true);
+        $("#communication_update1").prop('checked', true);
+        $("#communication_delete1").prop('checked', true);
+        $("#communication_view1").prop('checked', true);
+        $("#communication_list1").prop('checked', true);     
+        $("#communication_all1").prop('checked',true);
+
+        $("#delivery_create1").prop('checked', true);
+        $("#delivery_update1").prop('checked', true);
+        $("#delivery_delete1").prop('checked', true);
+        $("#delivery_view1").prop('checked', true);
+        $("#delivery_list1").prop('checked', true);     
+        $("#delivery_all1").prop('checked',true);
+
+        $("#company_create1").prop('checked', true);
+        $("#company_update1").prop('checked', true);
+        $("#company_delete1").prop('checked', true);
+        $("#company_view1").prop('checked', true);
+        $("#company_list1").prop('checked', true);
+        $("#company_all1").prop('checked',true);
+
+        $("#jobcard_create1").prop('checked', true);
+        $("#jobcard_update1").prop('checked', true);
+        $("#jobcard_delete1").prop('checked', true);
+        $("#jobcard_view1").prop('checked', true);
+        $("#jobcard_list1").prop('checked', true);     
+        $("#jobcard_all1").prop('checked',true);
+
+
+        
+    }
+     else if($("#select_all1").is(":not(:checked)")){
+        $("#select_all").val(0);
+        console.log($("#select_all").val());
+        $("#size_create1").prop('checked', false);
+        $("#size_update1").prop('checked', false);
+        $("#size_delete1").prop('checked', false);
+        $("#size_view1").prop('checked', false);
+        $("#size_list1").prop('checked', false);
+        $("#size_all1").prop('checked',false);
+
+        $("#gsm_create1").prop('checked', false);
+        $("#gsm_update1").prop('checked', false);
+        $("#gsm_delete1").prop('checked', false);
+        $("#gsm_view1").prop('checked', false);
+        $("#gsm_list1").prop('checked', false);   
+        $("#gsm_all1").prop('checked',false);
+
+        $("#paper_create1").prop('checked', false);
+        $("#paper_update1").prop('checked', false);
+        $("#paper_delete1").prop('checked', false);
+        $("#paper_view1").prop('checked', false);
+        $("#paper_list1").prop('checked', false);      
+        $("#paper_all1").prop('checked',false);
+
+        $("#process_create1").prop('checked', false);
+        $("#process_update1").prop('checked', false);
+        $("#process_delete1").prop('checked', false);
+        $("#process_view1").prop('checked', false);
+        $("#process_list1").prop('checked', false);      
+        $("#process_all1").prop('checked',false);
+
+        $("#product_create1").prop('checked', false);
+        $("#product_update1").prop('checked', false);
+        $("#product_delete1").prop('checked', false);
+        $("#product_view1").prop('checked', false);
+        $("#product_list1").prop('checked', false);      
+        $("#product_all1").prop('checked',false);
+
+        $("#communication_create1").prop('checked', false);
+        $("#communication_update1").prop('checked', false);
+        $("#communication_delete1").prop('checked', false);
+        $("#communication_view1").prop('checked', false);
+        $("#communication_list1").prop('checked', false);      
+        $("#communication_all1").prop('checked',false);
+
+        $("#delivery_create1").prop('checked', false);
+        $("#delivery_update1").prop('checked', false);
+        $("#delivery_delete1").prop('checked', false);
+        $("#delivery_view1").prop('checked', false);
+        $("#delivery_list1").prop('checked', false);      
+        $("#delivery_all1").prop('checked',false);
+
+        $("#company_create1").prop('checked', false);
+        $("#company_update1").prop('checked', false);
+        $("#company_delete1").prop('checked', false);
+        $("#company_view1").prop('checked', false);
+        $("#company_list1").prop('checked', false);
+        $("#company_all1").prop('checked', false);
+        
+        $("#jobcard_create1").prop('checked', false);
+        $("#jobcard_update1").prop('checked', false);
+        $("#jobcard_delete1").prop('checked', false);
+        $("#jobcard_view1").prop('checked', false);
+        $("#jobcard_list1").prop('checked', false);     
+        $("#jobcard_all1").prop('checked',false);
+
+
+        
+
+    }
+        
+}
+</script>
+
+{% include "includes/file_js.html" %}
+ 
+</html>

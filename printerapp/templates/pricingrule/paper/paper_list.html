@@ -1,0 +1,137 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+
+{% include "includes/css_file.html" %}
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+
+<section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>PAPER PRICING</h2>
+            </div>
+            <!-- Basic Table -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                {{module}} List
+                            </h2>
+                            <ul class="header-dropdown m-r--5">
+                                
+                                        <li><a href="/printerapp/pricingrule/paperpricing_create/"><i class="material-icons">add</i></a>
+                                   
+                            </ul>
+                        </div>
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Paper Type</th>
+                                        <th>Size</th>
+                                        <th>GSM</th>    
+                                        <th>Sq.Inch From</th>                                    
+                                        <th>Sq.Inch To</th>                                    
+                                        <th>Quantity From</th>                                    
+                                        <th>Quantity To</th>                                    
+                                        <th>Price</th>                                    
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    {% for lists_val in data %}
+                                    
+                                    <td>{{forloop.counter}}</td>
+                                    <td>
+                                        {% show_single_field tableName="printerapp_paper" show_field_name="paper_name" pk=lists_val.papertype as papertype %} {{papertype}}
+                                    </td>
+                                    <td>
+                                        {% show_single_field tableName="printerapp_size" show_field_name="size_name" pk=lists_val.size as size %} {{size}}
+                                    </td>
+                                    <td>
+                                        {% show_single_field tableName="printerapp_gsm" show_field_name="gsm_name" pk=lists_val.gsm as gsm %} {{gsm}}
+                                    </td>
+                                    <td>{{lists_val.squareinch_from}}</td>
+                                    <td>{{lists_val.squareinch_to}}</td>  
+                                    <td>{{lists_val.quality_from}}</td>
+                                    <td>{{lists_val.quality_to}}</td>            
+                                    <td>{{lists_val.price}}</td>            
+                                              
+                                    <td><div class="btn-group dropright">
+                                        <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                        <li><a href="/printerapp/pricingrule/paperpricing_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
+                                        <li><a href="/printerapp/pricingrule/paperpricing_delete/{{ lists_val.id }}"onclick="return confirm_delete();" ><i class="material-icons">delete</i></a></li>
+                                        <li><a href="/printerapp/pricingrule/paperpricing_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
+                                        </ul>
+                                        </div>
+                                    </td>
+                                   
+
+                                </tr>
+                                {% endfor %}
+                                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+               </div>
+            </div>
+</div>
+</section>
+
+{% if data.has_other_pages %}
+<div>
+<div class=""style="float: right">
+<ul class="pagination">
+    {% if data.has_previous %}
+    <li class="paginate_button previous"  tabindex="0" >
+        <a href="?page={{ data.previous_page_number }}">Previous</a>
+    </li>
+    {% else %}
+    <li class="paginate_button previous disabled"  tabindex="0" >
+        <a href="#">Previous</a>
+    </li>
+    {% endif %}
+    {% for i in data.paginator.page_range %}
+    {% if data.number == i %}
+    <li class="paginate_button active"  tabindex="0">
+        <a href="?page={{ i }}">{{ i }}</a>
+    </li> {% else %}
+    <li class="paginate_button "  tabindex="0">
+        <a href="?page={{ i }}">{{ i }}</a>
+    </li>{% endif %}
+    {% endfor %}
+    {% if data.has_next %}
+    <li class="paginate_button next"  tabindex="0" id="datatable_next">
+        <a href="?page={{ lists.next_page_number }}">Next</a>
+    {% else %}
+    <li class="paginate_button next disabled"  tabindex="0">
+        <a href="#">Next</a>
+    {% endif %}         
+    </li>
+</ul>
+</div>
+</div>
+{% endif %}  
+                   
+                     
+{% include "includes/file_js.html" %}
+ 
+</body>
+
+</html>

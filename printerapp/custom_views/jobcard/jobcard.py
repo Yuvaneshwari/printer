@@ -21,8 +21,16 @@ row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 
 @api_view(['GET','POST'])
 def jobcard_create(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     if request.method=='GET':
-        return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')
+        if loginuser.has_perm('printerapp.add_jobcard'):
+            print("yes")
+            return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')        
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_not_found.html')
     else:
         orderdate=request.POST.get("order_date")
         order_date=datetime.strptime(orderdate,"%m/%d/%Y").date()
@@ -38,27 +46,45 @@ def jobcard_create(request):
             communication_mode=request.POST.get("communicationmode")
             
             data={
-            "customer_name":customer_name,
+            "name":customer_name,
             "contact_person":contact_person,
             "primary_contact_no":primary_contact_no,
-            "whatsup_no":whatsup_no,
+            "whatsup_number":whatsup_no,
             "email_id":email_id,
             "secondary_contact_no":secondary_contact_no,
             "address":address,
             "communication_mode":communication_mode
             }
-            customerserializer=CustomerdetailsSerializer(data=data)
+            print("data")
+            print(data)
+            customerserializer=CustomerSerializer(data=data)
             if customerserializer.is_valid():
+                print("valid")
                 getcustomerid=customerserializer.save();
                 getcustid=getcustomerid.id
         else:
             getcustid=request.POST.get('customerid')
+            whatsup_no=request.POST.get("whatsup_no")
+            communication_mode=request.POST.get("communicationmode")
+            communication=int(communication_mode)
+            print("custid")
+            print(getcustid)
+            
+            customerobj=Customer.objects.get(pk=getcustid)
+            customerobj.whatsup_number=whatsup_no;
+            customerobj.communication_mode_id=communication;            
+            customerobj.save();
+    
+            
         company_id=1
         series_type="JOB"
         series=create_jobcardno(company_id,series_type)
-        data={"customerid":getcustid,"order_date":order_date,"jobcard_no":series}
+        data={"customerid_id":getcustid,"order_date":order_date,"jobcard_no":series}
+        print("data")
+        print(data)
         jobcardserializer=JobcardSerializer(data=data)
         if jobcardserializer.is_valid():
+            print("jobcard valid")
             getjobcardid=jobcardserializer.save();
             jobcardid=getjobcardid.id
             jobcardno=getjobcardid.jobcard_no
@@ -68,8 +94,8 @@ def jobcard_create(request):
             return Response({"data": jobcardid,"jobcardid":jobcardid,"jobcardno":jobcardno}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
-            for key in serializer.errors.keys():
-                error_details.append({"field": key, "message": serializer.errors[key][0]})
+            for key in jobcardserializer.errors.keys():
+                error_details.append({"field": key, "message": jobcardserializer.errors[key][0]})
             data = {
                     "Error": {
                     "status": 400,
@@ -85,6 +111,7 @@ def jobcard_create(request):
 
 @api_view(['GET','POST'])
 def jobcard_product_create(request):
+
     if request.method=='GET':
         return Response({'data':'','module':'Jobcard'},template_name='jobcard/jobcard1_create_update.html')
     else:
@@ -101,19 +128,22 @@ def jobcard_product_create(request):
         partial_qty=request.POST.get("Partialqty")
         partial_datetime=request.POST.get("PartialDateTime")
         side=request.POST.get("Sides")
-        jobtype=request.POST.get("Jobtype")
         delivery_mode=request.POST.get("Deliverymode")
         delivery_desc=request.POST.get("DeleiveryDesc")
         delivery_datetime=request.POST.get("DeleiveryDateTime")
         processlist_id=request.POST.getlist("a[]")
         process_ids=list(map(int,processlist_id))
-
+        jobtypelist=request.POST.getlist("jobtype[]")
+        jobtype=list(map(int,jobtypelist))
+        
         company_id=1
         series_type="PRD"
         productno=create_productno(company_id,series_type,jobcardno)
         print(productno)
         print("A")
         print(process_ids)
+        print("jobtype")
+        print(jobtype)
         data={
         "productcard":pname,
         "size_custom":sizeselect,
@@ -128,7 +158,6 @@ def jobcard_product_create(request):
         "delivery_datetime":delivery_datetime,
         "gsm":gsm,
         "jobcardid":jobcardid,
-        "jobtype":jobtype,
         "paper":paper,
         "size":size,
         "product_no":productno
@@ -144,7 +173,7 @@ def jobcard_product_create(request):
             product_obj=Product.objects.get(id=jobcard_product)
             print(product_obj.product_name)
             jobcard_product_name=product_obj.product_name
-            storeproduct_proccess(jobcard_product_id,process_ids)
+            storeproduct_proccess(jobcard_product_id,process_ids,jobtype)
             #product_data = ProductSerializer(product_obj).data
             #jobcard_product_name=product_data.product_name
 
@@ -154,7 +183,7 @@ def jobcard_product_create(request):
         else:
             error_details = []
             for key in jobcard_productserializer.errors.keys():
-                error_details.append({"field": key, "message": serializer.errors[key][0]})
+                error_details.append({"field": key, "message": jobcard_productserializer.errors[key][0]})
             data = {
             "Error": {
             "status": 400,
@@ -198,12 +227,17 @@ def jobcard_product_process_create(request):
     #return Response({"success_data": "Data added successfully"},template_name='processcard/processcard1.html')
     
 
-def storeproduct_proccess(jobcard_product_id,process_ids):
-    for x in process_ids:
+def storeproduct_proccess(jobcard_product_id,process_ids,jobtype):
+    process_length=len(process_ids)
+
+    for x in range(process_length):
         data ={
-            "processid":x,
+            "processid":process_ids[x],
             "jobcard_productid":jobcard_product_id,
+            "jobtype":jobtype[x]
         }
+        print("data")
+        print(data)
         Product_process_serializer = Jobcard_Product_ProcessSerializer(data=data)
         if Product_process_serializer.is_valid():
             Product_process_serializer.save();
@@ -212,11 +246,14 @@ def storeproduct_proccess(jobcard_product_id,process_ids):
 
 @api_view(['GET'])
 def jobcard_list(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     custom_filter={}
     custom_filter['deleted']=0
 
-    cust_obj = Customerdetails.objects.filter(**custom_filter)
-    cust_data = CustomerdetailsSerializer(cust_obj, many=True).data
+    cust_obj = Customer.objects.filter(**custom_filter)
+    cust_data = CustomerSerializer(cust_obj, many=True).data
 
 
     jobcard_obj = Jobcard.objects.filter(**custom_filter)
@@ -236,14 +273,24 @@ def jobcard_list(request):
         jobcard_data = paginator.page(1)
     except EmptyPage:
         jobcard_data = paginator.page(paginator.num_pages)
-    
-    if request.accepted_renderer.format == 'html':
-        return Response({"data":jobcard_data,'module':'Jobcard',"customerdata":cust_data,"jobcarddata":jobcard_data,"productdata":product_data,"processdata":process_data},template_name='jobcard/jobcard_list.html')
-    return Response({"data":jobcard_data}, status=status.HTTP_200_OK)
+    if loginuser.has_perm('printerapp.list_jobcard'):
+        print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":jobcard_data,'module':'Jobcard',"customerdata":cust_data,"jobcarddata":jobcard_data,"productdata":product_data,"processdata":process_data},template_name='jobcard/jobcard_list.html')
+        return Response({"data":jobcard_data}, status=status.HTTP_200_OK)
+
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
+
 
 
 @api_view(['GET'])
 def jobcard_view(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     process_obj=Process.objects.get(id=id)
     process_data = ProcessSerializer(process_obj).data
     if request.accepted_renderer.format == 'html':
@@ -252,9 +299,13 @@ def jobcard_view(request,id):
 
 @api_view(['GET','PUT','POST'])
 def jobcard_update(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     process_obj=Process.objects.get(id=id)
     if request.method=='GET':
         data=ProcessSerializer(process_obj).data
+
         if request.accepted_renderer.format == 'html':
             return Response({'data':data},template_name='productcard/jobcard1_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
@@ -283,6 +334,9 @@ def jobcard_update(request,id):
 
 @api_view(['GET', 'POST','Delete'])
 def jobcard_delete(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+
     selected_values=Jobcard.objects.get(pk=id)
     selected_values.deleted=1;
     selected_values.save();

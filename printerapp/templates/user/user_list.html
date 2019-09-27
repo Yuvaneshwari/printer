@@ -1,5 +1,4 @@
-{% load static %}{% load rest_framework %}
-
+{% load static %}{% load rest_framework %}{% load common_function %}
 <html>
 <head>
 {% include "includes/css_file.html" %}
@@ -24,15 +23,7 @@
                                 User List
                             </h2>
                             <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href=""><i class="material-icons">add</i></a></li>
-                                       
-                                    </ul>
-                                </li>
+                                <a href="/printerapp/user/user_create"><i class="material-icons">add</i></a>
                             </ul>
                         </div>
                         <div class="body table-responsive">
@@ -41,11 +32,9 @@
                                     <tr>
                                         <th>No</th>
                                         <th>User Name</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Email</th>
-                                        <th>Action</th>
-                                        
+                                        <th>Role</th>                                         
+                                                
+                                        <th>Action</th>                                       
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,17 +43,23 @@
                                     
                                     <td>{{forloop.counter}}</td>
                                     <td>{{lists_val.username}}</td>
-                                    <td>{{lists_val.first_name}}</td>
-                                    <td>{{lists_val.last_name}}</td>
-                                    <td>{{lists_val.email}}</td>
+                                    <td>
+                                        {%if lists_val.is_superuser == 1%}Super User{%endif%}
+                                        {%if lists_val.is_superuser != 1%}        
+                                        {% show_single_field_role tableName="printerapp_profile" show_field_name="role_id" user=lists_val.id as role_name %} 
+                                        {% show_single_field tableName="printerapp_role" show_field_name="name" pk=role_name as rolename %} {{rolename}}
+                                        {%endif%}                                                                                                  
+                                    </td>
+                                                
                                     <td><div class="btn-group dropright">
                                         <button type="button" class="btn btn-default waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                        <li><a href="/printerapp/user/user_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
-                                        <li><a href=""><i class="material-icons">delete</i></a></li>
-                                        <li><a href=""><i class="material-icons">visibility</i></a><li>
+                                        {%if lists_val.is_superuser != 1%} <li><a href="/printerapp/user/user_update/{{ lists_val.id }}"><i class="material-icons">create</i></a></li>
+                                        <li><a href="/printerapp/user/user_delete/{{ lists_val.id }}"><i class="material-icons">delete</i></a></li>
+                                        {%endif%}                                                                                  
+                                        <li><a href="/printerapp/user/user_view/{{ lists_val.id }}"><i class="material-icons">visibility</i></a><li>
                                         </ul>
                                         </div>
                                     </td>
@@ -72,7 +67,8 @@
 
                                 </tr>
                                 {% endfor %}
-                               
+                                <tr style="border: 0"><td></td><td></td><td></td><td></td></tr>
+                                
                                 </tbody>
                             </table>
                         </div>

@@ -1,0 +1,311 @@
+{% load static %}{% load rest_framework %}{%load common_function %}
+
+<html>
+<head>
+{% include "includes/css_file.html" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 60%;
+  padding: 6px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+.form-container .comment{
+ width: 20%;
+}
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 9px 20px;
+  border: none;
+  cursor: pointer;
+  width: 40%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+.square {
+  height: 100px;
+  width: 100px;
+  background-color:#f1f1f1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+  
+}
+
+</style>
+
+</head>
+<body class="theme-red">
+{% include "includes/index.html" %}
+
+
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2></h2>
+            </div>
+
+            <div class="row clearfix">
+                {% if  error_data  or  success_data%}
+                    <div class="col-md-12">
+                    <div   {% if  error_data  %} class="alert alert-danger"  {% endif %} {% if  success_data  %} class="alert  alert-success"  {% endif %}>
+                    {% if  error_data  %}
+                    {{error_data.Error.message}} 
+                                    
+                    {% for  error_details in error_data.Error.error_details %}
+                    {{error_data..Error.error_details}}
+                    </Br>
+                    {{error_details.field}} -> {{error_details.message}}
+                    {% endfor %}
+                    {% endif %}
+                    {% if  success_data %}
+                    <strong>Well done!</strong> {{success_data}}.
+                    {% endif %}
+                    </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <!-- Vertical Layout -->
+            
+<div id="jobcard"  class="row clearfix">
+<div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
+    <h4><b>{{data.jobcard_productno}}</b></h4>
+    <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-primary">
+            <div class="panel-heading" role="tab" id="headingOne_1">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">{{obj.productid.product_name}}</a> 
+                    <a href="/printerapp/processcard/processcard_list"><i class="material-icons">visibility</i></a>                   
+                </h4>
+                
+            </div>
+
+         
+
+    <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
+    <div class="panel-body">
+        <table class="table">
+        <thead>
+            <tr>
+                <th width="20%">OPEN</th>
+                <th width="20%">PROCESS</th>
+                <th width="20%">HOLD</th>
+                <th width="20%">COMPLETED</th>
+                <th width="20%">DELIVERED</th>
+            </tr>
+        </thead>
+        <tbody>
+         </tbody>
+                 
+            <tr>
+            <td><div class="square"><br><b>{{obj.processid.process_name}}</b></div></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+
+            </tr>
+                         
+      </table> 
+  
+
+    </div>
+    </div>
+
+    </div>
+    </div>
+</div>
+</div>
+<!-- #END# Vertical Layout -->
+            <!-- Vertical Layout | With Floating Label -->
+           
+<!--<button class="open-button" onclick="openForm()">Open Form</button>-->
+
+<div class="form-popup" id="myForm">
+  <form method="post" name="proccesscaardfrm" id="proccesscaardfrm"class="form-container" enctype="multipart/form-data">{% csrf_token %}
+
+<br>
+    <input type="hidden" name="jobcardid" id="jobcardid"required value="{{data.jobcardid_id}}">
+    <input type="hidden" name="productno" id="productno"required value="{{data.jobcardid_id}}">
+    <input type="hidden" name="customerid" id="customerid"required value="{{data.customerid}}">
+    
+    <label for="prdname"><b>ProductName:</b></label>
+    <input type="text" name="prdname" id="prdname"required readonly value="{{obj.productid.product_name}}">
+
+    <label for="proname"><b>ProcessName:</b></label>
+    <input type="text" name="proname" id="proname"required readonly value="{{obj.processid.process_name}}">
+
+    <label for="date"><b>DeliveryDate&nbsp;&nbsp;&nbsp;:</b></label>
+    <input type="text" name="date" id="date" required readonly value="{{data.del_datetime}}">
+
+    <label for="custname"><b>Customername:</b></label>
+    <input type="text" name="custname" id="custname"required readonly value="{{customer}}">
+
+    <label for="assign"><b>AssignedTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
+    <input type="text" name="assign" id="assign"required value="{{obj.assigned_to.username}}"><input type="hidden" name="assignto" id="assignto"required value="{{data.assigned_to}}">
+
+    <label for="machine"><b>Machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label><br>
+    <select class='form-control show-tick' id="machine" name="machine"><option value='0'>-Select Machine-</option><option value='1'>Machine1</option><option value='2'>Machine2</option><option value='3'>Machine3</option><option value='4'>Machine4</option><option value='5'>Machine5</option></select>
+
+    <label for="supplier"><b>Supplier&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
+    <input type="text" name="supplier_name" id="supplier_name"><input type="hidden" name="supplier" id="supplier">
+
+
+    <hr>
+    <i class="material-icons">insert_comment</i>:
+    <input type="text" name="comments" id="comments" style="width:85%;" required value="{{comments_data.comment}}">
+    {{comments_data.file}}
+    <!--<i class="material-icons">insert_photo</i>:-->
+    <input type="file" name="file_name" id="file_name" value="{{comments_data.file}}" required>
+    <hr>
+    
+    <button type="submit" class="btn" {% if view_mode %} style="display:none" {% endif%}>SAVE</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+
+  </form>
+</div>
+          
+</div>
+</section>
+<!-- Jquery Core Js -->
+        <!-- #END# Right Sidebar -->
+
+
+
+
+
+
+</body>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+<script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script type="text/javascript">
+  
+  var jQuery_3_2_1 = jQuery.noConflict();
+  var userid;
+  
+  jQuery_3_2_1(document).ready(function() {
+
+
+    openForm();
+
+    jQuery_3_2_1("#assign").autocomplete({
+      source : "/printerapp/autocomplete/username/",
+      select : function(event, ui) { //item selected
+      userid=ui.item.id;
+      jQuery_3_2_1("#assignto").val(ui.item.id);
+      
+      },
+      minLength : 2,
+      });
+
+
+    
+});
+function frmvalidation(){
+$("#gsmfrm").validate({
+  rules : {
+    gsm_name: {
+      required : true,
+      },
+      submitHandler : function(form) {
+        form.submit();
+
+      }
+    }
+  });
+}
+
+
+function openForm() {
+  console.log("enter");
+  document.getElementById("myForm").style.display = "block";
+  //$("#machine_select").append('<option>'+a+'</option>');
+   
+    //machine_select = new Option("Machine1", 2, false, false);
+  }
+
+
+
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+function save()
+{
+  var jobcardid=$("#jobcardid").val();
+  var productno=$("#productno").val();
+  var prdname=$("#prdname").val();
+  var balance_qty=$("#bal_qty").val();
+  var move_qty=$("#moving_qty").val();
+  var batch=$("#batch").val();
+  
+}
+
+</script>
+{% include "includes/file_js.html" %}
+ 
+</html>

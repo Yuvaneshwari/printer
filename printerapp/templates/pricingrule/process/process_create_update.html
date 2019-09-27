@@ -43,27 +43,21 @@
                         <div class="header">
                             {% if data.id %}
                                 {%if view_mode%}
-                                <h2>Paper View</h2>
+                                <h2>{{module}} View</h2>
                                 {%else%}
-                                <h2>Paper Update</h2>
+                                <h2>{{module}} Update</h2>
                                 {%endif%}
                             {%else%}
-                            <h2>Process Pricing Create</h2>
+                            <h2>{{module}} Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href=""><i class="material-icons">visibility</i></a></li>
-                                       
-                                    </ul>
-                                </li>
+                               
+                                <a href="/printerapp/pricingrule/processpricing_list/"><i class="material-icons">visibility</i></a>                                     
+                                   
                             </ul>
                         </div>
                         <div class="body">
-                            <form method="post" name="paperpricingfrm" id="paperpricingfrm">{% csrf_token %}
+                            <form method="post" name="processpricingfrm" id="processpricingfrm">{% csrf_token %}
 
 
                                 <div class="row clearfix">
@@ -72,7 +66,8 @@
                                 <label for="processname">Process Name</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Process Name">
+                                        <input type="text"name="process_name" id="process_name" class="form-control" value="{{obj.process.process_name}}" placeholder="Enter Process Name">
+                                        <input type="hidden"name="process" id="process" class="form-control" value="{{data.process}}"placeholder="Enter Process name">
                                     </div>
                                 </div>
                                 </div>
@@ -80,13 +75,15 @@
                                 <div class="col-md-4">
                                 <label for="jobtype">Job Type</label>
                                 <div class="form-group">
-                                    {% drop_down_list tableName="printerapp_jobtype" show_field_name="jobtype_name" store_field_name="id" as list_drop %}
                                     <div class="form-line">
-                                    <select class="form-control show-tick" id="" name="">
-                                    <option value="">-- Select Jobtype -- </option>
-                                    {% for list_drop_val in list_drop %}
-                                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
-                                    {% endfor %}
+                                    <select class="form-control show-tick" id="jobtype" name="jobtype" style='width:30%;'>
+                                    <option value="0">-- Select Jobtype -- </option>
+                                    <option value="1" {% if data.jobtype == 1 %}
+            checked="true" selected="true"{% endif%}>Inhouse</option>
+                                    <option value="2" {% if data.jobtype == 2 %}
+            checked="true" selected="true"{% endif%}>ScreenPrint</option>    
+                                    <option value="3" {% if data.jobtype == 3 %}
+            checked="true" selected="true"{% endif%}>DigitalPrint</option>                                   
                                     </select>
                                     </div>
                                 </div>
@@ -99,10 +96,16 @@
                                     <select class="form-control show-tick" id="pricingtype" name="pricingtype">
                                     <option value="0">-- Select type -- </option>    
                                 
-                                    <option value="1">By Time</option>
-                                    <option value="2">By Quantity</option>
-                                    <option value="3">By No.Of.Pages</option>
-                                    <option value="4">By Plating</option>
+                                    <option value="1" {% if data.pricingtype == 1 %}
+            checked="true" selected="true"{% endif%}>By Time with respctive to Size</option>
+                                    <option value="2"{% if data.pricingtype == 2 %}
+            checked="true" selected="true"{% endif%}>By Quantity with respctive to Size</option>
+                                    <option value="3"{% if data.pricingtype == 3 %}
+            checked="true" selected="true"{% endif%}>By No.Of.Pages with respctive to Size</option>
+                                    <option value="4"{% if data.pricingtype == 4 %}
+            checked="true" selected="true"{% endif%}>By Size</option>
+                                    <option value="5"{% if data.pricingtype == 5 %}
+            checked="true" selected="true"{% endif%}>By No.Of.Cycle</option>
                                     
                                     
                                     </select>
@@ -132,7 +135,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="time_squareinch_from" id="time_squareinch_from" class="form-control" value="{{data.time_squareinch_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -140,7 +143,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="time_squareinch_to" id="time_squareinch_to" class="form-control" value="{{data.time_squareinch_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -148,7 +151,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From Hour">
+                                        <input type="text"name="time_hour_from" id="time_hour_from" class="form-control" value="{{data.time_hour_from}}" placeholder="From Hour">
                                     </div>
                                     </div>
                                     </div>
@@ -156,7 +159,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To Hour">
+                                        <input type="text"name="time_hour_to" id="time_hour_to" class="form-control" value="{{data.time_hour_to}}" placeholder="To Hour">
                                     </div>
                                     </div>
                                     </div>
@@ -164,7 +167,7 @@
                                     <div class="col-md-4">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                        <input type="text"name="time_price" id="time_price" class="form-control" value="{{data.time_price}}" placeholder="Enter Price">
                                     </div>
                                     </div>
                                     </div>
@@ -189,7 +192,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="qty_squareinch_from" id="qty_squareinch_from" class="form-control" value="{{data.qty_squareinch_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -197,7 +200,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="qty_squareinch_to" id="qty_squareinch_to" class="form-control" value="{{data.qty_squareinch_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -206,7 +209,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="qty_from" id="qty_from" class="form-control" value="{{data.qty_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -214,7 +217,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="qty_to" id="qty_to" class="form-control" value="{{data.qty_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -222,7 +225,7 @@
                                     <div class="col-md-4">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                        <input type="text"name="qty_price" id="qty_price" class="form-control" value="{{data.qty_price}}" placeholder="Enter Price">
                                     </div>
                                     </div>
                                     </div>
@@ -233,7 +236,7 @@
                                 <div id="pagesdiv" hidden="true">
                                 <div class="row clearfix">
                                     <div class="col-md-4">
-                                    <label for=squareinch">Square Inch</label>
+                                    <label for="squareinch">Square Inch</label>
                                     </div> 
                                     <div class="col-md-4">
                                     <label for="time">No of Pages</label>
@@ -247,7 +250,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="pages_squareinch_from" id="pages_squareinch_from" class="form-control" value="{{data.pages_squareinch_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -255,7 +258,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="pages_squareinch_to" id="pages_squareinch_to" class="form-control" value="{{data.pages_squareinch_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -264,7 +267,7 @@
                                     <div class="col-md-4">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="No.of.Pages">
+                                        <input type="text"name="pages_from" id="pages_from" class="form-control" value="{{data.pages_from}}" placeholder="No.of.Pages">
                                     </div>
                                     </div>
                                     </div>
@@ -272,7 +275,7 @@
                                     <div class="col-md-4">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                        <input type="text"name="pages_price" id="pages_price" class="form-control" value="{{data.pages_price}}" placeholder="Enter Price">
                                     </div>
                                     </div>
                                     </div>
@@ -280,10 +283,10 @@
                                 </div>
                                 </div>
                                 
-                                <div id="platingdiv" hidden="true">
+                                <div id="sizediv" hidden="true">
                                 <div class="row clearfix">
                                     <div class="col-md-4">
-                                    <label for=squareinch">Square Inch</label>
+                                    <label for="squareinch">Square Inch</label>
                                     </div>   
                                     <div class="col-md-4">
                                     <label for="price">Price</label>
@@ -294,7 +297,7 @@
                                     <div class="col-md-2">
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="From">
+                                        <input type="text"name="size_squareinch_from" id="size_squareinch_from" class="form-control" value="{{data.size_squareinch_from}}" placeholder="From">
                                     </div>
                                     </div>
                                     </div>
@@ -302,7 +305,7 @@
                                     <div class="col-md-2">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="To">
+                                        <input type="text"name="size_squareinch_to" id="size_squareinch_to" class="form-control" value="{{data.size_squareinch_to}}" placeholder="To">
                                     </div>
                                     </div>
                                     </div>
@@ -310,41 +313,166 @@
                                     <div class="col-md-4">                                   
                                     <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="" id="" class="form-control" value="" placeholder="Enter Price">
+                                        <input type="text"name="size_price" id="size_price" class="form-control" value="{{data.size_price}}" placeholder="Enter Price">
                                     </div>
                                     </div>
                                     </div>
 
                                 </div>
                                 </div>
+
+                                <div id="cyclediv" hidden="true">
+                                <div class="row clearfix">
+                                    <div class="col-md-4">
+                                    <label for="squareinch">Square Inch</label>
+                                    </div> 
+                                    <div class="col-md-4">
+                                    <label for="time">No of Cycle</label>
+                                    </div>    
+                                    <div class="col-md-4">
+                                    <label for="price">Price</label>
+                                    </div>    
+                                </div>
+                                
+                                <div class="row clearfix">
+                                    <div class="col-md-2">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="cycle_squareinch_from" id="cycle_squareinch_from" class="form-control" value="{{data.cycle_squareinch_from}}" placeholder="From">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-2">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="cycle_squareinch_to" id="cycle_squareinch_to" class="form-control" value="{{data.cycle_squareinch_to}}" placeholder="To">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                
+                                    <div class="col-md-4">
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="cycle_from" id="cycle_from" class="form-control" value="{{data.cycle_from}}" placeholder="No.of.Cycle">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-4">                                   
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text"name="cycle_price" id="cycle_price" class="form-control" value="{{data.cycle_price}}" placeholder="Enter Price">
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                </div>
+                                </div>
+                                
 
 
                         </div>
                     </div>
-                    <div {% if view_mode %} style="display:none" {% endif%}>
-                    {%if data.id %}
-                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
-                    {%else%}
-                    <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
-                    {%endif%}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-                    </div>
-                    </form>
+                    
                 </div>
             </div>
             <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
-           
+            <div class="row clearfix" {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Update</button>
+                            {%else%}
+                            <button type="submit" name="submitfrm" id="submitfrm"class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
            
 </div>
 </section>
    
 </body>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
 <script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script type="text/javascript">
-$(document).ready(function() {
+var jQuery_3_2_1 = jQuery.noConflict();
+
+jQuery_3_2_1(document).ready(function() {
+
+    console.log("ready");
+    pricing=$('#pricingtype').val();
+    console.log(pricing);
+    
+
+    if(pricing==1){
+            $('#timediv').show();
+        }
+        else{
+            $('#timediv').hide();
+        }
+        if(pricing==2){
+            $('#qtydiv').show();
+        }
+        else{
+            $('#qtydiv').hide();
+        }
+        if(pricing==3){
+            $('#pagesdiv').show();
+        }
+        else{
+            $('#pagesdiv').hide();
+        }
+        if(pricing==4){
+            $('#sizediv').show();
+        }
+        else{
+            $('#sizediv').hide();
+        }
+        if(pricing==5){
+            $('#cyclediv').show();
+        }
+        else{
+            $('#cyclediv').hide();
+        }
+        if(pricing==0){
+            $('#timediv').hide();
+            $('#qtydiv').hide();
+            $('#pagesdiv').hide();
+            $('#sizediv').hide();
+            $('#cyclediv').hide();
+            
+        }
+
+
+
+
+
+    jQuery_3_2_1("#process_name").autocomplete({
+        source : "/printerapp/autocomplete/processname/",
+        select : function(event, ui) { //item selected
+        // AutoCompleteSelectHandler(event, ui)
+        var selectedObj = ui.item;
+        $("#process").val(selectedObj.id);       
+    },
+    minLength : 2,
+    });
+    
+
 
     $('#pricingtype').on('change', function() {
         
@@ -367,23 +495,30 @@ $(document).ready(function() {
             $('#pagesdiv').hide();
         }
         if(this.value==4){
-            $('#platingdiv').show();
+            $('#sizediv').show();
         }
         else{
-            $('#platingdiv').hide();
+            $('#sizediv').hide();
+        }
+        if(this.value==5){
+            $('#cyclediv').show();
+        }
+        else{
+            $('#cyclediv').hide();
         }
         if(this.value==0){
             $('#timediv').hide();
             $('#qtydiv').hide();
             $('#pagesdiv').hide();
-            $('#platingdiv').hide();
+            $('#sizediv').hide();
+            $('#cyclediv').hide();
             
         }
 
     });
 
     $("#submitfrm").click(function(){
-        frmvalidation();
+        //frmvalidation();
         
     }); 
     

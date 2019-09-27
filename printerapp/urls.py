@@ -1,17 +1,14 @@
 from django.conf.urls import url,include
 from django.contrib import admin
 from printerapp.views import *
-from printerapp.custom_views import paper
-from printerapp.custom_views import size
-from printerapp.custom_views import gsm
-from printerapp.custom_views import process
-from printerapp.custom_views import product
-from printerapp.custom_views import role
-from printerapp.custom_views import employee
+
+from printerapp.custom_views import default
 from printerapp.custom_views import autocomplete
-from printerapp.custom_views import jobcard
-from printerapp.custom_views import rectangle
-from printerapp.custom_views import processcard_jobcard
+
+from printerapp.custom_views.jobcard import jobcard
+from printerapp.custom_views.rectangle import rectangle
+from printerapp.custom_views.processcard import processcard_jobcard
+
 from printerapp.custom_views.master import customergroup
 from printerapp.custom_views.master import state
 from printerapp.custom_views.master import currency
@@ -20,22 +17,35 @@ from printerapp.custom_views.master import customer
 from printerapp.custom_views.master import deliverymode
 from printerapp.custom_views.master import communication
 from printerapp.custom_views.master import jobtype
+from printerapp.custom_views.master import employee
+from printerapp.custom_views.master import paper
+from printerapp.custom_views.master import size
+from printerapp.custom_views.master import gsm
+from printerapp.custom_views.master import process
+from printerapp.custom_views.master import product
+
 from printerapp.custom_views.pricingrule import paperpricing
 from printerapp.custom_views.pricingrule import packaging
 from printerapp.custom_views.pricingrule import processpricing
 from printerapp.custom_views.pricingrule import price_calculate
 
+from printerapp.custom_views.role import role
+from printerapp.custom_views.form import form
+
 app_name = 'printerapp'
 urlpatterns = [ 
     
  
-    url(r'^home/$', create_home, name='home'),
+    url(r'^home/$', default.create_home, name='home'),
 
-    url(r'^login/$', login_user, name='login'),  
-    url(r'^logout_user/$', logout_user, name='logout_user'),
+    url(r'^login/$', default.login_user, name='login'),  
+    url(r'^logout_user/$', default.logout_user, name='logout_user'),
     
-    url(r'^user/user_list/$', user_list, name='user_list'),
-    url(r'^user/user_update/(?P<id>[^/]*)/$', user_update, name='user_update'),
+    url(r'^user/user_create/$', default.signup_user, name='user_create'),    
+    url(r'^user/user_list/$', default.user_list, name='user_list'),
+    url(r'^user/user_update/(?P<id>[^/]*)/$', default.user_update, name='user_update'),
+    url(r'^user/user_delete/(?P<id>[^/]*)/$', default.user_delete, name='user_delete'),
+    url(r'^user/user_view/(?P<id>[^/]*)/$', default.user_view, name='user_view'),
         
     url(r'^paper/paper_create/$', paper.paper_create, name='paper_create'),
     url(r'^paper/paper_list/$', paper.paper_list, name='paper_list'),
@@ -61,8 +71,14 @@ urlpatterns = [
     url(r'^process/process_update/(?P<id>[^/]*)/$',process.process_update, name='process_update'),
     url(r'^process/process_delete/(?P<id>[^/]*)/$', process.process_delete, name='process_delete'),
 
+    url(r'^role/role_create/$', role.role_create, name='role_create'),
+    url(r'^role/role_list/$', role.role_list, name='role_list'),
+    url(r'^role/role_view/(?P<id>[^/]*)/$', role.role_view, name='role_view'),
+    url(r'^role/role_update/(?P<id>[^/]*)/$', role.role_update, name='role_update'),
+    url(r'^role/role_delete/(?P<id>[^/]*)/$', role.role_delete, name='role_delete'),
+    
+
     url(r'^product/product_create/$', product.product_create, name='product_create'),
-    url(r'^autocomplete/processname/$', autocomplete.process_name_autocomplete, name='processname_auto'),
     url(r'^product/product_list/$', product.product_list, name='product_list'),
     url(r'^product/product_view/(?P<id>[^/]*)/$', product.product_view, name='product_view'),
     url(r'^product/product_delete/(?P<id>[^/]*)/$', product.product_delete, name='product_delete'),
@@ -123,6 +139,11 @@ urlpatterns = [
     url(r'^jobcard/jobcard_product_process_create/$', jobcard.jobcard_product_process_create, name='jobcard_product_process_create'),
     
     url(r'^processcard/processcard_create/(?P<id>[^/]*)/$', processcard_jobcard.processcard_create, name='processcard_create'),
+    url(r'^processcard/processcard_list/$', processcard_jobcard.processcard_list, name='processcard_list'),
+    url(r'^processcard/processcard_update/(?P<id>[^/]*)/$', processcard_jobcard.processcard_update, name='processcard_update'),
+    url(r'^processcard/processcard_delete/(?P<id>[^/]*)/$', processcard_jobcard.processcard_delete, name='processcard_delete'),
+    url(r'^processcard/processcard_view/(?P<id>[^/]*)/$', processcard_jobcard.processcard_view, name='processcard_view'),
+    
     url(r'^processcard/comments_create/$', processcard_jobcard.comments_create, name='comments_create'),
 
 
@@ -130,7 +151,8 @@ urlpatterns = [
     url(r'^autocomplete/contact_no/$', autocomplete.contact_no_autocomplete, name='contact_no_auto'),
     url(r'^autocomplete/productname/$', autocomplete.product_name_autocomplete, name='productname_auto'),
     url(r'^autocomplete/username/$', autocomplete.user_name_autocomplete, name='username_auto'),
-
+    url(r'^autocomplete/processname/$', autocomplete.process_name_autocomplete, name='processname_auto'),
+    
     url(r'^jobcard/getproductadd/$', jobcard.getproductadd, name='getproductadd'),
     url(r'^jobcard/getprocesslist/$', jobcard.getprocesslist, name='getprocesslist'),
     url(r'^jobcard/getsizevalues/$', jobcard.getsizevalues, name='getsizevalues'),
@@ -144,10 +166,29 @@ urlpatterns = [
     url(r'^jobcard/jobcard_delete/(?P<id>[^/]*)/$', jobcard.jobcard_delete, name='jobcard_delete'),
     
     url(r'^pricingrule/paperpricing_create/$', paperpricing.paperpricing_create, name='paperpricing_create'),
+    url(r'^pricingrule/paperpricing_list/$', paperpricing.paperpricing_list, name='paperpricing_list'),
+    url(r'^pricingrule/paperpricing_update/(?P<id>[^/]*)/$',paperpricing.paperpricing_update, name='paperpricing_update'),
+    url(r'^pricingrule/paperpricing_view/(?P<id>[^/]*)/$',paperpricing.paperpricing_view, name='paperpricing_view'),
+    url(r'^pricingrule/paperpricing_delete/(?P<id>[^/]*)/$',paperpricing.paperpricing_delete, name='paperpricing_delete'),
+    
     url(r'^pricingrule/packaging_create/$', packaging.packaging_create, name='packaging_create'),
-    url(r'^pricingrule/processpricing_create/$', processpricing.processpricing_create, name='processpricing_create'),
+    url(r'^pricingrule/packaging_list/$', packaging.packaging_list, name='packaging_list'),
+    url(r'^pricingrule/packaging_update/(?P<id>[^/]*)/$',packaging.packaging_update, name='packaging_update'),
+    url(r'^pricingrule/packaging_view/(?P<id>[^/]*)/$',packaging.packaging_view, name='packaging_view'),
+    url(r'^pricingrule/packaging_delete/(?P<id>[^/]*)/$',packaging.packaging_delete, name='packaging_delete'),
+    
 
-    url(r'^test/testpage/$', chk, name='chk'),
+    url(r'^pricingrule/processpricing_create/$', processpricing.processpricing_create, name='processpricing_create'),
+    url(r'^pricingrule/processpricing_list/$', processpricing.processpricing_list, name='processpricing_list'),
+    url(r'^pricingrule/processpricing_update/(?P<id>[^/]*)/$',processpricing.processpricing_update, name='processpricing_update'),
+    url(r'^pricingrule/processpricing_view/(?P<id>[^/]*)/$',processpricing.processpricing_view, name='processpricing_view'),
+    url(r'^pricingrule/processpricing_delete/(?P<id>[^/]*)/$',processpricing.processpricing_delete, name='processpricing_delete'),
+    
+
+    url(r'^form/form_list/$', form.form_list, name='form_list'),
+    url(r'^form/form_create/(?P<id>[^/]*)/$', form.form_create, name='form_create'),
+    
+    url(r'^test/testpage/$', default.chk, name='chk'),
     url(r'^rectangle/logic/$', rectangle.logic_create, name='logic_create'),
 
 ]

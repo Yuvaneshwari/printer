@@ -158,10 +158,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <tbody>
          </tbody>
             {%getprocesslist id=a as processlist%}
-            {%for process in processlist%}
+            {%for process,default_user,user_id,machine1,machine2,machine3,machine4,machine5 in processlist%}
                   
             <tr>
-            <td><div class="square" onclick="openForm('{{y}}','{{process}}','{{z}}','{{customer}}','{{jobcardid}}','{{x}}');"><br><b>{{process}}</b></div></td>
+            <td><div class="square" onclick="openForm('{{y}}','{{process}}','{{z}}','{{customer}}','{{jobcardid}}','{{x}}','{{default_user}}','{{user_id}}','{{machine1}}','{{machine2}}','{{machine3}}','{{machine4}}','{{machine5}}');"><br><b>{{process}}</b></div></td>
             <td></td>
             <td></td>
             <td></td>
@@ -180,38 +180,48 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </div>
 </div>
 </div>
-{%endfor%}                               
+{%endfor%}  
+                                        
 <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
            
-<!--<button class="open-button" onclick="openForm()">Open Form</button>-->
+<!--<button class="open-button" onclick="openForm()">Open Form</button> style='width:30px;' -->
 
 <div class="form-popup" id="myForm">
   <form method="post" name="proccesscaardfrm" id="proccesscaardfrm"class="form-container" enctype="multipart/form-data">{% csrf_token %}
 
 <br>
-    <p><i class="fa fa-file-text"style="float:right;"></i></p><input type="hidden" name="jobcardid" id="jobcardid"required><input type="hidden" name="productno" id="productno"required>
+    <input type="hidden" name="jobcardid" id="jobcardid"required>
+    <input type="hidden" name="productno" id="productno"required>
     <label for="prdname"><b>ProductName:</b></label>
-    <input type="text" name="prdname" id="prdname"required>
+    <input type="text" name="prdname" id="prdname"required readonly>
 
     <label for="proname"><b>ProcessName:</b></label>
-    <input type="text" name="proname" id="proname"required>
+    <input type="text" name="proname" id="proname"required readonly>
 
     <label for="date"><b>DeliveryDate&nbsp;&nbsp;&nbsp;:</b></label>
     <input type="text" name="date" id="date" required>
 
     <label for="custname"><b>Customername:</b></label>
-    <input type="text" name="custname" id="custname"required>
+    <input type="text" name="custname" id="custname"required readonly>
 
     <label for="assign"><b>AssignedTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
     <input type="text" name="assign" id="assign"required><input type="hidden" name="assignto" id="assignto"required>
+
+    <label for="machine"><b>Machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
+    <select class='form-control show-tick' id="machine" name="machine"><option value='0'>-Select Machine-</option><option value='1'>Machine1</option><option value='2'>Machine2</option><option value='3'>Machine3</option><option value='4'>Machine4</option><option value='5'>Machine5</option></select>
+
+    <label for="supplier"><b>Supplier&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></label>
+    <input type="text" name="supplier_name" id="supplier_name" value="suppliername"><input type="hidden" name="supplier" id="supplier" value="1">
+
+
     <hr>
 
     <i class="material-icons">insert_comment</i>:
-    <input type="text" name="comments" id="comments" style="width:85%;" required>
+    <input type="text" name="comments" id="comments" style="width:85%;">
 
     <!--<i class="material-icons">insert_photo</i>:-->
-    <input type="file" name="file_name" id="file_name" value="{{data.file_name}}" required>
+    <input type="file" name="file_name" id="file_name">
     <hr>
     
     <button type="submit" class="btn">SAVE</button>
@@ -253,29 +263,15 @@ body {font-family: Arial, Helvetica, sans-serif;}
       },
       minLength : 2,
       });
-
-
-    
-});
-function frmvalidation(){
-$("#gsmfrm").validate({
-  rules : {
-    gsm_name: {
-      required : true,
-      },
-      submitHandler : function(form) {
-        form.submit();
-
-      }
-    }
+                                                                                                                    
   });
-}
-
-
-</script>
-<script>
-function openForm(prodname,processname,del_date,customer,jobcardid,productno) {
    
+
+
+  
+function openForm(prodname,processname,del_date,customer,jobcardid,productno,default_user,user_id,machine1,machine2,machine3,machine4,machine5) {
+document.getElementById("assignto").value="";
+document.getElementById("assign").value="";  
 document.getElementById("prdname").value=prodname;
 document.getElementById("proname").value=processname;
 document.getElementById("date").value=del_date;
@@ -283,6 +279,66 @@ document.getElementById("custname").value=customer;
 document.getElementById("myForm").style.display = "block";
 document.getElementById("jobcardid").value=jobcardid;
 document.getElementById("productno").value=productno;
+
+
+//var s= document.getElementById('machine');
+//s.options[s.options.length]= new Option('My option', '1');
+
+
+//var ss= document.getElementById('machine_sel');
+//ss.options[ss.options.length]= new Option('My option', '1');
+
+//var machine_select = document.getElementById("machine");
+   //if you want to remove this default option use newSel.innerHTML="" 
+  // machine_select.innerHTML="<option value=\"\">---Select Rack---</option>";
+       
+  if(machine1 != "False"){
+    console.log("machine1");    
+    console.log(machine1);
+   // machine_select = new Option("Machine1", 1, false, false);
+  // machine_select.innerHTML="<option value=\"\">---Select Rack---</option>";
+
+        
+  }
+  if(machine2 != "False"){
+    console.log("machine2");
+    console.log(machine2);
+    a="Machine2";
+
+    //$("#machine").append(new Option("machine1", "1"));
+    //$('#machine').append('<option value="ghghgh">machine2</option>');
+    //$('#machine_sel').append('<option value="ghghgh">machine2</option>');
+    //var o = new Option("machine1", "1");
+/// jquerify the DOM object 'o' so we can use the html method
+//$(o).html("machine1");
+//$("#machine").append(o);
+//$("#machine_sel").append(o);
+//var s= document.getElementById('machine');
+//s.options[s.options.length]= new Option('My option', '1');
+
+//var ss= document.getElementById('machine_sel');
+//ss.options[ss.options.length]= new Option('My option', '1');
+  
+    
+    
+    
+    
+    //machine_select.innerHTML="<option>"+a+"</option>";
+    //$("#machine_select").append('<option>machine</option>');
+   
+    //machine_select = new Option("Machine1", 2, false, false);
+  }
+
+
+
+if(default_user != 0){
+  console.log("not zero");
+  document.getElementById("assignto").value=user_id;
+  document.getElementById("assign").value=default_user;
+}
+else{
+  console.log("zero");
+}
 
 }
 
@@ -299,6 +355,7 @@ function save()
   var batch=$("#batch").val();
   
 }
+ 
 
 </script>
 {% include "includes/file_js.html" %}

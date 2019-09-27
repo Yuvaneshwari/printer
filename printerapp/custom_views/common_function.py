@@ -9,6 +9,8 @@ from datetime import datetime
 
 def session_user_id(request):
 	user = request.user
+	print("user")
+	print(user.id)
 	return User.objects.get(pk=user.id);
 
 def store_date_time():

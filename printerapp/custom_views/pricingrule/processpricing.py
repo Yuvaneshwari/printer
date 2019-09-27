@@ -16,13 +16,13 @@ row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 @api_view(['GET','POST'])
 def processpricing_create(request):
     if request.method=='GET':
-        return Response({'data':'','module':'Paper'},template_name='pricingrule/process/process_create_update.html')
+        return Response({'data':'','module':'Process Pricing'},template_name='pricingrule/process/process_create_update.html')
     else:
-        serializer=PaperSerializer(data=request.data)
+        serializer=ProcesspricingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return Response({"success_data": "Data added successfully"},template_name='paper/paper_create_update.html')
+                return Response({"success_data": "Data added successfully",'module':'Process Pricing'},template_name='pricingrule/process/process_create_update.html')
             return Response({"data": "Data added successfully"}, status=status.HTTP_201_CREATED)
         else:
             error_details = []
@@ -36,16 +36,16 @@ def processpricing_create(request):
             }
             }
             if request.accepted_renderer.format=='html':
-                return Response({"error_data": data},template_name='paper/paper_create_update.html')
+                return Response({"error_data": data},template_name='pricingrule/process/process_create_update.html')
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
-def processpricicng_list(request):
+def processpricing_list(request):
     custom_filter={}
     custom_filter['deleted']=0
-    paper_obj = Paper.objects.filter(**custom_filter)
-    paper_data = PaperSerializer(paper_obj, many=True).data
+    paper_obj = Processpricing.objects.filter(**custom_filter)
+    paper_data = ProcesspricingSerializer(paper_obj, many=True).data
     page = request.GET.get('page', 1)
     paginator = Paginator(paper_data, row_per_page)
     try:
@@ -56,33 +56,33 @@ def processpricicng_list(request):
         paper_data = paginator.page(paginator.num_pages)
 
     if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"custom_filter":custom_filter},template_name='paper/paper_list.html')
+        return Response({"data":paper_data,'module':'Process Pricing',"custom_filter":custom_filter},template_name='pricingrule/process/process_list.html')
     return Response({"data": paper_data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def processpricicng_view(request,id):
-    paper_obj=Paper.objects.get(id=id)
-    paper_data = PaperSerializer(paper_obj).data
+def processpricing_view(request,id):
+    paper_obj=Processpricing.objects.get(id=id)
+    paper_data = ProcesspricingSerializer(paper_obj).data
     if request.accepted_renderer.format == 'html':
-        return Response({"data":paper_data,'module':'Paper',"view_mode":1},template_name='paper/paper_create_update.html')
+        return Response({"data":paper_data,'obj':paper_obj,'module':'Process Pricing',"view_mode":1},template_name='pricingrule/process/process_create_update.html')
     return Response({"data": paper_data,"view_mode":1}, status=status.HTTP_200_OK)
 
 @api_view(['GET','PUT','POST'])
-def processpricicng_update(request,id):
-    paper_obj=Paper.objects.get(id=id)
+def processpricing_update(request,id):
+    paper_obj=Processpricing.objects.get(id=id)
     if request.method=='GET':
-        data=PaperSerializer(paper_obj).data
+        data=ProcesspricingSerializer(paper_obj).data
         if request.accepted_renderer.format == 'html':
-            return Response({'data':data},template_name='paper/paper_create_update.html')
+            return Response({'data':data,'obj':paper_obj,'module':'Process Pricing'},template_name='pricingrule/process/process_create_update.html')
         return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
-        serializer=PaperSerializer(paper_obj,request.data,partial=True)
+        serializer=ProcesspricingSerializer(paper_obj,request.data,partial=True)
         if serializer.is_valid():
             serializer.save();
             if request.accepted_renderer.format=='html':
-                return HttpResponseRedirect(reverse('printerapp:paper_list'))
+                return HttpResponseRedirect(reverse('printerapp:processpricing_list'))
             return Response({"data": "Data Updated successfully"}, status=status.HTTP_200_OK)
         else:
             error_details = []
@@ -96,12 +96,12 @@ def processpricicng_update(request,id):
                             }
                         }
                 if request.accepted_renderer.format=='html':
-                    return Response({"error_data": data},template_name='paper/paper_create_update.html')
+                    return Response({"error_data": data},template_name='pricingrule/process/process_create_update.html')
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST','Delete'])
-def processpricicng_delete(request,id):
-    selected_values=Paper.objects.get(pk=id)
+def processpricing_delete(request,id):
+    selected_values=Processpricing.objects.get(pk=id)
     selected_values.deleted=1;
     selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:paper_list'))
+    return HttpResponseRedirect(reverse('printerapp:processpricing_list'))

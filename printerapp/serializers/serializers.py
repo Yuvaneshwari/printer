@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from printerapp.models import *
 
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = "__all__"
+        
 class PaperSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paper
@@ -96,6 +102,16 @@ class JobtypeSerializer(serializers.ModelSerializer):
 class PaperpricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paperpricing
+        fields = "__all__"
+
+class ProcesspricingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Processpricing
+        fields = "__all__"
+
+class PackingpricingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Packingpricing
         fields = "__all__"
 
 class CustomerdetailsSerializer(serializers.ModelSerializer):

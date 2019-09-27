@@ -21,8 +21,16 @@ row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 
 @api_view(['GET','POST'])
 def size_create(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+    
     if request.method=='GET':
-        return Response({'data':'','module':'Size'},template_name='size/size_create_update.html')
+        if loginuser.has_perm('printerapp.add_size'):
+            print("yes")
+            return Response({'data':'','module':'Size'},template_name='size/size_create_update.html')
+        else:
+            print("no")
+            return Response({"data": ''}, template_name='includes/page_not_found.html')
     else:
         serializer=SizeSerializer(data=request.data)
         if serializer.is_valid():
@@ -53,7 +61,9 @@ def size_list(request):
     #get_user.user_permissions.add(get_perm)
     #g_perm = Permission.objects.get(name='Can add log entry')
     #get_user.user_permissions.add(g_perm)
-    #get_user.save()    
+    #get_user.save()
+    loginuser=session_user_id(request)
+    print(loginuser)    
     custom_filter={}
     custom_filter['deleted']=0
     size_obj = Size.objects.filter(**custom_filter)
@@ -66,11 +76,15 @@ def size_list(request):
         size_data = paginator.page(1)
     except EmptyPage:
         size_data = paginator.page(paginator.num_pages)
-    
-    if request.accepted_renderer.format == 'html':
-        return Response({"data":size_data,'module':'Size'},template_name='size/size_list.html')
-    return Response({"data": size_data}, status=status.HTTP_200_OK)
 
+    if loginuser.has_perm('printerapp.list_size'):
+        print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":size_data,'module':'Size'},template_name='size/size_list.html')
+        return Response({"data": size_data}, status=status.HTTP_200_OK)
+    else:
+        print("no")
+        return Response({"data": ''}, template_name='includes/page_not_found.html')
     #userid=User.objects.get(username=loginuser)
     #print(userid.id)
     #chkperm=user_permissions.get(user=userid.id,permission=odd_even.id)
@@ -97,28 +111,37 @@ def publish_blog(request):
 @api_view(['GET'])
 def size_view(request,id):
     size_obj=Size.objects.get(id=id)
+    loginuser=session_user_id(request)
+    print(loginuser)    
+    
     if request.method == "GET":
         size_data = SizeSerializer(size_obj).data
-        if request.accepted_renderer.format == 'html':
-            return Response({"data":size_data,'module':'Size',"view_mode":1},template_name='size/size_create_update.html')
-        return Response({"data":size_data,"view_mode":1}, status=status.HTTP_200_OK)
-
+        if loginuser.has_perm('printerapp.view_size'):
+            print("yes")    
+            if request.accepted_renderer.format == 'html':
+                return Response({"data":size_data,'module':'Size',"view_mode":1},template_name='size/size_create_update.html')
+            return Response({"data":size_data,"view_mode":1}, status=status.HTTP_200_OK)
+        else:
+            print("no")
+            return Response({"data": ''}, template_name='includes/page_not_found.html')
+    
 @api_view(['GET','PUT','POST'])
 def size_update(request,id):
-    #loginuser=session_user_id(request)
-    #print(loginuser)
+    loginuser=session_user_id(request)
+    print(loginuser)
     #print(loginuser.get_all_permissions())
     if request.method=='GET':
-        #if loginuser.has_perm('printerapp.change_size'):
-            #print("yes") 
-            size_obj=Size.objects.get(id=id)
-            data=SizeSerializer(size_obj).data
+        
+        size_obj=Size.objects.get(id=id)
+        data=SizeSerializer(size_obj).data
+        if loginuser.has_perm('printerapp.change_size'):
+            print("yes") 
             if request.accepted_renderer.format == 'html':
                 return Response({'data':data},template_name='size/size_create_update.html')
             return Response({"data": data}, status=status.HTTP_200_OK)
-        #else:
-            #print("no")
-            #return Response({'data':''},template_name='includes/page_error.html')
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_error.html')
     else:
         size_obj=Size.objects.get(id=id)
         serializer=SizeSerializer(size_obj,request.data,partial=True)
@@ -144,7 +167,14 @@ def size_update(request,id):
 
 @api_view(['GET', 'POST','Delete'])
 def size_delete(request,id):
-    selected_values=Size.objects.get(pk=id)
-    selected_values.deleted=1;
-    selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:size_list'))
+    loginuser=session_user_id(request)
+    print(loginuser)
+    if loginuser.has_perm('printerapp.delete_size'):
+        print("yes")
+        selected_values=Size.objects.get(pk=id)
+        selected_values.deleted=1;
+        selected_values.save();
+        return HttpResponseRedirect(reverse('printerapp:size_list'))
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_error.html')

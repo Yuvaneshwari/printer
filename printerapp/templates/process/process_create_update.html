@@ -51,15 +51,8 @@
                             <h2>Process Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/process/process_list"><i class="material-icons">visibility</i></a></li>
-                                       
-                                    </ul>
-                                </li>
+                                <a href="/printerapp/process/process_list"><i class="material-icons">visibility</i></a>
+                                 
                             </ul>
                         </div>
                         <div class="body">
@@ -68,86 +61,137 @@
                                
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text"name="process_name" id="process_name" class="form-control" value="{{data.process_name}}"placeholder="Enter Process name">
+                                        <input type="text"name="process_name" id="process_name" class="form-control" value="{{data.process_name}}"placeholder="Enter Process name">                                        
+                                    </div>
+                                </div>
+                                
+                               
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label for="user_name">Default User</label>
+                                        <input type="hidden"name="default_user" id="default_user" class="form-control" value="{{data.default_user}}"placeholder="Enter User name"> 
+                                        <input type="text"name="user_name" id="user_name" class="form-control" value="{{obj.default_user.username}}"placeholder="Enter User name">                                        
                                     </div>
                                 </div>
                                 
                                 <div class="demo-checkbox">
-                                   <input type="checkbox" id="partial_delivery" name="partial_delivery" class="filled-in chk-col-teal"/>
-                                    <label for="partial_delivery">Delivery Time Required?</label>             
+                                    <input type="checkbox" id="machine_1" name="machine_1" class="filled-in chk-col-teal" {% if data.machine1 == 1 %} checked="true" selected="true"{% endif%}/>
+                                    <label for="machine_1">Machine 1</label>
+                                    <input type="hidden"name="machine1" id="machine1" class="form-control">      
+                                    <input type="checkbox" id="machine_2" name="machine_2" class="filled-in chk-col-teal" {% if data.machine2 == 1 %} checked="true" selected="true"{% endif%}/>
+                                    <label for="machine_2">Machine 2</label>  
+                                    <input type="hidden"name="machine2" id="machine12" class="form-control">
+                                    <input type="checkbox" id="machine_3" name="machine_3" class="filled-in chk-col-teal"{% if data.machine3 == 1 %} checked="true" selected="true"{% endif%}/>
+                                    <label for="machine_3">Machine 3</label>  
+                                    <input type="hidden"name="machine3" id="machine3" class="form-control">
+                                    <input type="checkbox" id="machine_4" name="machine_4" class="filled-in chk-col-teal" {% if data.machine4 == 1 %} checked="true" selected="true"{% endif%}/>
+                                    <label for="machine_4">Machine 4</label>  
+                                    <input type="hidden"name="machine4" id="machine4" class="form-control">
+                                    <input type="checkbox" id="machine_5" name="machine_5" class="filled-in chk-col-teal" {% if data.machine5 == 1 %} checked="true" selected="true"{% endif%}/>
+                                    <label for="machine_5">Machine 5</label>             
+                                    <input type="hidden"name="machine5" id="machine5" class="form-control">
                                 </div>
-                                
 
-                              
+                                <div class="demo-checkbox">
+                                   <input type="checkbox" id="partialdelivery" name="partialdelivery" class="filled-in chk-col-teal" {% if data.is_deliveryTime == 1 %} checked="true" selected="true"{% endif%}/>
+                                    <label for="partialdelivery">Delivery Time Required?</label>  
+                                    <input type="hidden"name="is_deliveryTime" id="is_deliveryTime" class="form-control">            
+                                </div>
 
                         </div>
                     </div>
-                    <div {% if view_mode %} style="display:none" {% endif%}>
-                    {%if data.id %}
-                    <button type="button" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
-                    {%else%}
-                    <button type="button"  name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
-                    {%endif%}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-                    </div>
-                    </form>
+                    
                 </div>
             </div>
             <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
-           
+            <div class="row clearfix"  {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                            {%else%}
+                            <button type="submit"  name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
            
 </div>
-</section>
-                            
- 
-                  
+</section>                
 
 </body>
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
 <script src="{% static 'printerapp/js/jquery-3.2.1.min.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script>
-$(document).ready(function() {
+var jQuery_3_2_1 = jQuery.noConflict();
+    
+jQuery_3_2_1(document).ready(function() {
 
+    
+    jQuery_3_2_1("#user_name").autocomplete({
+      source : "/printerapp/autocomplete/username/",
+      select : function(event, ui) { //item selected
+      $('#default_user').val(ui.item.id);
+      $('#user_name').val(ui.item.value);      
+      },
+      minLength : 2,
+    });
 
-
-    $("#submitfrm").click(function(){
-        
+    $("#submitfrm").click(function(){        
        
-        if ($('#partial_delivery').is(":checked")) {
-            $('#partial_delivery').val("1");
+        if ($('#partialdelivery').is(":checked")) {
+            $('#is_deliveryTime').val("1");
 
         } else {
-            $('#partial_delivery').val("0");
+            $('#is_deliveryTime').val("0");
         }
-            
+        if ($('#machine_1').is(":checked")) {
+            $('#machine1').val("1");
+
+        } else {
+            $('#machine1').val("0");
+        } 
+        if ($('#machine_2').is(":checked")) {
+            $('#machine2').val("1");
+
+        } else {
+            $('#machine2').val("0");
+        }
+        if ($('#machine_3').is(":checked")) {
+            $('#machine3').val("1");
+
+        } else {
+            $('#machine3').val("0");
+        }
+        if ($('#machine_4').is(":checked")) {
+            $('#machine4').val("1");
+
+        } else {
+            $('#machine4').val("0");
+        }  
+        if ($('#machine_5').is(":checked")) {
+            $('#machine5').val("1");
+
+        } else {
+            $('#machine5').val("0");
+        }
+
         frmvalidation();
-
-
-        var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
-        data={"partial_delivery": $('#partial_delivery').val(),"process_name": $('#process_name').val()};
-        /* url="../../product_processupdate/";
-    
-        data={"product_name":jQuery_3_2_1('#product_name').val()};*/
-    $.ajax({
-        type:"POST",
-        url:"../process_create/",
-        data:data,
-        headers : {
-        "X-CSRFToken" : crf_token
-        },
-            
-        success:function(data){
-            document.getElementById("processfrm").reset();  
-        }
-        });     
-    }); 
-   
        
         
     
+});
 });
 function frmvalidation(){
 $("#processfrm").validate({

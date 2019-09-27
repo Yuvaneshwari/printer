@@ -51,15 +51,10 @@
                             <h2>GSM Create</h2>
                             {%endif%}
                             <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a></li>
+                                
+                                <a href="/printerapp/gsm/gsm_list"><i class="material-icons">visibility</i></a>
                                        
-                                    </ul>
-                                </li>
+                                   
                             </ul>
                         </div>
                         <div class="body">
@@ -74,21 +69,30 @@
                                
                         </div>
                     </div>
-                    <div {% if view_mode %} style="display:none" {% endif%}>
-                    {%if data.id %}
-                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
-                    {%else%}
-                    <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
-                    {%endif%}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
-                    </div>
-                    </form>
+                    
                 </div>
             </div>
             <!-- #END# Vertical Layout -->
             <!-- Vertical Layout | With Floating Label -->
-           
+            <div class="row clearfix" {% if view_mode %} style="display:none" {% endif%}>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                            {%if data.id %}
+                            <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                            
+                            {%else%}
+                            <button type="submit" name="submitfrm" id="submitfrm" class="btn btn-primary m-t-15 waves-effect">Submit</button>
+                            {%endif%}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-secondary m-t-15 waves-effect">Reset</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
            
 </div>
 </section>

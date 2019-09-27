@@ -27,7 +27,7 @@
             <div class="form-group">
             {% drop_down_list tableName="printerapp_product" show_field_name="product_name" store_field_name="id" as list_drop %}
             <div class="col-md-8">
-            <select class="form-control show-tick" id="product_name{{data}}" name="product_name[]" onchange="getproductid(this,data);">
+            <select class="form-control show-tick" id="product_name{{data}}" placeholder="{{data}}" name="product_name[]" onchange="getproductid(this,data);">
                 <option value="">-- Select Product-- </option>   
                 {% for list_drop_val in list_drop %}
                 <option value="{{ list_drop_val.id }}"> {{ list_drop_val.text }} </option>
@@ -41,7 +41,7 @@
             <div class="container">
 
             <div id="processlistdiv{{data}}" name="processlistdiv[]" class="demo-checkbox"></div>
-
+            <table class="a" style="width:100%" border="2"> </table>
             </div>       
                        
             <br>
@@ -95,7 +95,7 @@
             
             <div class="row clearfix">    
                 <div class="col-md-3">    
-                    <label for="size">Size</label>
+                    <label for="size">Size (Inches)</label>
                 </div>
                 <div class="form-group">
                 {% batch_drop_down_list tableName="printerapp_size" show_field_name="size_name" store_field_name="id" show_field_name1="length" show_field_name2="width" as list_drop %}
@@ -202,29 +202,12 @@
             </div>
             <br>
 
-            <div class="row clearfix">    
-                <div class="col-md-4">    
-                    <label for="size">JobType</label>
-                </div>
-                <div class="form-group">
-                {% drop_down_list tableName="printerapp_jobtype" show_field_name="jobtype_name" store_field_name="id" as list_drop %}                
-                <div class="col-md-8">
-                    <select class="form-control show-tick" id="jobtype{{data}}" name="jobtype[]">
-                    <option value="">-- Select Jobtype -- </option>
-                    {% for list_drop_val in list_drop %}
-                    <option value="{{ list_drop_val.id }}">{{list_drop_val.text}}</option>
-                    {% endfor %}
-                    </select>
-                </div>
-                </div>
-            </div>
-            <br>
             <div class="row clearfix"> 
                                    
                 <label for="Expected_delivery">Expected Delivery  Date and Time</label>
                 <div class="form-group">
                 <div class="form-line">
-                    <input type="text" name="delivery_datetime[]" id="delivery_datetime{{data}}" class="datetimepicker form-control" value="" placeholder="Enter Expected Delivery  Date and Time">
+                    <input type="text" name="delivery_datetime[]" id="delivery_datetime{{data}}" class="datetimepicker form-control" value="2019-12-12 11:25:14" placeholder="Enter Expected Delivery  Date and Time">
                 </div>
                 </div>
             </div>

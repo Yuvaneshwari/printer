@@ -12,12 +12,22 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import  settings
+from printerapp.custom_views.common_function import *
+
 row_per_page=settings.GLOBAL_SETTINGS['row_per_page']
 
 @api_view(['GET','POST'])
 def product_create(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+ 
     if request.method=='GET':
-        return Response({'data':'','module':'Product'},template_name='product/product_create_update.html')
+        if loginuser.has_perm('printerapp.add_product'):
+            print("yes")
+            return Response({'data':'','module':'Product'},template_name='product/product_create_update.html')
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_not_found.html')
     else:
         pname=request.POST.get('product_name')
         gprarray=request.POST.getlist('processidarray[]')
@@ -65,6 +75,9 @@ def add_productdetails(prarray,defaultarray,productid):
 
 @api_view(['GET','POST'])
 def product_list(request):
+    loginuser=session_user_id(request)
+    print(loginuser)
+ 
     custom_filter={}
     custom_filter['deleted']=0
     product_obj = Product.objects.filter(**custom_filter)
@@ -81,13 +94,20 @@ def product_list(request):
         product_data = paginator.page(1)
     except EmptyPage:
         product_data = paginator.page(paginator.num_pages)
-    
-    if request.accepted_renderer.format == 'html':
-        return Response({"data":product_data,"product_data":proddet_data},template_name='product/product_list.html')
-    return Response({"data": product_data})
+    if loginuser.has_perm('printerapp.list_product'):
+        print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":product_data,"product_data":proddet_data},template_name='product/product_list.html')
+        return Response({"data": product_data})
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
 
 @api_view(['GET','POST'])
 def product_view(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+ 
     product_obj = Product.objects.get(id=id)
     product_data = ProductSerializer(product_obj).data
 
@@ -95,19 +115,36 @@ def product_view(request,id):
     custom_filter['deleted']=0
     proddet_obj = Productdetails.objects.filter(**custom_filter)
     proddet_data = ProductdetailsSerializer(proddet_obj, many=True).data
-    if request.accepted_renderer.format == 'html':
-        return Response({"data":product_data,"product_data":proddet_data},template_name='product/product_create_update.html')
-    return Response({"data": product_data})
+    if loginuser.has_perm('printerapp.view_product'):
+        print("yes")
+        if request.accepted_renderer.format == 'html':
+            return Response({"data":product_data,"product_data":proddet_data},template_name='product/product_create_update.html')
+        return Response({"data": product_data})
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
 
 @api_view(['GET', 'POST','Delete'])
 def product_delete(request,id):
-    selected_values=Product.objects.get(pk=id)
-    selected_values.deleted=1;
-    selected_values.save();
-    return HttpResponseRedirect(reverse('printerapp:product_list'))
+    loginuser=session_user_id(request)
+    print(loginuser)
+    if loginuser.has_perm('printerapp.delete_product'):
+        print("yes")
+        selected_values=Product.objects.get(pk=id)
+        selected_values.deleted=1;
+        selected_values.save();
+        return HttpResponseRedirect(reverse('printerapp:product_list'))
+    else:
+        print("no")
+        return Response({'data':''},template_name='includes/page_not_found.html')
+
 
 @api_view(['GET','PUT','POST'])
 def product_update(request,id):
+    loginuser=session_user_id(request)
+    print(loginuser)
+ 
     product_obj=Product.objects.get(id=id)
     if request.method=='GET':
         data=ProductSerializer(product_obj).data
@@ -116,10 +153,15 @@ def product_update(request,id):
         custom_filter['deleted']=0
         proddet_obj = Productdetails.objects.filter(**custom_filter)
         proddet_data = ProductdetailsSerializer(proddet_obj, many=True).data
+        if loginuser.has_perm('printerapp.change_product'):
+            print("yes")
+            if request.accepted_renderer.format == 'html':
+                return Response({'data':data,"product_data":proddet_data},template_name='product/product_create_update.html')
+            return Response({"data": data}, status=status.HTTP_200_OK)
+        else:
+            print("no")
+            return Response({'data':''},template_name='includes/page_not_found.html')
 
-        if request.accepted_renderer.format == 'html':
-            return Response({'data':data,"product_data":proddet_data},template_name='product/product_create_update.html')
-        return Response({"data": data}, status=status.HTTP_200_OK)
 
     else:
         pname=request.POST.get('product_name')
